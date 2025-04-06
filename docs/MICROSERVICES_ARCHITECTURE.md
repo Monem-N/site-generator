@@ -8,7 +8,7 @@ This document outlines the plan to transition the Docsify Site Generator from a 
 
 The current architecture is monolithic, with all components tightly coupled:
 
-```
+```plaintext
 ┌─────────────────────────────────────────────────┐
 │                                                 │
 │               Docsify Site Generator            │
@@ -25,7 +25,7 @@ The current architecture is monolithic, with all components tightly coupled:
 
 The proposed architecture splits the generator into several independent microservices:
 
-```
+```plaintext
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
 │             │     │             │     │             │
 │  Parser     │────▶│ Component   │────▶│ Builder     │
