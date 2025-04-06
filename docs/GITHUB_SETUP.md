@@ -6,6 +6,10 @@ This guide provides instructions for setting up and configuring GitHub repositor
 
 - [GitHub Actions](#github-actions)
 - [Repository Settings](#repository-settings)
+  <<<<<<< Updated upstream
+  =======
+- [Branch Protection Rules](#branch-protection-rules)
+  > > > > > > > Stashed changes
 - [Issue Labels](#issue-labels)
 - [Project Boards](#project-boards)
 - [Additional Features](#additional-features)
@@ -99,6 +103,41 @@ To add collaborators:
    - Maintain: Can also manage the repository without admin access
    - Admin: Full access including sensitive settings
 5. Click Add
+
+# <<<<<<< Updated upstream
+
+## Branch Protection Rules
+
+Branch protection rules help maintain code quality and prevent accidental changes to important branches.
+
+### Setting Up Branch Protection for Main Branch
+
+1. Go to Settings > Branches
+2. Under "Branch protection rules", click Add rule
+3. In the "Branch name pattern" field, enter `main`
+4. Configure these recommended settings:
+   - Require a pull request before merging
+   - Require approvals (at least 1)
+   - Require status checks to pass before merging
+   - Select status checks: build, test, lint (from your CI workflow)
+   - Require conversation resolution before merging
+5. Click Create to save the rule
+
+### Setting Up Branch Protection for Develop Branch
+
+1. Go to Settings > Branches
+2. Under "Branch protection rules", click Add rule
+3. In the "Branch name pattern" field, enter `develop`
+4. Configure these recommended settings:
+   - Require a pull request before merging
+   - Require approvals (at least 1)
+   - Require status checks to pass before merging
+   - Select status checks: build, test (from your CI workflow)
+5. Click Create to save the rule
+
+For more detailed instructions and additional protection options, see the [Branch Protection Rules Setup Guide](./BRANCH_PROTECTION_RULES.md).
+
+> > > > > > > Stashed changes
 
 ## Issue Labels
 

@@ -36,6 +36,20 @@ Use this checklist to ensure all GitHub repository features are properly configu
   - [ ] Allow rebase merging
   - [ ] Automatically delete head branches
 
+# <<<<<<< Updated upstream
+
+- [ ] Branch protection rules configured
+
+  - [ ] Main branch protected
+    - [ ] Require pull request reviews
+    - [ ] Require status checks to pass
+    - [ ] Require conversation resolution
+  - [ ] Develop branch protected
+    - [ ] Require pull request reviews
+    - [ ] Require status checks to pass
+
+> > > > > > > Stashed changes
+
 - [ ] Tags and releases set up
 
   - [ ] Initial release created (v1.0.0 or appropriate version)
