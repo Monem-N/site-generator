@@ -52,15 +52,16 @@ const generator = new DocsifyWebsiteGenerator({
   sourceDir: './docs',
   outputDir: './dist',
   designSystem: {
-    name: 'vue'
-  }
+    name: 'vue',
+  },
 });
 
-generator.generate()
+generator
+  .generate()
   .then(() => {
     console.log('Website generated successfully!');
   })
-  .catch((error) => {
+  .catch(error => {
     console.error('Error generating website:', error);
   });
 ```

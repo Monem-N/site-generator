@@ -13,12 +13,12 @@ export class ParserFactory {
     // Register the new DocsifyMarkdownParser for markdown files
     this.register('markdown', new DocsifyMarkdownParser());
     this.register('md', new DocsifyMarkdownParser()); // Also register for .md extension
-    
+
     // Register other parsers
     this.register('openapi', new OpenAPIParser());
     this.register('yaml', new OpenAPIParser()); // For OpenAPI YAML files
     this.register('json', new OpenAPIParser()); // For OpenAPI JSON files
-    
+
     // Register CMS integration if available
     try {
       this.register('contentful', new CMSIntegrationModule('', ''));

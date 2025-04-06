@@ -5,7 +5,7 @@ export interface WebsiteGeneratorConfig {
   projectName: string;
   outputDir: string;
   sourceDir: string;
-  
+
   // Parser configuration
   parser: ParserConfig & {
     plugins?: string[];

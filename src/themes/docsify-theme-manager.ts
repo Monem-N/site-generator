@@ -55,33 +55,34 @@ export class DocsifyThemeManager {
         background: '#ffffff',
         text: '#2c3e50',
         codeBackground: '#f8f8f8',
-        borderColor: '#eaecef'
+        borderColor: '#eaecef',
       },
       typography: {
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
         fontSize: '16px',
         lineHeight: '1.7',
         headings: {
           fontFamily: 'inherit',
           fontWeight: '600',
-          lineHeight: '1.25'
-        }
+          lineHeight: '1.25',
+        },
       },
       spacing: {
         unit: '16px',
         container: '800px',
         content: '60px',
-        sidebar: '300px'
+        sidebar: '300px',
       },
       breakpoints: {
         mobile: '480px',
         tablet: '768px',
-        desktop: '1024px'
+        desktop: '1024px',
       },
       animation: {
         duration: '0.3s',
-        timing: 'ease-in-out'
-      }
+        timing: 'ease-in-out',
+      },
     };
 
     return {
@@ -91,7 +92,7 @@ export class DocsifyThemeManager {
       typography: { ...defaultConfig.typography, ...customConfig?.typography },
       spacing: { ...defaultConfig.spacing, ...customConfig?.spacing },
       breakpoints: { ...defaultConfig.breakpoints, ...customConfig?.breakpoints },
-      animation: { ...defaultConfig.animation, ...customConfig?.animation }
+      animation: { ...defaultConfig.animation, ...customConfig?.animation },
     };
   }
 
@@ -291,7 +292,7 @@ export class DocsifyThemeManager {
       colors: this.config.colors,
       typography: this.config.typography,
       spacing: this.config.spacing,
-      breakpoints: this.config.breakpoints
+      breakpoints: this.config.breakpoints,
     });
   }
 }

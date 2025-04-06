@@ -27,7 +27,7 @@ export class CMSIntegrationModule {
         metadata: {},
         sections: [
           {
-            type: "section",
+            type: 'section',
             title: 'Content',
             content: content || 'No content available.',
           },

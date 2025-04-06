@@ -98,10 +98,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         babelHelpers: 'bundled',
       }),
       postcss({
-        plugins: [
-          autoprefixer(),
-          this.config.optimization?.minify && cssnano(),
-        ].filter(Boolean),
+        plugins: [autoprefixer(), this.config.optimization?.minify && cssnano()].filter(Boolean),
       }),
       image(),
     ];
@@ -173,7 +170,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     // Generate preload links for fonts
     const preloadLinks = fonts
       .filter(font => /\.(woff2?)$/i.test(font))
-      .map(font => `<link rel="preload" href="/fonts/${font}" as="font" type="font/${font.split('.').pop()}" crossorigin>`);
+      .map(
+        font =>
+          `<link rel="preload" href="/fonts/${font}" as="font" type="font/${font
+            .split('.')
+            .pop()}" crossorigin>`
+      );
 
     // Inject preload links into HTML
     const htmlPath = path.join(this.config.outDir, 'index.html');
@@ -187,9 +189,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     await workbox.generateSW({
       swDest: path.join(this.config.outDir, 'service-worker.js'),
       globDirectory: this.config.outDir,
-      globPatterns: [
-        '**/*.{js,css,html,png,jpg,jpeg,gif,svg,woff,woff2}',
-      ],
+      globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,gif,svg,woff,woff2}'],
       skipWaiting: true,
       clientsClaim: true,
       runtimeCaching: [

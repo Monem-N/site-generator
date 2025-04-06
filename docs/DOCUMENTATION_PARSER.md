@@ -82,9 +82,16 @@ Each parser implements a common interface with a `parse` method that transforms 
 The parser system also supports integration with Content Management Systems (CMS) like Contentful:
 
 ```javascript
-if (this.config.cms?.type === 'contentful' && this.config.cms.spaceId && this.config.cms.accessToken) {
+if (
+  this.config.cms?.type === 'contentful' &&
+  this.config.cms.spaceId &&
+  this.config.cms.accessToken
+) {
   import('./CMSIntegrationModule').then(CMSIntegrationModule => {
-    const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(this.config.cms.spaceId || '', this.config.cms.accessToken || '');
+    const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(
+      this.config.cms.spaceId || '',
+      this.config.cms.accessToken || ''
+    );
     this.parserFactory.prototype.register('contentful', cmsModule);
   });
 }

@@ -24,7 +24,7 @@ export class DocsifyPlugin implements Plugin {
         responsiveTables: true,
         readyTransition: true,
       },
-      ...options
+      ...options,
     };
   }
 
@@ -42,7 +42,7 @@ export class DocsifyPlugin implements Plugin {
     beforeGenerate: async (components: ComponentTemplate[]): Promise<ComponentTemplate[]> => {
       // Add docsify-specific components and styling
       return this.addDocsifyComponents(components);
-    }
+    },
   };
 
   private processDocsifyMarkdown(content: string): string {
@@ -83,15 +83,23 @@ export class DocsifyPlugin implements Plugin {
   }
 
   private generateCodeTabsHTML(tabs: string[]): string {
-    const tabButtons = tabs.map((tab, index) => {
-      const title = tab.split('\n')[0];
-      return `<button class="tab-button${index === 0 ? ' active' : ''}" data-tab="${index}">${title}</button>`;
-    }).join('');
+    const tabButtons = tabs
+      .map((tab, index) => {
+        const title = tab.split('\n')[0];
+        return `<button class="tab-button${
+          index === 0 ? ' active' : ''
+        }" data-tab="${index}">${title}</button>`;
+      })
+      .join('');
 
-    const tabContents = tabs.map((tab, index) => {
-      const content = tab.split('\n').slice(1).join('\n');
-      return `<div class="tab-content${index === 0 ? ' active' : ''}" data-tab="${index}">${content}</div>`;
-    }).join('');
+    const tabContents = tabs
+      .map((tab, index) => {
+        const content = tab.split('\n').slice(1).join('\n');
+        return `<div class="tab-content${
+          index === 0 ? ' active' : ''
+        }" data-tab="${index}">${content}</div>`;
+      })
+      .join('');
 
     return `<div class="tabs-container">
       <div class="tab-buttons">${tabButtons}</div>
@@ -106,9 +114,9 @@ export class DocsifyPlugin implements Plugin {
         ...parsed.metadata,
         docsify: {
           ...this.options,
-          plugins: ['search', 'zoom-image', 'copy-code']
-        }
-      }
+          plugins: ['search', 'zoom-image', 'copy-code'],
+        },
+      },
     };
   }
 
@@ -130,7 +138,7 @@ export class DocsifyPlugin implements Plugin {
     return {
       type: 'navbar',
       content: '<nav class="app-nav"></nav>',
-      metadata: { docsify: true }
+      metadata: { docsify: true },
     };
   }
 
@@ -138,7 +146,7 @@ export class DocsifyPlugin implements Plugin {
     return {
       type: 'sidebar',
       content: '<aside class="sidebar"></aside>',
-      metadata: { docsify: true }
+      metadata: { docsify: true },
     };
   }
 
@@ -146,7 +154,7 @@ export class DocsifyPlugin implements Plugin {
     return {
       type: 'coverpage',
       content: '<section class="cover show"></section>',
-      metadata: { docsify: true }
+      metadata: { docsify: true },
     };
   }
 }

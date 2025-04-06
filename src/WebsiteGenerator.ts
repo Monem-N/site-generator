@@ -14,15 +14,23 @@ export class WebsiteGenerator {
   constructor(config: Partial<WebsiteGeneratorConfig> = {}) {
     this.config = { ...defaultConfig, ...config };
     this.parserFactory = DocumentationParserFactory;
-    if (this.config.cms?.type === 'contentful' && this.config.cms.spaceId && this.config.cms.accessToken) {
+    if (
+      this.config.cms?.type === 'contentful' &&
+      this.config.cms.spaceId &&
+      this.config.cms.accessToken
+    ) {
       import('./CMSIntegrationModule').then(CMSIntegrationModule => {
-        const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(this.config.cms.spaceId || '', this.config.cms.accessToken || '');
+        const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(
+          this.config.cms.spaceId || '',
+          this.config.cms.accessToken || ''
+        );
         this.parserFactory.prototype.register('contentful', cmsModule);
       });
     }
     this.componentGenerator = new ComponentGenerator(this.config.designSystem);
+  }
 
-private async initializePlugins(): Promise<void> {
+  private async initializePlugins(): Promise<void> {
     if (!this.config.plugins) return;
 
     for (const pluginConfig of this.config.plugins) {
@@ -68,7 +76,7 @@ private async initializePlugins(): Promise<void> {
     const parsedContent: ParsedContent[] = [];
 
     for (const file of files) {
-                                                                                                                                                                                                const content = await fs.readFile(file, 'utf-8');
+      const content = await fs.readFile(file, 'utf-8');
       const format = path.extname(file).slice(1);
 
       // Apply plugins' beforeParse hooks
@@ -102,7 +110,7 @@ private async initializePlugins(): Promise<void> {
     for (const content of parsedContent) {
       // Apply plugins' beforeGenerate hooks
       let currentComponents = await this.componentGenerator.generateComponent(content);
-      
+
       for (const plugin of this.plugins) {
         if (plugin.hooks?.beforeGenerate) {
           currentComponents = await plugin.hooks.beforeGenerate(currentComponents);
@@ -116,19 +124,22 @@ private async initializePlugins(): Promise<void> {
   }
 
   private async applyDesignSystem(components: ComponentTemplate[]): Promise<ComponentTemplate[]> {
-    return Promise.all(components.map(async component => ({
-      ...component,
-      content: await this.componentGenerator.generateComponent(component.content),
-    })));
+    return Promise.all(
+      components.map(async component => ({
+        ...component,
+        content: await this.componentGenerator.generateComponent(component.content),
+      }))
+    );
   }
 
   private async generateTests(components: ComponentTemplate[]): Promise<void> {
-    if (!this.config.testing.components.unit && 
-        !this.config.testing.components.integration) {
+    if (!this.config.testing.components.unit && !this.config.testing.components.integration) {
       return;
     }
 
-    const testGenerator = await import('./TestGenerator').then(m => new m.TestGenerator(this.config.testing));
+    const testGenerator = await import('./TestGenerator').then(
+      m => new m.TestGenerator(this.config.testing)
+    );
     await testGenerator.generateTests(components);
   }
 
@@ -152,7 +163,7 @@ private async initializePlugins(): Promise<void> {
       const fullPath = path.join(sourceDir, entry.name);
 
       if (entry.isDirectory()) {
-        files.push(...await this.getDocumentationFiles(fullPath));
+        files.push(...(await this.getDocumentationFiles(fullPath)));
       } else if (this.isDocumentationFile(entry.name)) {
         files.push(fullPath);
       }
@@ -166,5 +177,3 @@ private async initializePlugins(): Promise<void> {
     return this.config.parser.extensions?.includes(ext) ?? false;
   }
 }
-
-

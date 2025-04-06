@@ -169,8 +169,8 @@ private async executeBuild(buildConfig: any): Promise<void> {
     dir: this.config.outDir,
     format: 'esm',
     sourcemap: this.config.target !== 'production',
-    entryFileNames: this.config.target === 'production' 
-      ? 'assets/js/[name].[hash].js' 
+    entryFileNames: this.config.target === 'production'
+      ? 'assets/js/[name].[hash].js'
       : 'assets/js/[name].js',
     chunkFileNames: 'assets/js/[name].[hash].js',
     assetFileNames: 'assets/[ext]/[name].[hash][extname]',

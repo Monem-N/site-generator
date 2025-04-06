@@ -47,23 +47,23 @@ class MarkdownParser {
     try {
       // Basic content parsing
       let ast = this.parseToAST(source);
-      
+
       // Apply plugins for additional processing
       for (const plugin of this.plugins) {
         ast = await plugin.process(ast, options);
       }
-      
+
       // Transform to normalized content model
       const contentModel = this.transformToContentModel(ast);
-      
+
       // Extract metadata
       const metadata = this.extractMetadata(ast);
-      
+
       return {
         contentModel,
         metadata,
         format: 'markdown',
-        originalSource: source
+        originalSource: source,
       };
     } catch (error) {
       throw new Error(`Markdown parsing failed: ${error.message}`);
@@ -75,9 +75,9 @@ class MarkdownParser {
     // This is a simplified placeholder
     const sections = [];
     const lines = source.split('\n');
-    
+
     let currentSection = null;
-    
+
     for (const line of lines) {
       if (line.startsWith('# ')) {
         // New h1 section
@@ -88,17 +88,17 @@ class MarkdownParser {
           type: 'section',
           title: line.substring(2),
           level: 1,
-          content: []
+          content: [],
         };
       } else if (currentSection) {
         currentSection.content.push(line);
       }
     }
-    
+
     if (currentSection) {
       sections.push(currentSection);
     }
-    
+
     return { type: 'document', sections };
   }
 
@@ -111,8 +111,8 @@ class MarkdownParser {
         type: 'section',
         title: section.title,
         level: section.level,
-        content: this.processContent(section.content)
-      }))
+        content: this.processContent(section.content),
+      })),
     };
   }
 
@@ -135,7 +135,7 @@ class MarkdownParser {
           codeBlock = {
             type: 'code',
             language,
-            content: []
+            content: [],
           };
         }
       } else if (codeBlock) {
@@ -149,7 +149,7 @@ class MarkdownParser {
         if (!paragraph) {
           paragraph = {
             type: 'paragraph',
-            content: []
+            content: [],
           };
         }
         paragraph.content.push(line);
@@ -169,7 +169,7 @@ class MarkdownParser {
     const metadata = {
       title: '',
       description: '',
-      tags: []
+      tags: [],
     };
 
     if (ast.sections.length > 0) {
@@ -213,6 +213,6 @@ class APIEndpointExtractorPlugin {
 module.exports = {
   DocumentationParserFactory,
   plugins: {
-    APIEndpointExtractorPlugin
-  }
+    APIEndpointExtractorPlugin,
+  },
 };

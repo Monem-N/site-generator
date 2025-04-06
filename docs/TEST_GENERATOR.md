@@ -179,7 +179,7 @@ The test generation process follows these steps:
 
 ```typescript
 private async generateTests(components: ComponentTemplate[]): Promise<void> {
-  if (!this.config.testing.components.unit && 
+  if (!this.config.testing.components.unit &&
       !this.config.testing.components.integration) {
     return;
   }

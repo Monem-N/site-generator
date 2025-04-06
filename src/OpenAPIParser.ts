@@ -18,12 +18,12 @@ export class OpenAPIParser {
         metadata: {},
         sections: [
           {
-            type: "section",
+            type: 'section',
             title: 'Overview',
             content: description || 'No overview available.',
           },
           {
-            type: "section",
+            type: 'section',
             title: 'API Endpoints',
             content: this.generateEndpointsContent(paths),
           },

@@ -8,7 +8,7 @@ export class DocsifyMarkdownParser {
 
   constructor(options = {}) {
     this.options = options;
-    
+
     // Configure marked with Docsify-like settings
     marked.setOptions({
       renderer: new marked.Renderer(),
@@ -19,7 +19,7 @@ export class DocsifyMarkdownParser {
       sanitize: false,
       smartLists: true,
       smartypants: false,
-      ...options
+      ...options,
     });
   }
 
@@ -62,7 +62,7 @@ export class DocsifyMarkdownParser {
         sections,
         assets,
         references,
-        html // Add the HTML for rendering
+        html, // Add the HTML for rendering
       };
 
       // Apply plugins (post-processing)
@@ -89,17 +89,17 @@ export class DocsifyMarkdownParser {
   private extractSections(content: string): ContentNode[] {
     const sections: ContentNode[] = [];
     const lines = content.split('\n');
-    
+
     let currentSection: ContentNode | null = null;
     let currentSubsection: ContentNode | null = null;
     let currentContent: string[] = [];
-    
+
     for (const line of lines) {
       // Check for headings
       const h1Match = line.match(/^#\s+(.*)/);
       const h2Match = line.match(/^##\s+(.*)/);
       const h3Match = line.match(/^###\s+(.*)/);
-      
+
       if (h1Match) {
         // Save previous section if exists
         if (currentSection) {
@@ -107,15 +107,15 @@ export class DocsifyMarkdownParser {
           sections.push(currentSection);
           currentContent = [];
         }
-        
+
         // Create new section
         currentSection = {
           type: 'section',
           title: h1Match[1].trim(),
           content: '',
-          children: []
+          children: [],
         };
-        
+
         currentSubsection = null;
       } else if (h2Match && currentSection) {
         // Save content to current section or subsection
@@ -126,29 +126,29 @@ export class DocsifyMarkdownParser {
           currentSection.content = currentContent.join('\n');
           currentContent = [];
         }
-        
+
         // Create new subsection
         currentSubsection = {
           type: 'subsection',
           title: h2Match[1].trim(),
           content: '',
-          children: []
+          children: [],
         };
-        
+
         currentSection.children.push(currentSubsection);
       } else if (h3Match && currentSubsection) {
         // Save content to current subsection
         currentSubsection.content = currentContent.join('\n');
         currentContent = [];
-        
+
         // Create new sub-subsection
         const subSubsection: ContentNode = {
           type: 'subsubsection',
           title: h3Match[1].trim(),
           content: '',
-          children: []
+          children: [],
         };
-        
+
         currentSubsection.children.push(subSubsection);
         currentSubsection = subSubsection;
       } else {
@@ -156,19 +156,19 @@ export class DocsifyMarkdownParser {
         currentContent.push(line);
       }
     }
-    
+
     // Save final section or subsection
     if (currentSubsection) {
       currentSubsection.content = currentContent.join('\n');
     } else if (currentSection) {
       currentSection.content = currentContent.join('\n');
     }
-    
+
     // Add final section if exists
     if (currentSection) {
       sections.push(currentSection);
     }
-    
+
     return sections;
   }
 
@@ -176,21 +176,21 @@ export class DocsifyMarkdownParser {
     const assets: Asset[] = [];
     const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
     let match;
-    
+
     while ((match = imageRegex.exec(content)) !== null) {
       const altText = match[1];
       const imagePath = match[2];
-      
+
       assets.push({
         type: 'image',
         path: imagePath,
         metadata: {
           altText,
-          referencedFrom: filePath
-        }
+          referencedFrom: filePath,
+        },
       });
     }
-    
+
     return assets;
   }
 
@@ -198,29 +198,29 @@ export class DocsifyMarkdownParser {
     const references: Reference[] = [];
     const linkRegex = /\[(.*?)\]\((.*?)\)/g;
     let match;
-    
+
     while ((match = linkRegex.exec(content)) !== null) {
       const text = match[1];
       const target = match[2];
-      
+
       // Skip image links (already handled in extractAssets)
       if (content.substring(match.index - 1, match.index) === '!') {
         continue;
       }
-      
+
       // Determine if internal or external link
       const type = target.startsWith('http') ? 'external' : 'internal';
-      
+
       references.push({
         type,
         source: filePath || '',
         target,
         attributes: {
-          text
-        }
+          text,
+        },
       });
     }
-    
+
     return references;
   }
 }

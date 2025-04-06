@@ -14,15 +14,15 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/types/**/*',
     '!src/index.ts',
-    '!src/cli.ts'
+    '!src/cli.ts',
   ],
   coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
       lines: 70,
-      statements: 70
-    }
+      statements: 70,
+    },
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };

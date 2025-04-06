@@ -27,6 +27,7 @@ site-generator --source ./docs --output ./dist
 ```
 
 This will:
+
 1. Read all Markdown files in the `./docs` directory
 2. Generate a React website
 3. Output the website to the `./dist` directory
@@ -89,9 +90,10 @@ The generator supports standard Markdown syntax:
 
 ```markdown
 # Heading 1
+
 ## Heading 2
 
-Paragraph with **bold** and *italic* text.
+Paragraph with **bold** and _italic_ text.
 
 - List item 1
 - List item 2
@@ -123,11 +125,11 @@ function hello() {
 Tables are supported:
 
 ```markdown
-| Name  | Type    | Description       |
-|-------|---------|-------------------|
-| id    | string  | Unique identifier |
-| title | string  | Item title        |
-| count | number  | Item count        |
+| Name  | Type   | Description       |
+| ----- | ------ | ----------------- |
+| id    | string | Unique identifier |
+| title | string | Item title        |
+| count | number | Item count        |
 ```
 
 ### Task Lists

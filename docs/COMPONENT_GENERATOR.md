@@ -43,13 +43,13 @@ The main class responsible for generating components from parsed content:
 export class ComponentGenerator {
   private designSystem: DesignSystem;
   private templateRegistry: Map<string, ComponentTemplate>;
-  
+
   constructor(designSystem: DesignSystem) {
     this.designSystem = designSystem;
     this.templateRegistry = new Map();
     this.registerDefaultTemplates();
   }
-  
+
   private registerDefaultTemplates(): void {
     // Register built-in component templates
     this.registerTemplate('section', new SectionTemplate());
@@ -58,24 +58,24 @@ export class ComponentGenerator {
     this.registerTemplate('table', new TableTemplate());
     this.registerTemplate('navigation', new NavigationTemplate());
   }
-  
+
   public registerTemplate(type: string, template: ComponentTemplate): void {
     this.templateRegistry.set(type, template);
   }
-  
+
   public async generateComponent(contentElement: any): Promise<string> {
     const elementType = contentElement.type;
     const template = this.templateRegistry.get(elementType);
-    
+
     if (!template) {
       throw new Error(`No template registered for element type: ${elementType}`);
     }
-    
+
     // Generate component based on content model and design system
     const componentCode = await template.generate(contentElement, this.designSystem);
     return this.applyDesignSystem(componentCode, elementType);
   }
-  
+
   // Additional methods...
 }
 ```
@@ -100,7 +100,7 @@ The Component Generator applies design system styling and components to the gene
 private applyDesignSystem(componentCode: string, elementType: string): string {
   // Apply design system styling and components
   const dsConfig = this.designSystem.getConfigForType(elementType);
-  
+
   // Replace placeholder classes with design system classes
   let styledCode = componentCode;
   for (const [placeholder, actualClass] of Object.entries(dsConfig.classMapping)) {
@@ -109,10 +109,10 @@ private applyDesignSystem(componentCode: string, elementType: string): string {
       actualClass as string
     );
   }
-  
+
   // Add design system imports if needed
   const imports = this.generateImports(dsConfig.components);
-  
+
   return `${imports}\n\n${styledCode}`;
 }
 ```
@@ -169,7 +169,7 @@ private async generateComponents(parsedContent: ParsedContent[]): Promise<Compon
   for (const content of parsedContent) {
     // Apply plugins' beforeGenerate hooks
     let currentComponents = await this.componentGenerator.generateComponent(content);
-    
+
     for (const plugin of this.plugins) {
       if (plugin.hooks?.beforeGenerate) {
         currentComponents = await plugin.hooks.beforeGenerate(currentComponents);

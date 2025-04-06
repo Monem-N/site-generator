@@ -5,6 +5,7 @@ This is a basic example of using the Site Generator.
 ## Getting Started
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```

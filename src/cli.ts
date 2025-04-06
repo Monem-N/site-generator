@@ -10,13 +10,13 @@ const options: any = {
   sourceDir: '.',
   outputDir: './dist',
   theme: 'vue',
-  ignorePatterns: ['node_modules', '.git', '.github', '.vscode']
+  ignorePatterns: ['node_modules', '.git', '.github', '.vscode'],
 };
 
 // Parse arguments
 for (let i = 0; i < args.length; i++) {
   const arg = args[i];
-  
+
   if (arg === '--source' || arg === '-s') {
     options.sourceDir = args[++i];
   } else if (arg === '--output' || arg === '-o') {
@@ -72,12 +72,12 @@ const config = {
   outputDir: options.outputDir,
   parser: {
     extensions: ['md', 'markdown'],
-    ignorePatterns: options.ignorePatterns
+    ignorePatterns: options.ignorePatterns,
   },
   designSystem: {
     name: options.theme,
-    type: 'custom'
-  }
+    type: 'custom',
+  },
 };
 
 // Create generator
@@ -86,11 +86,12 @@ const generator = new DocsifyWebsiteGenerator(config);
 // Generate website
 console.log(`Generating website from ${options.sourceDir} to ${options.outputDir}...`);
 
-generator.generate()
+generator
+  .generate()
   .then(() => {
     console.log('Website generated successfully!');
   })
-  .catch((error) => {
+  .catch(error => {
     console.error('Error generating website:', error);
     process.exit(1);
   });

@@ -22,11 +22,11 @@ function hello() {
 
 ## Table Example
 
-| Name  | Type    | Description       |
-|-------|---------|-------------------|
-| id    | string  | Unique identifier |
-| title | string  | Item title        |
-| count | number  | Item count        |
+| Name  | Type   | Description       |
+| ----- | ------ | ----------------- |
+| id    | string | Unique identifier |
+| title | string | Item title        |
+| count | number | Item count        |
 
 ## Task List Example
 

@@ -28,7 +28,7 @@ class MarkdownTemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: any): Promise<string> {
+  async generate(content: { title?: string; body: string }): Promise<string> {
     const { title, body } = content;
     return `
       <div class="markdown-section ${this.designSystem.classNames.markdownContainer}">
@@ -42,9 +42,10 @@ class MarkdownTemplate implements ComponentTemplate {
 
   private processMarkdownContent(content: string): string {
     // Apply design system styles to markdown elements
-    return content
-      .replace(/<h([1-6])>/g, (_, level) => 
-        `<h${level} class="${this.designSystem.classNames[`heading${level}`]}">`);
+    return content.replace(
+      /<h([1-6])>/g,
+      (_, level) => `<h${level} class="${this.designSystem.classNames[`heading${level}`]}">`
+    );
   }
 }
 
@@ -55,7 +56,7 @@ class APITemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: any): Promise<string> {
+  async generate(content: { method: string; endpoint: string; parameters?: Array<{ name: string; type: string; description: string }>; responses?: Record<string, { description: string; example?: unknown }> }): Promise<string> {
     const { method, endpoint, parameters, responses } = content;
     return `
       <div class="api-section ${this.designSystem.classNames.apiContainer}">
@@ -69,7 +70,7 @@ class APITemplate implements ComponentTemplate {
     `;
   }
 
-  private generateParameters(parameters: any[]): string {
+  private generateParameters(parameters?: Array<{ name: string; type: string; description: string }>): string {
     if (!parameters?.length) return '';
     return `
       <div class="parameters">
@@ -83,35 +84,47 @@ class APITemplate implements ComponentTemplate {
             </tr>
           </thead>
           <tbody>
-            ${parameters.map(param => `
+            ${parameters
+              .map(
+                param => `
               <tr>
                 <td>${param.name}</td>
                 <td>${param.type}</td>
                 <td>${param.description}</td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
     `;
   }
 
-  private generateResponses(responses: any): string {
+  private generateResponses(responses?: Record<string, { description: string; example?: unknown }>): string {
     if (!responses) return '';
     return `
       <div class="responses">
         <h3>Responses</h3>
-        ${Object.entries(responses).map(([code, response]: [string, any]) => `
+        ${Object.entries(responses)
+          .map(
+            ([code, response]: [string, { description: string; example?: unknown }]) => `
           <div class="response-code">
             <span class="code">${code}</span>
             <span class="description">${response.description}</span>
           </div>
-          ${response.example ? `
+          ${
+            response.example
+              ? `
             <pre><code class="language-json">
               ${JSON.stringify(response.example, null, 2)}
             </code></pre>
-          ` : ''}
-        `).join('')}
+          `
+              : ''
+          }
+        `
+          )
+          .join('')}
       </div>
     `;
   }
@@ -124,7 +137,7 @@ class CodeTemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: any): Promise<string> {
+  async generate(content: { language: string; code: string; filename?: string }): Promise<string> {
     const { language, code, filename } = content;
     return `
       <div class="code-section ${this.designSystem.classNames.codeContainer}">
@@ -142,7 +155,7 @@ class CodeTemplate implements ComponentTemplate {
       '<': '&lt;',
       '>': '&gt;',
       '"': '&quot;',
-      "'": '&#039;'
+      "'": '&#039;',
     };
     return str.replace(/[&<>"']/g, m => escapeMap[m]);
   }

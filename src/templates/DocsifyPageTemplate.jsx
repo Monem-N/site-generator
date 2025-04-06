@@ -6,8 +6,8 @@ import { DocsifyContent } from './DocsifyContent';
 export const DocsifyPageTemplate = ({ content }) => {
   return (
     <DocsifyLayout theme={content.theme} title={content.title}>
-      <DocsifySidebar 
-        navigation={content.navigation} 
+      <DocsifySidebar
+        navigation={content.navigation}
         currentPath={content.metadata?.originalPath}
       />
       <DocsifyContent>

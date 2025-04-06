@@ -44,33 +44,33 @@ export class PerformanceOptimizer {
         enabled: true,
         threshold: 100,
         placeholder: 'loading',
-        ...config.lazyLoading
+        ...config.lazyLoading,
       },
       codeOptimization: {
         minify: true,
         splitChunks: true,
         treeshaking: true,
-        ...config.codeOptimization
+        ...config.codeOptimization,
       },
       caching: {
         strategy: 'memory',
         maxAge: 3600,
         revalidate: true,
-        ...config.caching
+        ...config.caching,
       },
       assets: {
         imageOptimization: {
           enabled: true,
           quality: 85,
           formats: ['webp', 'avif'],
-          ...config.assets?.imageOptimization
+          ...config.assets?.imageOptimization,
         },
         fontOptimization: {
           preload: true,
           formats: ['woff2', 'woff'],
-          ...config.assets?.fontOptimization
-        }
-      }
+          ...config.assets?.fontOptimization,
+        },
+      },
     };
   }
 
@@ -100,30 +100,30 @@ export default function LazyComponent(props) {
     return {
       optimization: {
         minimize: this.config.codeOptimization.minify,
-        splitChunks: this.config.codeOptimization.splitChunks ? {
-          chunks: 'all',
-          minSize: 20000,
-          maxSize: 40000,
-          cacheGroups: {
-            vendor: {
-              test: /[\\]node_modules[\\]/,
-              name: 'vendors',
-              chunks: 'all'
+        splitChunks: this.config.codeOptimization.splitChunks
+          ? {
+              chunks: 'all',
+              minSize: 20000,
+              maxSize: 40000,
+              cacheGroups: {
+                vendor: {
+                  test: /[\\]node_modules[\\]/,
+                  name: 'vendors',
+                  chunks: 'all',
+                },
+              },
             }
-          }
-        } : false,
-        usedExports: this.config.codeOptimization.treeshaking
+          : false,
+        usedExports: this.config.codeOptimization.treeshaking,
       },
       output: {
         filename: '[name].[contenthash].js',
-        chunkFilename: '[name].[contenthash].chunk.js'
+        chunkFilename: '[name].[contenthash].chunk.js',
       },
       cache: this.generateCacheConfig(),
       module: {
-        rules: [
-          ...this.generateAssetRules()
-        ]
-      }
+        rules: [...this.generateAssetRules()],
+      },
     };
   }
 
@@ -133,8 +133,8 @@ export default function LazyComponent(props) {
       maxAge: this.config.caching.maxAge * 1000, // Convert to milliseconds
       store: this.config.caching.strategy === 'filesystem' ? 'pack' : 'memory',
       buildDependencies: {
-        config: [__filename]
-      }
+        config: [__filename],
+      },
     };
   }
 
@@ -149,17 +149,17 @@ export default function LazyComponent(props) {
             loader: 'image-webpack-loader',
             options: {
               mozjpeg: {
-                quality: this.config.assets.imageOptimization.quality
+                quality: this.config.assets.imageOptimization.quality,
               },
               webp: {
-                quality: this.config.assets.imageOptimization.quality
+                quality: this.config.assets.imageOptimization.quality,
               },
               avif: {
-                quality: this.config.assets.imageOptimization.quality
-              }
-            }
-          }
-        ]
+                quality: this.config.assets.imageOptimization.quality,
+              },
+            },
+          },
+        ],
       });
     }
 
@@ -171,10 +171,10 @@ export default function LazyComponent(props) {
             loader: 'file-loader',
             options: {
               name: '[name].[hash].[ext]',
-              outputPath: 'fonts/'
-            }
-          }
-        ]
+              outputPath: 'fonts/',
+            },
+          },
+        ],
       });
     }
 
