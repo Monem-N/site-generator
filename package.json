@@ -36,6 +36,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@types/jest": "^29.5.0",
     "@types/marked": "^4.0.8",
     "@types/node": "^18.15.11",
