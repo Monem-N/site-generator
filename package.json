@@ -4,12 +4,16 @@
   "description": "A documentation-driven website generator with Docsify integration",
   "main": "dist/index.js",
   "bin": {
-    "site-generator": "dist/cli.js"
+    "site-generator": "dist/cli.js",
+    "site-generator-enhanced": "dist/cli-enhanced.js"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/cli.js",
+    "start:enhanced": "node dist/cli-enhanced.js",
     "dev": "tsc --watch",
+    "dev:serve": "tsc && node dist/cli-enhanced.js --serve",
+    "dev:watch": "tsc && node dist/cli-enhanced.js --watch --serve",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -30,19 +34,25 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.3",
+    "express": "^4.18.2",
     "front-matter": "^4.0.2",
     "marked": "^4.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
+    "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/marked": "^4.0.8",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "babel-jest": "^29.5.0",
