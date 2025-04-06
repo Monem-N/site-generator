@@ -21,22 +21,20 @@ Use this checklist to ensure all GitHub repository features are properly configu
 
 ## Repository Settings
 
-- [ ] Features enabled
+- [x] Features enabled
 
-  - [ ] Issues
-  - [ ] Pull requests
-  - [ ] Discussions
-  - [ ] Projects
-  - [ ] Wiki (if needed)
+  - [x] Issues
+  - [x] Pull requests
+  - [x] Discussions
+  - [x] Projects
+  - [x] Wiki (if needed)
 
-- [ ] Pull request settings configured
+- [x] Pull request settings configured
 
-  - [ ] Allow merge commits
-  - [ ] Allow squash merging
-  - [ ] Allow rebase merging
-  - [ ] Automatically delete head branches
-
-# <<<<<<< Updated upstream
+  - [x] Allow merge commits
+  - [x] Allow squash merging
+  - [x] Allow rebase merging
+  - [x] Automatically delete head branches
 
 - [ ] Branch protection rules configured
 
@@ -48,8 +46,6 @@ Use this checklist to ensure all GitHub repository features are properly configu
     - [ ] Require pull request reviews
     - [ ] Require status checks to pass
 
-> > > > > > > Stashed changes
-
 - [ ] Tags and releases set up
 
   - [ ] Initial release created (v1.0.0 or appropriate version)
@@ -59,37 +55,37 @@ Use this checklist to ensure all GitHub repository features are properly configu
 
 ## Issue Labels
 
-- [ ] Standard labels created
+- [x] Standard labels created
 
-  - [ ] bug (#d73a4a)
-  - [ ] enhancement (#a2eeef)
-  - [ ] documentation (#0075ca)
-  - [ ] good first issue (#7057ff)
-  - [ ] help wanted (#008672)
-  - [ ] question (#d876e3)
-  - [ ] wontfix (#ffffff)
+  - [x] bug (#d73a4a)
+  - [x] enhancement (#a2eeef)
+  - [x] documentation (#0075ca)
+  - [x] good first issue (#7057ff)
+  - [x] help wanted (#008672)
+  - [x] question (#d876e3)
+  - [x] wontfix (#ffffff)
 
-- [ ] Priority labels created
+- [x] Priority labels created
 
-  - [ ] priority:high (#ff0000)
-  - [ ] priority:medium (#ffff00)
-  - [ ] priority:low (#00ff00)
+  - [x] priority:high (#ff0000)
+  - [x] priority:medium (#ffff00)
+  - [x] priority:low (#00ff00)
 
-- [ ] Component labels created
-  - [ ] component:parser (#fbca04)
-  - [ ] component:generator (#fbca04)
-  - [ ] component:plugins (#fbca04)
-  - [ ] component:themes (#fbca04)
-  - [ ] component:navigation (#fbca04)
+- [x] Component labels created
+  - [x] component:parser (#fbca04)
+  - [x] component:generator (#fbca04)
+  - [x] component:plugins (#fbca04)
+  - [x] component:themes (#fbca04)
+  - [x] component:navigation (#fbca04)
 
 ## Project Boards
 
-- [ ] "Site Generator Development" project board created
+- [x] "Site Generator Development" project board created
 
-  - [ ] To Do column
-  - [ ] In Progress column
-  - [ ] Review column
-  - [ ] Done column
+  - [x] To Do column
+  - [x] In Progress column
+  - [x] Review column
+  - [x] Done column
 
 - [ ] Initial issues created and added to project board
 
@@ -108,8 +104,8 @@ Use this checklist to ensure all GitHub repository features are properly configu
     - [ ] Q&A
     - [ ] Show and Tell
 
-- [ ] Dependabot alerts enabled
-  - [ ] Dependabot security updates enabled
+- [x] Dependabot alerts enabled
+  - [x] Dependabot security updates enabled
 
 ## Next Steps
 

@@ -1,47 +1,11 @@
 // Core types for the documentation-driven website generator
 
-// Parser related types
-export interface ParserConfig {
-  defaultFormat?: string;
-  extensions?: string[];
-  ignorePatterns?: string[];
-  metadata?: {
-    required?: string[];
-    optional?: string[];
-  };
-}
-
-export interface ParsedContent {
-  title: string;
-  description: string;
-  metadata: Record<string, any>;
-  sections: ContentNode[];
-  assets: Asset[];
-  references: Reference[];
-}
-
-export interface ContentNode {
-  type: string;
-  title?: string;
-  content: string | ContentNode[];
-  attributes?: Record<string, any>;
-  children?: ContentNode[];
-}
-
-export interface Asset {
-  type: 'image' | 'video' | 'document' | 'other';
-  path: string;
-  mimeType?: string;
-  size?: number;
-  metadata?: Record<string, any>;
-}
-
-export interface Reference {
-  type: 'internal' | 'external';
-  source: string;
-  target: string;
-  attributes?: Record<string, any>;
-}
+// Re-export all types from specific type files
+export * from './cms';
+export * from './component';
+export * from './design';
+export * from './parser';
+export * from './plugin';
 
 // Generator related types
 export interface GeneratorConfig {
