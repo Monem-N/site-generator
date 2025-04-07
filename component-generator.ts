@@ -1,7 +1,10 @@
 /* eslint-disable */
-// import { ContentModel, DesignSystem } from './types';
 
 // Core component generator
+import { ContentModel } from './types/cms';
+import { DesignSystem } from './types/design';
+import { ContentElement } from './types/cms';
+
 export class ComponentGenerator {
   private designSystem: DesignSystem;
   private templateRegistry: Map<string, IComponentTemplate>;
@@ -112,6 +115,10 @@ export default function ${this.sanitizeComponentName(pageTitle)}() {
 }
 
 // Template implementations
+interface IComponentTemplate {
+  generate(element: any, designSystem: DesignSystem): Promise<string>;
+}
+
 class SectionTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { title, level, content } = element;
@@ -242,8 +249,8 @@ class APIEndpointTemplate implements IComponentTemplate {
           <div className="{response-description}">${response.description}</div>
         </div>
         `
-            )
-          .join('')}
+          )
+        .join('')}
       </div>
     </div>
     `;
@@ -334,14 +341,6 @@ class NavigationTemplate implements IComponentTemplate {
   }
 }
 
-// Type definitions would be in a separate file
-// This is for illustration purposes
-import { ContentModel } from './types/cms';
-import { DesignSystem } from './types/design';
-import { ContentElement } from './types/cms';
-
-interface IComponentTemplate {
-  generate(element: any, designSystem: DesignSystem): Promise<string>;
 
 // Test
 

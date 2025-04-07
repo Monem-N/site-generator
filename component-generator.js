@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,7 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComponentGenerator = void 0;
-// Core component generator
 var ComponentGenerator = /** @class */ (function () {
     function ComponentGenerator(designSystem) {
         this.designSystem = designSystem;
@@ -149,7 +149,6 @@ var ComponentGenerator = /** @class */ (function () {
     return ComponentGenerator;
 }());
 exports.ComponentGenerator = ComponentGenerator;
-// Template implementations
 var SectionTemplate = /** @class */ (function () {
     function SectionTemplate() {
     }
@@ -292,6 +291,7 @@ function testComponentGenerator() {
             switch (_a.label) {
                 case 0:
                     designSystem = {
+                        type: 'custom',
                         importPath: 'test',
                         classNames: {
                             pageContainer: 'test'
@@ -308,10 +308,18 @@ function testComponentGenerator() {
                 case 1:
                     _a.sent();
                     contentModel = {
-                        elements: [contentElement],
+                        id: 'test',
+                        contentType: 'page',
+                        title: 'Test Page',
+                        slug: 'test-page',
+                        content: 'test content',
                         metadata: {
-                            title: 'Test Page'
-                        }
+                            createdAt: '2024-04-07',
+                            updatedAt: '2024-04-07',
+                            locale: 'en-US'
+                        },
+                        fields: {},
+                        elements: [contentElement]
                     };
                     return [4 /*yield*/, componentGenerator.generatePage(contentModel)];
                 case 2:
