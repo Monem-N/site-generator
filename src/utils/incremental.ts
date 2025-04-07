@@ -42,12 +42,14 @@ export class IncrementalManager {
   private dirty: boolean;
 
   constructor(options: IncrementalOptions) {
-    this.options = {
+    // Set default options first, then override with provided options
+    const defaultOptions = {
       enabled: true,
       stateFile: '.incremental-state.json',
       forceRebuild: false,
-      ...options,
     };
+
+    this.options = { ...defaultOptions, ...options };
 
     this.state = {
       timestamp: 0,

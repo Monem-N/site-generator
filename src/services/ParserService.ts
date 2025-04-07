@@ -37,9 +37,12 @@ export class ParserService extends BaseService {
   constructor(config: ParserServiceConfig) {
     super('parser-service');
 
+    // Create config with defaults that will be overridden by any values in config
     this.config = {
-      extensions: ['md', 'markdown'],
-      ignorePatterns: ['node_modules', '.git'],
+      ...{
+        extensions: ['md', 'markdown'],
+        ignorePatterns: ['node_modules', '.git'],
+      },
       ...config,
     };
 

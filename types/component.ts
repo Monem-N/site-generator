@@ -7,7 +7,12 @@ import { ContentElement } from './cms';
  * Interface for component templates
  */
 export interface ComponentTemplate {
-  generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;
+  name?: string;
+  path?: string;
+  content?: string;
+  type?: string;
+  metadata?: Record<string, any>;
+  generate?(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }
 
 /**

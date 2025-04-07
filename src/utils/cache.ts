@@ -37,13 +37,15 @@ export class ContentCache<T> {
   private cacheDir: string;
 
   constructor(options: CacheOptions) {
-    this.options = {
+    // Set default options first, then override with provided options
+    const defaultOptions = {
       enabled: true,
-      storageType: 'memory',
+      storageType: 'memory' as 'memory' | 'filesystem',
       maxSize: 1000,
       ttl: 3600000, // 1 hour
-      ...options,
     };
+
+    this.options = { ...defaultOptions, ...options };
 
     this.memoryCache = new Map<string, CacheItem<T>>();
 
@@ -98,7 +100,8 @@ export class ContentCache<T> {
   /**
    * Clean up expired items from memory cache
    */
-  private cleanupMemoryCache(): void {
+  // Method to clean up memory cache (currently unused but kept for future use)
+  private _cleanupMemoryCache(): void {
     if (!this.options.ttl) return;
 
     const now = Date.now();

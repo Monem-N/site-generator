@@ -288,11 +288,14 @@ export class DocsifyThemeManager {
 
   public applyThemeToDesignSystem(): void {
     // Update design system with theme configuration
-    this.designSystem.updateTheme({
-      colors: this.config.colors,
-      typography: this.config.typography,
-      spacing: this.config.spacing,
-      breakpoints: this.config.breakpoints,
-    });
+    // Check if updateTheme method exists before calling it
+    if (this.designSystem.updateTheme) {
+      this.designSystem.updateTheme({
+        colors: this.config.colors,
+        typography: this.config.typography,
+        spacing: this.config.spacing,
+        breakpoints: this.config.breakpoints,
+      });
+    }
   }
 }

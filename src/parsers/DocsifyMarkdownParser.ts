@@ -1,25 +1,26 @@
-import { ParsedContent, ContentNode, Asset, Reference } from '../types';
+import { ParsedContent, ContentNode } from '../../types/parser';
+import { Asset, Reference } from '../../types/parser';
 import { marked } from 'marked';
 import frontMatter from 'front-matter';
 
 export class DocsifyMarkdownParser {
-  private options: any;
+  // Options are not currently used but may be needed in the future
   private plugins: any[] = [];
 
-  constructor(options = {}) {
-    this.options = options;
+  constructor(_options = {}) {
+    // Options are stored for future use
 
     // Configure marked with Docsify-like settings
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
-      tables: true,
+      // Enable tables (this is a custom option that may not be in the type definition)
       breaks: false,
       pedantic: false,
       sanitize: false,
       smartLists: true,
       smartypants: false,
-      ...options,
+      ..._options,
     });
   }
 
@@ -76,7 +77,8 @@ export class DocsifyMarkdownParser {
       return result;
     } catch (error) {
       console.error('Error parsing markdown:', error);
-      throw new Error(`Markdown parsing failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Markdown parsing failed: ${errorMessage}`);
     }
   }
 
@@ -135,6 +137,10 @@ export class DocsifyMarkdownParser {
           children: [],
         };
 
+        // Initialize children array if it doesn't exist
+        if (!currentSection.children) {
+          currentSection.children = [];
+        }
         currentSection.children.push(currentSubsection);
       } else if (h3Match && currentSubsection) {
         // Save content to current subsection
@@ -149,6 +155,10 @@ export class DocsifyMarkdownParser {
           children: [],
         };
 
+        // Initialize children array if it doesn't exist
+        if (!currentSubsection.children) {
+          currentSubsection.children = [];
+        }
         currentSubsection.children.push(subSubsection);
         currentSubsection = subSubsection;
       } else {

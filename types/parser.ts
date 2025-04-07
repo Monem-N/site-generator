@@ -19,10 +19,13 @@ export interface ParserConfig {
 export interface ParsedContent {
   title: string;
   description: string;
+  content?: string; // Adding content property
   metadata: Record<string, unknown>;
   sections: ContentNode[];
   assets: Asset[];
   references: Reference[];
+  type?: string; // Adding optional type property to fix the error
+  html?: string; // Adding html property for rendered content
 }
 
 /**
@@ -34,6 +37,7 @@ export interface ContentNode {
   content: string | ContentNode[];
   attributes?: Record<string, unknown>;
   children?: ContentNode[];
+  level?: number; // Adding level property for heading hierarchy
 }
 
 /**

@@ -22,6 +22,10 @@ export class DocsifyTemplateManager {
 }
 
 class MarkdownTemplate implements ComponentTemplate {
+  name = 'markdown-template';
+  path = '';
+  content = '';
+  type = 'markdown';
   private designSystem: DesignSystem;
 
   constructor(designSystem: DesignSystem) {
@@ -31,7 +35,7 @@ class MarkdownTemplate implements ComponentTemplate {
   async generate(content: { title?: string; body: string }): Promise<string> {
     const { title, body } = content;
     return `
-      <div class="markdown-section ${this.designSystem.classNames.markdownContainer}">
+      <div class="markdown-section ${this.designSystem.classNames?.markdownContainer || ''}">
         ${title ? `<h1>${title}</h1>` : ''}
         <div class="markdown-body">
           ${this.processMarkdownContent(body)}
@@ -44,22 +48,31 @@ class MarkdownTemplate implements ComponentTemplate {
     // Apply design system styles to markdown elements
     return content.replace(
       /<h([1-6])>/g,
-      (_, level) => `<h${level} class="${this.designSystem.classNames[`heading${level}`]}">`
+      (_, level) => `<h${level} class="${this.designSystem.classNames?.[`heading${level}`] || ''}">`
     );
   }
 }
 
 class APITemplate implements ComponentTemplate {
+  name = 'api-template';
+  path = '';
+  content = '';
+  type = 'api';
   private designSystem: DesignSystem;
 
   constructor(designSystem: DesignSystem) {
     this.designSystem = designSystem;
   }
 
-  async generate(content: { method: string; endpoint: string; parameters?: Array<{ name: string; type: string; description: string }>; responses?: Record<string, { description: string; example?: unknown }> }): Promise<string> {
+  async generate(content: {
+    method: string;
+    endpoint: string;
+    parameters?: Array<{ name: string; type: string; description: string }>;
+    responses?: Record<string, { description: string; example?: unknown }>;
+  }): Promise<string> {
     const { method, endpoint, parameters, responses } = content;
     return `
-      <div class="api-section ${this.designSystem.classNames.apiContainer}">
+      <div class="api-section ${this.designSystem.classNames?.apiContainer || ''}">
         <div class="api-method ${method.toLowerCase()}">
           <span class="method">${method}</span>
           <span class="endpoint">${endpoint}</span>
@@ -70,12 +83,14 @@ class APITemplate implements ComponentTemplate {
     `;
   }
 
-  private generateParameters(parameters?: Array<{ name: string; type: string; description: string }>): string {
+  private generateParameters(
+    parameters?: Array<{ name: string; type: string; description: string }>
+  ): string {
     if (!parameters?.length) return '';
     return `
       <div class="parameters">
         <h3>Parameters</h3>
-        <table class="${this.designSystem.classNames.table}">
+        <table class="${this.designSystem.classNames?.table || ''}">
           <thead>
             <tr>
               <th>Name</th>
@@ -101,7 +116,9 @@ class APITemplate implements ComponentTemplate {
     `;
   }
 
-  private generateResponses(responses?: Record<string, { description: string; example?: unknown }>): string {
+  private generateResponses(
+    responses?: Record<string, { description: string; example?: unknown }>
+  ): string {
     if (!responses) return '';
     return `
       <div class="responses">
@@ -131,6 +148,10 @@ class APITemplate implements ComponentTemplate {
 }
 
 class CodeTemplate implements ComponentTemplate {
+  name = 'code-template';
+  path = '';
+  content = '';
+  type = 'code';
   private designSystem: DesignSystem;
 
   constructor(designSystem: DesignSystem) {
@@ -140,7 +161,7 @@ class CodeTemplate implements ComponentTemplate {
   async generate(content: { language: string; code: string; filename?: string }): Promise<string> {
     const { language, code, filename } = content;
     return `
-      <div class="code-section ${this.designSystem.classNames.codeContainer}">
+      <div class="code-section ${this.designSystem.classNames?.codeContainer || ''}">
         ${filename ? `<div class="filename">${filename}</div>` : ''}
         <pre><code class="language-${language}">
           ${this.escapeHtml(code)}

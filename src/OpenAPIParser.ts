@@ -4,7 +4,24 @@ import SwaggerParser from 'swagger-parser';
 export class OpenAPIParser {
   async parse(content: string): Promise<ParsedContent> {
     try {
-      const api = await SwaggerParser.parse(content);
+      // Use any to bypass the type checking for SwaggerParser
+      const SwaggerParserAny = SwaggerParser as any;
+      const api = (await SwaggerParserAny.parse(content)) as {
+        openapi: string;
+        info: {
+          title: string;
+          description?: string;
+        };
+        paths: {
+          [path: string]: {
+            [method: string]: {
+              summary?: string;
+              description?: string;
+              parameters?: unknown[];
+            };
+          };
+        };
+      };
 
       // Extract relevant information from OpenAPI object
       const title = api.info.title;
@@ -39,13 +56,24 @@ export class OpenAPIParser {
     }
   }
 
-  private generateEndpointsContent(paths: any): string {
+  private generateEndpointsContent(
+    paths: Record<
+      string,
+      {
+        [method: string]: {
+          summary?: string;
+          description?: string;
+          parameters?: unknown[];
+        };
+      }
+    >
+  ): string {
     let endpointsContent = '';
-    for (const path in paths) {
-      if (paths.hasOwnProperty(path)) {
+    for (const path in paths as Record<string, unknown>) {
+      if (Object.prototype.hasOwnProperty.call(paths, path)) {
         const pathItem = paths[path];
         for (const method in pathItem) {
-          if (pathItem.hasOwnProperty(method)) {
+          if (Object.prototype.hasOwnProperty.call(pathItem, method)) {
             const operation = pathItem[method];
             endpointsContent += `### ${method.toUpperCase()} ${path}\n`;
             endpointsContent += `${operation.summary || 'No summary available.'}\n\n`;

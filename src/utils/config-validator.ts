@@ -60,8 +60,11 @@ export function validateConfig(config: WebsiteGeneratorConfig): void {
       if (typeof config.parser.customFormats !== 'object') {
         errors.push('parser.customFormats must be an object');
       } else {
-        for (const [format, config] of Object.entries(config.parser.customFormats)) {
-          if (!config.parser) {
+        for (const [format, formatConfig] of Object.entries(config.parser.customFormats) as [
+          string,
+          any
+        ][]) {
+          if (!formatConfig.parser) {
             errors.push(`Missing parser for custom format: ${format}`);
           }
         }

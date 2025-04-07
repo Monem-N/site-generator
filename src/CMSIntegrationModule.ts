@@ -1,8 +1,8 @@
 import { createClient, ContentfulClientApi } from 'contentful';
-import { ParsedContent } from '../types';
+import { ParsedContent } from '../types/parser';
 
 export class CMSIntegrationModule {
-  private client: ContentfulClientApi;
+  private client: ContentfulClientApi<any>;
 
   constructor(spaceId: string, accessToken: string) {
     this.client = createClient({
@@ -11,14 +11,26 @@ export class CMSIntegrationModule {
     });
   }
 
+  // Implement the Parser interface's parse method
+  async parse(source: string, _options?: Record<string, unknown>): Promise<ParsedContent> {
+    try {
+      // Assuming source is an entry ID
+      return await this.getEntry(source);
+    } catch (error) {
+      console.error('Error parsing Contentful entry:', error);
+      throw error;
+    }
+  }
+
   async getEntry(entryId: string): Promise<ParsedContent> {
     try {
       const entry = await this.client.getEntry(entryId);
 
       // Extract relevant information from Contentful entry
-      const title = entry.fields.title;
-      const description = entry.fields.description;
-      const content = entry.fields.content;
+      // Add type assertions for entry fields
+      const title = String(entry.fields.title || '');
+      const description = String(entry.fields.description || '');
+      const content = String(entry.fields.content || '');
 
       // Structure the extracted information into ParsedContent format
       const parsedContent: ParsedContent = {

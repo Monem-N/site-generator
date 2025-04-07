@@ -68,18 +68,7 @@ export interface TestConfig {
   };
 }
 
-// Plugin system types
-export interface Plugin {
-  name: string;
-  version: string;
-  hooks?: {
-    beforeParse?: (content: string) => Promise<string>;
-    afterParse?: (content: ParsedContent) => Promise<ParsedContent>;
-    beforeGenerate?: (components: ComponentTemplate[]) => Promise<ComponentTemplate[]>;
-    afterGenerate?: (output: string) => Promise<string>;
-  };
-  options?: Record<string, any>;
-}
+// Plugin system types are imported from './plugin'
 
 // Build and deployment types
 export interface BuildConfig {

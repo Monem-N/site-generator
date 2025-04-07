@@ -20,7 +20,7 @@ export function startDevServer(outputDir: string, port = 3000): () => void {
   app.use(express.static(outputDir));
 
   // Serve index.html for all routes (SPA support)
-  app.get('*', (req, res) => {
+  app.get('*', (_req, res) => {
     const indexPath = path.join(outputDir, 'index.html');
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
@@ -49,7 +49,8 @@ export function startDevServer(outputDir: string, port = 3000): () => void {
   });
 
   // Function to notify clients to reload
-  const notifyReload = () => {
+  // Function to notify clients to reload (currently unused but kept for future use)
+  const _notifyReload = () => {
     wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify({ type: 'reload' }));

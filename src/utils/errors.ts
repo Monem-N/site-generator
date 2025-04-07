@@ -121,7 +121,7 @@ export function setupGlobalErrorHandler(verbose = false): void {
     process.exit(1);
   });
 
-  process.on('unhandledRejection', (reason, promise) => {
+  process.on('unhandledRejection', (reason, _promise) => {
     console.error('\n🔥 Unhandled Promise Rejection:');
 
     if (reason instanceof SiteGeneratorError) {

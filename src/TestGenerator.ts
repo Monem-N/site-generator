@@ -1,17 +1,15 @@
-import { TestConfig, ComponentTemplate } from '../types';
+import type { WebsiteGeneratorConfig } from '../config/generator.config';
+import { ComponentConfig } from '../types/component';
 import path from 'path';
 import fs from 'fs/promises';
 
 export class TestGenerator {
-  private config: TestConfig;
-
-  constructor(config: TestConfig) {
-    this.config = config;
-  }
-
-  public async generateTests(components: ComponentTemplate[]): Promise<void> {
+  constructor(private config: WebsiteGeneratorConfig['testing']) {}
+  public async generateTests(components: ComponentConfig[]): Promise<void> {
     if (this.config.coverage?.enabled) {
-      console.log(`Generating tests with ${this.config.coverage.threshold}% coverage threshold`);
+      // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
+      console.log(`Generating tests with ${this.config.coverage?.threshold}% coverage threshold`);
     }
 
     await Promise.all([
@@ -20,7 +18,7 @@ export class TestGenerator {
     ]);
   }
 
-  private async generateUnitTests(components: ComponentTemplate[]): Promise<void> {
+  private async generateUnitTests(components: ComponentConfig[]): Promise<void> {
     if (!this.config.components.unit) return;
 
     for (const component of components) {
@@ -30,7 +28,7 @@ export class TestGenerator {
     }
   }
 
-  private async generateIntegrationTests(components: ComponentTemplate[]): Promise<void> {
+  private async generateIntegrationTests(components: ComponentConfig[]): Promise<void> {
     if (!this.config.components.integration) return;
 
     for (const component of components) {
@@ -40,7 +38,7 @@ export class TestGenerator {
     }
   }
 
-  private generateUnitTestContent(component: ComponentTemplate): string {
+  private generateUnitTestContent(component: ComponentConfig): string {
     const { name } = component;
     const importPath = this.getRelativeImportPath(component.path);
 
@@ -65,7 +63,7 @@ describe('${name}', () => {
 `;
   }
 
-  private generateIntegrationTestContent(component: ComponentTemplate): string {
+  private generateIntegrationTestContent(component: ComponentConfig): string {
     const { name } = component;
     const importPath = this.getRelativeImportPath(component.path);
 
@@ -90,7 +88,7 @@ describe('${name} Integration', () => {
 `;
   }
 
-  private generateInteractionTests(component: ComponentTemplate): string {
+  private generateInteractionTests(component: ComponentConfig): string {
     // Generate tests based on component type and props
     const tests: string[] = [];
 
@@ -119,7 +117,7 @@ describe('${name} Integration', () => {
     return tests.join('\n');
   }
 
-  private generateIntegrationScenarios(component: ComponentTemplate): string {
+  private generateIntegrationScenarios(component: ComponentConfig): string {
     // Generate integration scenarios based on component relationships
     const scenarios: string[] = [];
 
@@ -145,9 +143,16 @@ describe('${name} Integration', () => {
   }
 
   private getRelativeImportPath(componentPath: string): string {
+    // Check if componentPath is defined
+    if (!componentPath) {
+      return '';
+    }
+
     const testDir = path.dirname(componentPath);
-    const componentDir = path.dirname(componentPath);
-    return path.relative(testDir, componentPath).replace(/\.[jt]sx?$/, '');
+    const relativePath = path.relative(testDir, componentPath);
+
+    // Check if relativePath is defined before calling replace
+    return relativePath ? relativePath.replace(/\.[jt]sx?$/, '') : '';
   }
 
   private async writeTestFile(testPath: string, content: string): Promise<void> {

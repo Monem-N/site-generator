@@ -31,11 +31,12 @@ export interface PerformanceConfig {
 
 export class PerformanceOptimizer {
   private config: PerformanceConfig;
-  private buildConfig: BuildConfig;
+  // Build configuration (currently unused but kept for future use)
+  private _buildConfig: BuildConfig;
 
   constructor(config: Partial<PerformanceConfig>, buildConfig: BuildConfig) {
     this.config = this.mergeWithDefaultConfig(config);
-    this.buildConfig = buildConfig;
+    this._buildConfig = buildConfig;
   }
 
   private mergeWithDefaultConfig(config: Partial<PerformanceConfig>): PerformanceConfig {
@@ -182,7 +183,7 @@ export default function LazyComponent(props) {
   }
 
   public generatePreloadDirectives(): string[] {
-    const directives = [];
+    const directives: string[] = [];
 
     if (this.config.assets.fontOptimization.preload) {
       this.config.assets.fontOptimization.formats.forEach(format => {
@@ -198,13 +199,15 @@ export default function LazyComponent(props) {
   public async optimizeImages(imagePath: string): Promise<void> {
     if (!this.config.assets.imageOptimization.enabled) return;
 
-    const sharp = await import('sharp');
+    // Import sharp dynamically to avoid requiring it as a dependency
+    const sharpModule = await import('sharp');
+    const sharp = sharpModule.default;
     const formats = this.config.assets.imageOptimization.formats;
     const quality = this.config.assets.imageOptimization.quality;
 
     for (const format of formats) {
       await sharp(imagePath)
-        .toFormat(format as keyof sharp.FormatEnum, { quality })
+        .toFormat(format as any, { quality })
         .toFile(`${imagePath}.${format}`);
     }
   }

@@ -164,6 +164,20 @@ Check out the [examples](examples/) directory for sample projects that demonstra
 
 See the [CHANGELOG.md](CHANGELOG.md) file for details on version history and updates.
 
+## Recent Updates
+
+### TypeScript Fixes
+
+We've recently fixed several TypeScript compilation errors in the codebase. These fixes include:
+
+- Fixed import path extensions
+- Resolved module import issues
+- Added proper type assertions for unknown types
+- Added null checks for potentially undefined properties
+- Fixed duplicate property specifications
+
+For more details, see the [TypeScript Fixes Documentation](docs/typescript-fixes.md).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

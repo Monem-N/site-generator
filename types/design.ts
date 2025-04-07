@@ -10,6 +10,11 @@ export interface DesignSystem {
   type: 'material-ui' | 'chakra-ui' | 'custom';
 
   /**
+   * Name of the design system
+   */
+  name?: string;
+
+  /**
    * Path to import design system components from
    */
   importPath: string;
@@ -17,20 +22,40 @@ export interface DesignSystem {
   /**
    * CSS class names for different elements
    */
-  classNames: Record<string, string>;
+  classNames?: Record<string, string>;
 
   /**
    * Components to be used in page templates
    */
-  pageComponents: string[];
+  pageComponents?: string[];
+
+  /**
+   * Theme configuration
+   */
+  theme?: Record<string, any>;
+
+  /**
+   * Component configurations
+   */
+  components?: Record<string, { import: string; props?: Record<string, any> }>;
+
+  /**
+   * Style configurations
+   */
+  styles?: { global?: string; components?: Record<string, string> };
 
   /**
    * Get configuration for a specific component type
    */
-  getConfigForType(elementType: string): {
+  getConfigForType?(elementType: string): {
     classMapping: Record<string, string>;
     components: string[];
   };
+
+  /**
+   * Update theme configuration
+   */
+  updateTheme?(theme: Record<string, any>): void;
 }
 
 /**
