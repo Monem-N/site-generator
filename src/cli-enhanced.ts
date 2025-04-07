@@ -122,7 +122,7 @@ ${chalk.bold('Options:')}
   --serve          Start a development server
   --port           Port for development server (default: 3000)
   --help, -h       Show this help message
-  
+
 ${chalk.bold('Themes:')}
   vue              Vue theme (default)
   dark             Dark theme
@@ -190,7 +190,7 @@ if (config.parser) {
 
 // Add plugins
 if (options.plugins.length > 0) {
-  config.plugins = [...(config.plugins || []), ...options.plugins.map(name => ({ name }))];
+  config.plugins = [...(config.plugins || []), ...options.plugins.map((name: string) => ({ name }))];
 }
 
 // Check if source directory exists

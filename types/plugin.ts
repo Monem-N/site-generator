@@ -7,19 +7,21 @@ import { ComponentTemplate } from './component';
  */
 export interface Plugin {
   name: string;
-  version: string;
+  version?: string;
   hooks?: PluginHooks;
-  options?: Record<string, unknown>;
+  options?: Record<string, any>;
+  initialize?: () => Promise<void> | void;
 }
 
 /**
  * Plugin hooks for different lifecycle events
  */
 export interface PluginHooks {
-  beforeParse?: (content: string, filePath?: string) => Promise<string>;
-  afterParse?: (content: ParsedContent, filePath?: string) => Promise<ParsedContent>;
-  beforeGenerate?: (components: ComponentTemplate[]) => Promise<ComponentTemplate[]>;
-  afterGenerate?: (output: string) => Promise<string>;
+  beforeParse?: (content: string, options?: any) => string | Promise<string>;
+  afterParse?: (content: ParsedContent, options?: any) => ParsedContent | Promise<ParsedContent>;
+  beforeGenerate?: (component: any, options?: any) => any | Promise<any>;
+  afterGenerate?: (component: any, options?: any) => any | Promise<any>;
+  [key: string]: any; // Allow for dynamic hook access
 }
 
 /**

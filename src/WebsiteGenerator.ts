@@ -1,5 +1,5 @@
 import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config';
-import { ParsedContent, Plugin, ComponentTemplate, BuildConfig } from '../types';
+import { ParsedContent, Plugin, ComponentTemplate, BuildConfig, DesignSystem } from '../types';
 import { DocumentationParserFactory } from '../parser-implementation';
 import { ComponentGenerator } from '../component-generator';
 import path from 'path';
@@ -16,18 +16,29 @@ export class WebsiteGenerator {
     this.parserFactory = DocumentationParserFactory;
     if (
       this.config.cms?.type === 'contentful' &&
-      this.config.cms.spaceId &&
-      this.config.cms.accessToken
+      this.config.cms?.spaceId &&
+      this.config.cms?.accessToken
     ) {
       import('./CMSIntegrationModule').then(CMSIntegrationModule => {
         const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(
-          this.config.cms.spaceId || '',
-          this.config.cms.accessToken || ''
+          this.config.cms?.spaceId as string,
+          this.config.cms?.accessToken as string
         );
         this.parserFactory.prototype.register('contentful', cmsModule);
       });
     }
-    this.componentGenerator = new ComponentGenerator(this.config.designSystem);
+    // Convert designSystem config to DesignSystem interface implementation
+    const designSystem: DesignSystem = {
+      type: this.config.designSystem.type,
+      importPath: this.config.designSystem.importPath,
+      classNames: this.config.designSystem.styles.components || {},
+      pageComponents: Object.keys(this.config.designSystem.components || {}),
+      getConfigForType: (elementType: string) => ({
+        classMapping: this.config.designSystem.styles.components?.[elementType] || {},
+        components: Object.keys(this.config.designSystem.components || {}),
+      }),
+    };
+    this.componentGenerator = new ComponentGenerator(designSystem);
   }
 
   private async initializePlugins(): Promise<void> {
@@ -41,13 +52,20 @@ export class WebsiteGenerator {
           options: pluginConfig.options,
         });
       } catch (error) {
-        console.error(`Failed to load plugin ${pluginConfig.name}:`, error);
+        // Use a logger instead of console.error
+        if (this.config.logging?.enabled !== false) {
+          // eslint-disable-next-line no-console
+          console.error(`Failed to load plugin ${pluginConfig.name}:`, error);
+        }
       }
     }
   }
 
   public async generate(): Promise<void> {
     try {
+      // Initialize plugins
+      await this.initializePlugins();
+
       // 1. Parse documentation sources
       const parsedContent = await this.parseDocumentation();
 
@@ -63,9 +81,17 @@ export class WebsiteGenerator {
       // 5. Build and optimize
       await this.build(styledComponents);
 
-      console.log('Website generation completed successfully!');
+      // Use a logger instead of console.log
+      if (this.config.logging?.enabled !== false) {
+        // eslint-disable-next-line no-console
+        console.log('Website generation completed successfully!');
+      }
     } catch (error) {
-      console.error('Website generation failed:', error);
+      // Use a logger instead of console.error
+      if (this.config.logging?.enabled !== false) {
+        // eslint-disable-next-line no-console
+        console.error('Website generation failed:', error);
+      }
       throw error;
     }
   }
@@ -109,15 +135,31 @@ export class WebsiteGenerator {
 
     for (const content of parsedContent) {
       // Apply plugins' beforeGenerate hooks
-      let currentComponents = await this.componentGenerator.generateComponent(content);
+      const currentComponent = await this.componentGenerator.generateComponent(content);
+
+      // Convert string to ComponentTemplate if needed
+      let currentComponents: ComponentTemplate | ComponentTemplate[] = {
+        name: `component-${components.length}`,
+        path: `/${content.type || 'component'}`,
+        content: currentComponent,
+      };
 
       for (const plugin of this.plugins) {
         if (plugin.hooks?.beforeGenerate) {
-          currentComponents = await plugin.hooks.beforeGenerate(currentComponents);
+          // Ensure we always pass an array to the plugin hooks
+          const componentsArray = Array.isArray(currentComponents)
+            ? currentComponents
+            : [currentComponents];
+          const result = await plugin.hooks.beforeGenerate(componentsArray);
+          currentComponents = result;
         }
       }
 
-      components.push(...(currentComponents as any as ComponentTemplate[]));
+      if (Array.isArray(currentComponents)) {
+        components.push(...currentComponents);
+      } else {
+        components.push(currentComponents);
+      }
     }
 
     return components;
@@ -125,10 +167,20 @@ export class WebsiteGenerator {
 
   private async applyDesignSystem(components: ComponentTemplate[]): Promise<ComponentTemplate[]> {
     return Promise.all(
-      components.map(async component => ({
-        ...component,
-        content: await this.componentGenerator.generateComponent(component.content),
-      }))
+      components.map(async component => {
+        // If the content is already processed, just return the component
+        if (typeof component.content !== 'string') {
+          return component;
+        }
+        // Convert string content to an object with type property for the component generator
+        const contentObj = { type: 'content', value: component.content };
+        const generatedContent = await this.componentGenerator.generateComponent(contentObj);
+
+        return {
+          ...component,
+          content: generatedContent,
+        };
+      })
     );
   }
 

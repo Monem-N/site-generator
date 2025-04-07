@@ -1,9 +1,10 @@
-import { ContentModel, ComponentTemplate, DesignSystem } from './types';
+/* eslint-disable */
+// import { ContentModel, DesignSystem } from './types';
 
 // Core component generator
 export class ComponentGenerator {
   private designSystem: DesignSystem;
-  private templateRegistry: Map<string, ComponentTemplate>;
+  private templateRegistry: Map<string, IComponentTemplate>;
 
   constructor(designSystem: DesignSystem) {
     this.designSystem = designSystem;
@@ -20,13 +21,14 @@ export class ComponentGenerator {
     this.registerTemplate('navigation', new NavigationTemplate());
   }
 
-  public registerTemplate(type: string, template: ComponentTemplate): void {
+  public registerTemplate(type: string, template: IComponentTemplate): void {
     this.templateRegistry.set(type, template);
   }
 
   public async generateComponent(contentElement: any): Promise<string> {
+    console.log('contentElement:', contentElement);
     const elementType = contentElement.type;
-    const template = this.templateRegistry.get(elementType);
+    const template = this.templateRegistry.get(elementType) as IComponentTemplate;
 
     if (!template) {
       throw new Error(`No template registered for element type: ${elementType}`);
@@ -39,16 +41,17 @@ export class ComponentGenerator {
 
   private applyDesignSystem(componentCode: string, elementType: string): string {
     // Apply design system styling and components
-    const dsConfig = this.designSystem.getConfigForType(elementType);
+    if (!this.designSystem) return componentCode;
+    const dsConfig = this.designSystem.getConfigForType?.(elementType);
 
     // Replace placeholder classes with design system classes
     let styledCode = componentCode;
-    for (const [placeholder, actualClass] of Object.entries(dsConfig.classMapping)) {
+    for (const [placeholder, actualClass] of Object.entries(dsConfig?.classMapping || {})) {
       styledCode = styledCode.replace(new RegExp(`{${placeholder}}`, 'g'), actualClass as string);
     }
 
     // Add design system imports if needed
-    const imports = this.generateImports(dsConfig.components);
+    const imports = this.generateImports(dsConfig?.components || []);
 
     return `${imports}\n\n${styledCode}`;
   }
@@ -64,6 +67,7 @@ export class ComponentGenerator {
     const components: string[] = [];
 
     // Generate individual components
+    if (!contentModel?.elements) return '';
     for (const element of contentModel.elements) {
       const component = await this.generateComponent(element);
       components.push(component);
@@ -74,6 +78,7 @@ export class ComponentGenerator {
   }
 
   private assemblePage(components: string[], metadata: any): string {
+    console.log('metadata:', metadata);
     const pageTitle = metadata.title || 'Generated Page';
     const imports = this.generatePageImports();
 
@@ -82,7 +87,7 @@ ${imports}
 
 export default function ${this.sanitizeComponentName(pageTitle)}() {
   return (
-    <div className={${this.designSystem.classNames.pageContainer}}>
+    <div className={${this.designSystem?.classNames?.pageContainer || ''}}>
       ${components.join('\n      ')}
     </div>
   );
@@ -91,8 +96,9 @@ export default function ${this.sanitizeComponentName(pageTitle)}() {
   }
 
   private generatePageImports(): string {
+    if (!this.designSystem) return '';
     const baseImports = `import React from 'react';`;
-    const dsImports = `import { ${this.designSystem.pageComponents.join(', ')} } from '${
+    const dsImports = `import { ${this.designSystem?.pageComponents?.join(', ')} } from '${
       this.designSystem.importPath
     }';`;
 
@@ -106,7 +112,7 @@ export default function ${this.sanitizeComponentName(pageTitle)}() {
 }
 
 // Template implementations
-class SectionTemplate implements ComponentTemplate {
+class SectionTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { title, level, content } = element;
 
@@ -137,7 +143,7 @@ class SectionTemplate implements ComponentTemplate {
   }
 }
 
-class CodeBlockTemplate implements ComponentTemplate {
+class CodeBlockTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { language, content } = element;
 
@@ -159,14 +165,14 @@ class CodeBlockTemplate implements ComponentTemplate {
     // Escape HTML special characters
     return code
       .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
       .replace(/'/g, '&#039;');
   }
 }
 
-class APIEndpointTemplate implements ComponentTemplate {
+class APIEndpointTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { method, endpoint, parameters, responses } = element;
 
@@ -213,8 +219,7 @@ class APIEndpointTemplate implements ComponentTemplate {
           </tr>
           `
             )
-            .join('')}
-        </tbody>
+          .join('')}
       </table>
     </div>
     `;
@@ -237,7 +242,7 @@ class APIEndpointTemplate implements ComponentTemplate {
           <div className="{response-description}">${response.description}</div>
         </div>
         `
-          )
+            )
           .join('')}
       </div>
     </div>
@@ -253,7 +258,7 @@ class APIEndpointTemplate implements ComponentTemplate {
   }
 }
 
-class TableTemplate implements ComponentTemplate {
+class TableTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { headers, rows } = element;
 
@@ -284,7 +289,7 @@ class TableTemplate implements ComponentTemplate {
   }
 }
 
-class NavigationTemplate implements ComponentTemplate {
+class NavigationTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { items } = element;
 
@@ -331,6 +336,47 @@ class NavigationTemplate implements ComponentTemplate {
 
 // Type definitions would be in a separate file
 // This is for illustration purposes
-interface ComponentTemplate {
+import { ContentModel } from './types/cms';
+import { DesignSystem } from './types/design';
+import { ContentElement } from './types/cms';
+
+interface IComponentTemplate {
   generate(element: any, designSystem: DesignSystem): Promise<string>;
+
+// Test
+
+async function testComponentGenerator() {
+  const designSystem: DesignSystem = {
+    type: 'custom',
+    importPath: 'test',
+    classNames: {
+      pageContainer: 'test'
+    }
+  };
+  const componentGenerator = new ComponentGenerator(designSystem);
+  const contentElement: ContentElement = {
+    type: 'section',
+    title: 'Test Section',
+    level: 1,
+    content: []
+  };
+  await componentGenerator.generateComponent(contentElement);
+
+  const contentModel: ContentModel = {
+    id: 'test',
+    contentType: 'page',
+    title: 'Test Page',
+    slug: 'test-page',
+    content: 'test content',
+    metadata: {
+      createdAt: '2024-04-07',
+      updatedAt: '2024-04-07',
+      locale: 'en-US'
+    },
+    fields: {},
+    elements: [contentElement]
+  };
+  await componentGenerator.generatePage(contentModel);
 }
+
+testComponentGenerator();

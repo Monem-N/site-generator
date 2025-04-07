@@ -110,8 +110,9 @@ export class NavigationGenerator {
 
         if (dirReadme) {
           title =
-            (await this.extractTitle(path.join(this.sourceDir, dir.path, dirReadme.name))) || title;
-          path = path.join(dir.path, dirReadme.name);
+            (await this.extractTitle(require('path').join(this.sourceDir, dir.path, dirReadme.name))) || title;
+          const pathModule = require('path');
+          path = pathModule.join(dir.path, dirReadme.name);
         }
 
         navigation.push({

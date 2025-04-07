@@ -23,7 +23,8 @@ export class ParserFactory {
     try {
       this.register('contentful', new CMSIntegrationModule('', ''));
     } catch (error) {
-      console.warn('Contentful integration not available:', error.message);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn('Contentful integration not available:', errorMessage);
     }
   }
 

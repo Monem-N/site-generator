@@ -1,47 +1,122 @@
-import { ParsedContent } from '../types';
-
-export interface Plugin {
-  name: string;
-  beforeParse?: (content: string, filePath?: string) => Promise<string> | string;
-  afterParse?: (
-    parsedContent: ParsedContent,
-    filePath?: string
-  ) => Promise<ParsedContent> | ParsedContent;
-}
+import { Plugin } from '../../types/plugin';
+import { ParsedContent } from '../../types/parser';
 
 export class PluginManager {
-  private plugins: Map<string, Plugin> = new Map();
+  private plugins: Plugin[] = [];
+  // Flag to track if the plugin list has been modified
+  private _dirty: boolean = false;
 
-  register(plugin: Plugin): void {
-    this.plugins.set(plugin.name, plugin);
-    console.log(`Plugin registered: ${plugin.name}`);
+  constructor(plugins: Plugin[] = []) {
+    this.plugins = [...plugins];
+  }
+
+  /**
+   * Get all registered plugins
+   */
+  getPlugins(): Plugin[] {
+    return this.plugins;
+  }
+
+  /**
+   * Register a new plugin
+   */
+  registerPlugin(plugin: Plugin): void {
+    this.plugins.push(plugin);
+    this._dirty = true;
+  }
+
+  /**
+   * Initialize all plugins that have an initialize method
+   */
+  async initializePlugins(): Promise<void> {
+    for (const plugin of this.plugins) {
+      if (plugin.initialize) {
+        await plugin.initialize();
+      }
+    }
+  }
+
+  /**
+   * Execute a specific hook for all plugins
+   */
+  executeHook<T>(hookName: string, data: T, continueOnError: boolean = false): T {
+    let result = data;
+
+    for (const plugin of this.plugins) {
+      if (plugin.hooks && plugin.hooks[hookName]) {
+        try {
+          // @ts-ignore - Dynamic hook access
+          result = plugin.hooks[hookName](result, plugin.options);
+        } catch (error) {
+          if (!continueOnError) {
+            throw error;
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Execute a specific hook for a specific plugin
+   */
+  executeHookForPlugin<T>(hookName: string, pluginName: string, data: T): T {
+    const plugin = this.getPluginByName(pluginName);
+
+    if (!plugin || !plugin.hooks || !plugin.hooks[hookName]) {
+      return data;
+    }
+
+    try {
+      // @ts-ignore - Dynamic hook access
+      return plugin.hooks[hookName](data, plugin.options);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Get a plugin by name
+   */
+  getPluginByName(name: string): Plugin | undefined {
+    return this.plugins.find(plugin => plugin.name === name);
+  }
+
+  /**
+   * Check if a plugin exists
+   */
+  hasPlugin(name: string): boolean {
+    return this.plugins.some(plugin => plugin.name === name);
+  }
+
+  /**
+   * Remove a plugin by name
+   */
+  removePlugin(name: string): void {
+    const index = this.plugins.findIndex(plugin => plugin.name === name);
+    if (index !== -1) {
+      this.plugins.splice(index, 1);
+      this._dirty = true;
+    }
+  }
+
+  /**
+   * Legacy methods for backward compatibility
+   */
+  async applyBeforeParse(content: string, _filePath?: string): Promise<string> {
+    return this.executeHook('beforeParse', content);
+  }
+
+  async applyAfterParse(parsedContent: ParsedContent, _filePath?: string): Promise<ParsedContent> {
+    return this.executeHook('afterParse', parsedContent);
   }
 
   getPlugin(name: string): Plugin | undefined {
-    return this.plugins.get(name);
+    return this.getPluginByName(name);
   }
 
-  async applyBeforeParse(content: string, filePath?: string): Promise<string> {
-    let result = content;
-
-    for (const [_, plugin] of this.plugins.entries()) {
-      if (plugin.beforeParse) {
-        result = await plugin.beforeParse(result, filePath);
-      }
-    }
-
-    return result;
-  }
-
-  async applyAfterParse(parsedContent: ParsedContent, filePath?: string): Promise<ParsedContent> {
-    let result = parsedContent;
-
-    for (const [_, plugin] of this.plugins.entries()) {
-      if (plugin.afterParse) {
-        result = await plugin.afterParse(result, filePath);
-      }
-    }
-
-    return result;
+  register(plugin: Plugin): void {
+    this.registerPlugin(plugin);
   }
 }

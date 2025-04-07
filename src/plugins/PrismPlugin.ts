@@ -1,8 +1,17 @@
-import { Plugin } from './PluginManager';
-import { ParsedContent } from '../types';
+import { Plugin } from '../../types/plugin';
+import { ParsedContent } from '../../types/parser';
 
 export class PrismPlugin implements Plugin {
   name = 'prism';
+  version = '1.0.0';
+  hooks = {
+    beforeParse: this.beforeParse.bind(this),
+    afterParse: this.afterParse.bind(this)
+  };
+  options = {
+    theme: 'default',
+    languages: ['javascript', 'typescript', 'html', 'css', 'json', 'markdown']
+  };
 
   async beforeParse(content: string): Promise<string> {
     // No pre-processing needed for Prism
@@ -18,13 +27,26 @@ export class PrismPlugin implements Plugin {
       parsedContent.metadata = parsedContent.metadata || {};
       parsedContent.metadata.dependencies = parsedContent.metadata.dependencies || [];
 
-      if (!parsedContent.metadata.dependencies.includes('prism')) {
-        parsedContent.metadata.dependencies.push('prism');
+      // Initialize dependencies array if it doesn't exist
+      if (!parsedContent.metadata.dependencies) {
+        parsedContent.metadata.dependencies = [];
+      }
+
+      // Add prism dependency if not already included
+      if (!Array.isArray(parsedContent.metadata.dependencies) ||
+          !parsedContent.metadata.dependencies.includes('prism')) {
+        (parsedContent.metadata.dependencies as string[]).push('prism');
       }
 
       // Add initialization script for Prism
       parsedContent.metadata.scripts = parsedContent.metadata.scripts || [];
-      parsedContent.metadata.scripts.push({
+      // Initialize scripts array if it doesn't exist
+      if (!parsedContent.metadata.scripts) {
+        parsedContent.metadata.scripts = [];
+      }
+
+      // Add Prism script
+      (parsedContent.metadata.scripts as any[]).push({
         type: 'text/javascript',
         content: `
           document.addEventListener('DOMContentLoaded', () => {
@@ -37,7 +59,13 @@ export class PrismPlugin implements Plugin {
 
       // Add CSS for Prism
       parsedContent.metadata.styles = parsedContent.metadata.styles || [];
-      parsedContent.metadata.styles.push({
+      // Initialize styles array if it doesn't exist
+      if (!parsedContent.metadata.styles) {
+        parsedContent.metadata.styles = [];
+      }
+
+      // Add Prism styles
+      (parsedContent.metadata.styles as any[]).push({
         type: 'text/css',
         href: 'https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css',
       });

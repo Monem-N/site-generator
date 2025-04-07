@@ -1,4 +1,5 @@
-import { BuildConfig, ComponentTemplate } from '../types';
+import { BuildConfig, ComponentTemplate } from '../types/index';
+import type { InputOptions, OutputOptions, RollupBuild, ManualChunksOption } from 'rollup';
 import path from 'path';
 import fs from 'fs/promises';
 import { rollup } from 'rollup';
@@ -10,6 +11,7 @@ import image from '@rollup/plugin-image';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
+import { logger } from './utils/logger';
 
 export class Builder {
   private config: BuildConfig;
@@ -40,9 +42,9 @@ export class Builder {
         await this.generateServiceWorker();
       }
 
-      console.log('Build completed successfully!');
+      logger.info('Build completed successfully!');
     } catch (error) {
-      console.error('Build failed:', error);
+      logger.error('Build failed:', { error });
       throw error;
     }
   }
@@ -74,7 +76,7 @@ export class Builder {
     return entryPoints;
   }
 
-  private generateMainEntry(components: ComponentTemplate[]): string {
+  private generateMainEntry(_components: ComponentTemplate[]): string {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -87,7 +89,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 `;
   }
 
-  private createBuildConfig(entryPoints: Map<string, string>): any {
+  private createBuildConfig(entryPoints: Map<string, string>): InputOptions {
     const plugins = [
       nodeResolve({
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -99,6 +101,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }),
       postcss({
         plugins: [autoprefixer(), this.config.optimization?.minify && cssnano()].filter(Boolean),
+        minimize: this.config.optimization?.minify,
       }),
       image(),
     ];
@@ -109,29 +112,27 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
     return {
       input: Object.fromEntries(entryPoints),
-      output: {
-        dir: this.config.outDir,
-        format: 'esm',
-        sourcemap: true,
-        manualChunks: this.config.optimization?.splitChunks
-          ? this.generateChunkConfig()
-          : undefined,
-      },
       plugins,
+    } as InputOptions;
+  }
+
+  private generateChunkConfig(): ManualChunksOption {
+    return (id: string) => {
+      if (id.includes('node_modules')) {
+        return 'vendor';
+      }
     };
   }
 
-  private generateChunkConfig() {
-    return {
-      vendor: (id: string) => {
-        return id.includes('node_modules');
-      },
+  private async executeBuild(config: InputOptions): Promise<void> {
+    const outputOptions: OutputOptions = {
+      dir: this.config.outDir,
+      format: 'esm',
+      sourcemap: true,
+      manualChunks: this.config.optimization?.splitChunks ? this.generateChunkConfig() : undefined,
     };
-  }
-
-  private async executeBuild(config: any): Promise<void> {
-    const bundle = await rollup(config);
-    await bundle.write(config.output);
+    const bundle: RollupBuild = await rollup(config as InputOptions);
+    bundle.write(outputOptions);
     await bundle.close();
   }
 
@@ -153,12 +154,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     for (const image of images) {
       if (!/\.(jpe?g|png|gif|webp)$/i.test(image)) continue;
 
+      // Process image with sharp
       const imagePath = path.join(assetsDir, image);
-      const optimizedImage = await sharp(imagePath)
+      const optimizedImage = await sharp
+        .default(imagePath)
         .resize(1920, 1080, { fit: 'inside', withoutEnlargement: true })
         .toFormat('webp', { quality: 80 })
         .toBuffer();
-
       await fs.writeFile(imagePath.replace(/\.[^.]+$/, '.webp'), optimizedImage);
     }
   }

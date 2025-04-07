@@ -6,7 +6,14 @@ import fs from 'fs';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const options: any = {
+
+interface Options {
+  sourceDir: string;
+  outputDir: string;
+  theme: string;
+  ignorePatterns: string[];
+}
+const options: Options = {
   sourceDir: '.',
   outputDir: './dist',
   theme: 'vue',
@@ -18,13 +25,17 @@ for (let i = 0; i < args.length; i++) {
   const arg = args[i];
 
   if (arg === '--source' || arg === '-s') {
-    options.sourceDir = args[++i];
+    options.sourceDir = args[i + 1];
+    i++;
   } else if (arg === '--output' || arg === '-o') {
-    options.outputDir = args[++i];
+    options.outputDir = args[i + 1];
+    i++;
   } else if (arg === '--theme' || arg === '-t') {
-    options.theme = args[++i];
+    options.theme = args[i + 1];
+    i++;
   } else if (arg === '--ignore' || arg === '-i') {
-    options.ignorePatterns = args[++i].split(',');
+    options.ignorePatterns = args[i + 1].split(',');
+    i++;
   } else if (arg === '--help' || arg === '-h') {
     showHelp();
     process.exit(0);
@@ -76,7 +87,11 @@ const config = {
   },
   designSystem: {
     name: options.theme,
-    type: 'custom',
+    type: 'custom' as "custom",
+    importPath: '',
+    theme: {},
+    components: {},
+    styles: {},
   },
 };
 

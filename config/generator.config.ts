@@ -6,6 +6,13 @@ export interface WebsiteGeneratorConfig {
   outputDir: string;
   sourceDir: string;
 
+  // Logging configuration
+  logging?: {
+    enabled?: boolean;
+    level?: 'debug' | 'info' | 'warn' | 'error';
+    format?: 'json' | 'text';
+  };
+
   // Parser configuration
   parser: ParserConfig & {
     plugins?: string[];

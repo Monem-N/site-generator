@@ -1,4 +1,6 @@
-import { Plugin, ParsedContent, ComponentTemplate } from '../../types';
+import { Plugin } from '../../types/plugin';
+import { ParsedContent } from '../../types/parser';
+import { ComponentTemplate } from '../../types/component';
 
 interface DocsifyPluginOptions {
   basePath?: string;
@@ -12,7 +14,10 @@ interface DocsifyPluginOptions {
 }
 
 export class DocsifyPlugin implements Plugin {
-  private options: DocsifyPluginOptions;
+  name = 'docsify';
+  version = '1.0.0';
+  options: DocsifyPluginOptions;
+  // Hooks are defined in the constructor
 
   constructor(options: DocsifyPluginOptions = {}) {
     this.options = {
@@ -55,7 +60,7 @@ export class DocsifyPlugin implements Plugin {
 
   private processEmbeds(content: string): string {
     // Handle [!embed] syntax
-    return content.replace(/\[!embed\]\((.*?)\)/g, (match, url) => {
+    return content.replace(/\[!embed\]\((.*?)\)/g, (_match, url) => {
       return `<div class="embed-container">
         <iframe src="${url}" frameborder="0" allowfullscreen></iframe>
       </div>`;
@@ -67,7 +72,7 @@ export class DocsifyPlugin implements Plugin {
     const alertTypes = ['info', 'tip', 'warning', 'danger'];
     alertTypes.forEach(type => {
       const regex = new RegExp(`> \[!${type}\]\n([\s\S]*?)(?=\n(?:>|$))`, 'g');
-      content = content.replace(regex, (match, text) => {
+      content = content.replace(regex, (_match, text) => {
         return `<div class="alert alert-${type}">${text.trim()}</div>`;
       });
     });
@@ -76,8 +81,8 @@ export class DocsifyPlugin implements Plugin {
 
   private processCodeTabs(content: string): string {
     // Handle code tabs syntax
-    return content.replace(/```tabs([\s\S]*?)```/g, (match, content) => {
-      const tabs = content.split('====').map(tab => tab.trim());
+    return content.replace(/```tabs([\s\S]*?)```/g, (_match, content) => {
+      const tabs = content.split('====').map((tab: string) => tab.trim());
       return this.generateCodeTabsHTML(tabs);
     });
   }
@@ -105,6 +110,11 @@ export class DocsifyPlugin implements Plugin {
       <div class="tab-buttons">${tabButtons}</div>
       <div class="tab-contents">${tabContents}</div>
     </div>`;
+  }
+
+  // Process content after parsing (for backward compatibility)
+  private processContent(parsed: ParsedContent): ParsedContent {
+    return this.enhanceWithDocsifyFeatures(parsed);
   }
 
   private enhanceWithDocsifyFeatures(parsed: ParsedContent): ParsedContent {

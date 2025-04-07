@@ -1,5 +1,5 @@
-import { Plugin } from './PluginManager';
-import { ParsedContent } from '../types';
+import { Plugin } from '../../types/plugin';
+import { ParsedContent } from '../../types/parser';
 import path from 'path';
 
 export class CrossReferencePlugin implements Plugin {
@@ -13,7 +13,7 @@ export class CrossReferencePlugin implements Plugin {
   async beforeParse(content: string, filePath?: string): Promise<string> {
     // Process cross-references in markdown
     // Format: [[path/to/file|Optional link text]]
-    return content.replace(/\[\[(.*?)\]\]/g, (match, reference) => {
+    return content.replace(/\[\[(.*?)\]\]/g, (_match, reference) => {
       const parts = reference.split('|');
       const targetPath = parts[0].trim();
       const displayText = parts.length > 1 ? parts[1].trim() : targetPath;

@@ -21,7 +21,7 @@ The system consists of six core components that work together to transform docum
 
 The components interact in a sequential pipeline, with the Plugin System providing hooks at various stages:
 
-```
+``` text
 Documentation Sources → DocumentationParser → ComponentGenerator → TestGenerator → Builder → Generated Website
                                 ↑                    ↑                 ↑              ↑
                                 |                    |                 |              |
