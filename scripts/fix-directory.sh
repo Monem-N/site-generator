@@ -10,6 +10,11 @@ fi
 
 DIRECTORY=$1
 
+# Initial analysis to see issues in this directory
+echo "Initial analysis of issues in $DIRECTORY..."
+npx eslint --format json "$DIRECTORY" > eslint_report.json
+python scripts/analyze_eslint.py
+
 # Phase 1: Fix formatting issues
 echo "Phase 1: Fixing formatting issues in $DIRECTORY..."
 npx prettier --write "$DIRECTORY/**/*.{ts,js,json,md}"
@@ -30,4 +35,10 @@ node --experimental-modules ./scripts/fix-module-system-issues.js "$DIRECTORY"
 echo "Phase 5: Fixing logic and runtime errors in $DIRECTORY..."
 node --experimental-modules ./scripts/fix-logic-errors-issues.js "$DIRECTORY"
 
+# Final analysis to see progress
+echo "Final analysis of remaining issues in $DIRECTORY..."
+npx eslint --format json "$DIRECTORY" > eslint_report.json
+python scripts/analyze_eslint.py
+
 echo "Done! Please review the changes in $DIRECTORY and fix the remaining issues manually."
+echo "Consider running this script on other directories based on the analysis results."

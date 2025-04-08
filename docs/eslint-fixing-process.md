@@ -18,6 +18,22 @@ The main categories of issues are:
    - `no-sparse-arrays` (23 errors)
    - `no-redeclare` (18 errors)
 
+## Analysis and Prioritization
+
+Before starting the fixing process, run the analysis script to identify the most problematic areas:
+
+```bash
+python analyze_eslint.py
+```
+
+This script analyzes the ESLint report and organizes issues by directory and file, helping you prioritize which areas to fix first. The analysis shows:
+
+1. Directories with the most issues (e.g., `utils`, `plugins`, `src`)
+2. Specific files with high error counts (e.g., `cache.js`, `dependency-graph.js`, `SiteMapGenerator.js`)
+3. Distribution of error types across the codebase
+
+Use this information to decide which directories to target first with the `fix-directory.sh` script.
+
 ## Phased Approach
 
 We've created a phased approach to tackle these issues:
@@ -100,13 +116,25 @@ You can run all scripts in sequence with:
 
 ## Fixing a Specific Directory
 
-To fix issues in a specific directory, use:
+Based on the analysis results, fix issues in specific directories in order of priority:
 
 ```bash
-./scripts/fix-directory.sh src/parsers
+./scripts/fix-directory.sh src/utils    # Highest number of issues
+./scripts/fix-directory.sh src/plugins  # Second highest
+./scripts/fix-directory.sh src/parsers  # And so on...
 ```
 
-This will run all the fix scripts on just the specified directory.
+This will run all the fix scripts on just the specified directory. Focus on directories with the most issues first, then move to less problematic areas.
+
+## Tracking Progress
+
+After fixing issues in a directory, run the analysis script again to see your progress:
+
+```bash
+python analyze_eslint.py
+```
+
+This will show you how many issues remain and which areas still need attention.
 
 ## Commit Strategy
 
@@ -116,8 +144,9 @@ After fixing issues, commit changes in logical groups:
 2. Type safety improvements
 3. Module system improvements
 4. Logic and runtime error fixes
+5. Directory-specific fixes (e.g., "Fix ESLint issues in utils directory")
 
-This will make the changes easier to review and understand.
+This will make the changes easier to review and understand. Include before/after issue counts in your commit messages to track progress.
 
 ## Ongoing Maintenance
 
