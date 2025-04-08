@@ -1,6 +1,6 @@
 import { ParsedContent } from '../../types/parser';
 import { DesignSystem } from '../../types/design';
-import { performance, PerformanceMonitor } from '../utils/performance';
+import { PerformanceMonitor } from '../utils/performance';
 import { TemplateError } from '../utils/errors';
 
 /**

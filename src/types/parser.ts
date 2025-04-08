@@ -20,22 +20,117 @@ export interface ParsedContent {
   /**
    * Metadata
    */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 
   /**
    * Sections
    */
-  sections?: any[];
+  sections?: ContentSection[];
 
   /**
    * Assets
    */
-  assets?: any[];
+  assets?: ContentAsset[];
 
   /**
    * References
    */
-  references?: any[];
+  references?: ContentReference[];
+}
+
+/**
+ * Interface for content reference
+ */
+export interface ContentReference {
+  /**
+   * Reference ID
+   */
+  id: string;
+
+  /**
+   * Reference title
+   */
+  title: string;
+
+  /**
+   * Reference URL
+   */
+  url: string;
+
+  /**
+   * Reference type
+   */
+  type?: 'internal' | 'external' | 'citation';
+
+  /**
+   * Reference description
+   */
+  description?: string;
+}
+
+/**
+ * Interface for content asset
+ */
+export interface ContentAsset {
+  /**
+   * Asset path
+   */
+  path: string;
+
+  /**
+   * Asset type
+   */
+  type: 'image' | 'video' | 'audio' | 'document' | 'other';
+
+  /**
+   * Asset name
+   */
+  name: string;
+
+  /**
+   * Asset size in bytes
+   */
+  size?: number;
+
+  /**
+   * Asset metadata
+   */
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Interface for content section
+ */
+export interface ContentSection {
+  /**
+   * Section ID
+   */
+  id: string;
+
+  /**
+   * Section title
+   */
+  title: string;
+
+  /**
+   * Section content
+   */
+  content: string;
+
+  /**
+   * Section type
+   */
+  type?: string;
+
+  /**
+   * Section level
+   */
+  level?: number;
+
+  /**
+   * Section metadata
+   */
+  metadata?: Record<string, unknown>;
 }
 
 /**

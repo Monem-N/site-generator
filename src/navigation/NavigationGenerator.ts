@@ -1,6 +1,18 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
+interface FileEntry {
+  name: string;
+  path: string;
+}
+
+interface DirectoryStructure {
+  name?: string;
+  path?: string;
+  files: FileEntry[];
+  directories: DirectoryStructure[];
+}
+
 export interface NavigationItem {
   title: string;
   path?: string;
@@ -23,10 +35,10 @@ export class NavigationGenerator {
     return this.buildNavigation(structure);
   }
 
-  private async scanDirectory(dir: string): Promise<any> {
+  private async scanDirectory(dir: string): Promise<DirectoryStructure> {
     try {
       const entries = await fs.readdir(dir, { withFileTypes: true });
-      const result: any = { files: [], directories: [] };
+      const result: DirectoryStructure = { files: [], directories: [] };
 
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
@@ -69,11 +81,13 @@ export class NavigationGenerator {
     return this.ignorePaths.some(ignorePath => relativePath.split(path.sep).includes(ignorePath));
   }
 
-  private async buildNavigation(structure: any): Promise<NavigationItem[]> {
+  private async buildNavigation(structure: DirectoryStructure): Promise<NavigationItem[]> {
     const navigation: NavigationItem[] = [];
 
     // Process README.md files first
-    const readmeFile = structure.files.find((file: any) => file.name.toLowerCase() === 'readme.md');
+    const readmeFile = structure.files.find(
+      (file: FileEntry) => file.name.toLowerCase() === 'readme.md'
+    );
 
     if (readmeFile) {
       const title = await this.extractTitle(path.join(this.sourceDir, readmeFile.path));
@@ -103,16 +117,16 @@ export class NavigationGenerator {
       // Only add directories that have content
       if (subNav.length > 0) {
         // Check if directory has a README.md
-        const dirReadme = dir.files.find((file: any) => file.name.toLowerCase() === 'readme.md');
+        const dirReadme = dir.files.find(
+          (file: FileEntry) => file.name.toLowerCase() === 'readme.md'
+        );
 
         let title = this.formatDirectoryName(dir.name);
         let path = undefined;
 
         if (dirReadme) {
           title =
-            (await this.extractTitle(
-              path.join(this.sourceDir, dir.path, dirReadme.name)
-            )) || title;
+            (await this.extractTitle(path.join(this.sourceDir, dir.path, dirReadme.name))) || title;
           path = path.join(dir.path, dirReadme.name);
         }
 

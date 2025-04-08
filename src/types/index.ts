@@ -11,7 +11,7 @@ export * from './design';
 // Plugin related types
 export interface PluginOptions {
   enabled?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Generator related types
@@ -115,7 +115,7 @@ export interface CMSModel {
 export interface CMSField {
   type: string;
   required?: boolean;
-  defaultValue?: any;
+  defaultValue?: unknown;
   validations?: Record<string, unknown>;
 }
 
