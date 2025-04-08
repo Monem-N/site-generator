@@ -33,41 +33,62 @@ Run the following scripts to automatically fix formatting and other auto-fixable
 
 ### Phase 2: Type Safety Improvements
 
-Run the following script to identify files with type safety issues:
+Run the following script to automatically fix common type safety issues:
 
 ```bash
-node ./scripts/fix-type-safety.js
+node --experimental-modules ./scripts/fix-type-safety-issues.js
 ```
 
-Then, manually fix the identified issues by:
-1. Replacing `any` types with more specific types
-2. Removing unused variables or prefixing them with underscore
+This script will:
+
+1. Replace `any` types with `unknown` where appropriate
+2. Prefix unused variables with underscore
+
+For remaining issues, manually fix them by:
+
+1. Using more specific types instead of `unknown`
+2. Removing truly unused variables
 
 ### Phase 3: Module System Improvements
 
-Run the following script to identify files with module system issues:
+Run the following script to automatically fix module system issues:
 
 ```bash
-node ./scripts/fix-module-system.js
+node --experimental-modules ./scripts/fix-module-system-issues.js
 ```
 
-Then, manually fix the identified issues by:
-1. Replacing `require()` with import statements
-2. For dynamic requires, using dynamic imports or adding ESLint disable comments
+This script will:
+
+1. Replace `require()` statements with import statements
+2. Convert dynamic requires to dynamic imports
+3. Add .js extensions to local module imports
+
+For complex cases, manually fix the remaining issues by:
+
+1. Restructuring code to use ES modules properly
+2. Adding ESLint disable comments where necessary
 
 ### Phase 4: Logic and Runtime Errors
 
-Run the following script to identify files with logic and runtime errors:
+Run the following script to automatically fix logic and runtime errors:
 
 ```bash
-node ./scripts/fix-logic-errors.js
+node --experimental-modules ./scripts/fix-logic-errors-issues.js
 ```
 
-Then, manually fix the identified issues by:
-1. Adding break statements or `// fallthrough` comments in switch cases
-2. Replacing `console.log` with a logger or removing debugging statements
-3. Fixing array declarations with empty slots
-4. Renaming variables or using let/const instead of var
+This script will:
+
+1. Add `// fallthrough` comments to switch cases without break statements
+2. Replace `console.log` with `logger.debug` and other console methods with appropriate logger methods
+3. Fix simple sparse arrays
+4. Identify variable redeclarations for manual fixing
+
+For complex cases, manually fix the remaining issues by:
+
+1. Adding break statements where appropriate
+2. Removing unnecessary console statements
+3. Fixing complex sparse arrays
+4. Renaming redeclared variables
 
 ## Running All Scripts
 
@@ -76,6 +97,16 @@ You can run all scripts in sequence with:
 ```bash
 ./scripts/fix-all-eslint.sh
 ```
+
+## Fixing a Specific Directory
+
+To fix issues in a specific directory, use:
+
+```bash
+./scripts/fix-directory.sh src/parsers
+```
+
+This will run all the fix scripts on just the specified directory.
 
 ## Commit Strategy
 
