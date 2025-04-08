@@ -109,3 +109,29 @@ public
 
 # Generated files
 generated/
+
+# Generated JavaScript files from TypeScript
+# Exclude all .js files that have a corresponding .ts file
+src/**/*.js
+src/**/*.js.map
+types/**/*.js
+types/**/*.js.map
+
+# Temporary configuration files
+*.config.js.old
+*.config.simple.js
+
+# Temporary test files
+src/__tests__/simple-test.js
+src/__tests__/simple-test.ts
+src/__tests__/simple.test.ts
+src/__tests__/simple/
+
+# Temporary script files
+scripts/fix-*-new*.sh
+scripts/fix-linting.js
+scripts/fix-plugin-loader-errors.sh
+scripts/run-improvements.js
+
+# Temporary TypeScript configuration files
+tsconfig.*.json.bak
