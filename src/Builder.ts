@@ -1,17 +1,43 @@
-import { BuildConfig, ComponentTemplate } from '../types/index';
+import { BuildConfig, ComponentTemplate } from '../types/index.js';
 import type { InputOptions, OutputOptions, RollupBuild, ManualChunksOption } from 'rollup';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { rollup } from 'rollup';
-import { babel } from '@rollup/plugin-babel';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
-import image from '@rollup/plugin-image';
-import postcss from 'rollup-plugin-postcss';
-import autoprefixer from 'autoprefixer';
-import cssnano from 'cssnano';
-import { logger } from './utils/logger';
+import { logger } from './utils/logger.js';
+
+// Import these dynamically to avoid ESM issues
+let babel;
+let commonjs;
+let terser;
+let image;
+let postcss;
+let autoprefixer;
+let cssnano;
+
+// Load plugins dynamically
+async function loadPlugins() {
+  const babelModule = await import('@rollup/plugin-babel');
+  babel = babelModule.babel;
+
+  const commonjsModule = await import('@rollup/plugin-commonjs');
+  commonjs = commonjsModule.default;
+
+  const terserModule = await import('rollup-plugin-terser');
+  terser = terserModule.terser;
+
+  const imageModule = await import('@rollup/plugin-image');
+  image = imageModule.default;
+
+  const postcssModule = await import('rollup-plugin-postcss');
+  postcss = postcssModule.default;
+
+  const autoprefixerModule = await import('autoprefixer');
+  autoprefixer = autoprefixerModule.default;
+
+  const cssnanoModule = await import('cssnano');
+  cssnano = cssnanoModule.default;
+}
 
 export class Builder {
   private config: BuildConfig;
@@ -22,6 +48,9 @@ export class Builder {
 
   public async build(components: ComponentTemplate[]): Promise<void> {
     try {
+      // 0. Load plugins
+      await loadPlugins();
+
       // 1. Prepare output directory
       await this.prepareOutputDirectory();
 
@@ -79,7 +108,7 @@ export class Builder {
   private generateMainEntry(_components: ComponentTemplate[]): string {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './App.js';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

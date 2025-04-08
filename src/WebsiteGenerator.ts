@@ -1,7 +1,11 @@
-import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config';
-import { ParsedContent, Plugin, ComponentTemplate, BuildConfig, DesignSystem } from '../types';
-import { DocumentationParserFactory } from '../parser-implementation';
-import { ComponentGenerator } from '../component-generator';
+import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config.js';
+import { ParsedContent } from '../types/parser.js';
+import { Plugin } from '../types/plugin.js';
+import { ComponentTemplate } from '../types/component.js';
+import { BuildConfig } from '../types/index.js';
+import { DesignSystem } from '../types/design.js';
+import { DocumentationParserFactory } from '../parser-implementation.js';
+import { ComponentGenerator } from '../component-generator.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
@@ -19,7 +23,7 @@ export class WebsiteGenerator {
       this.config.cms?.spaceId &&
       this.config.cms?.accessToken
     ) {
-      import('./CMSIntegrationModule').then(CMSIntegrationModule => {
+      import('./CMSIntegrationModule.js').then(CMSIntegrationModule => {
         const cmsModule = new CMSIntegrationModule.CMSIntegrationModule(
           this.config.cms?.spaceId as string,
           this.config.cms?.accessToken as string
@@ -142,6 +146,7 @@ export class WebsiteGenerator {
         name: `component-${components.length}`,
         path: `/${content.type || 'component'}`,
         content: currentComponent,
+        generate: async (element, designSystem) => currentComponent,
       };
 
       for (const plugin of this.plugins) {
@@ -189,10 +194,16 @@ export class WebsiteGenerator {
       return;
     }
 
-    const testGenerator = await import('./TestGenerator').then(
+    const testGenerator = await import('./TestGenerator.js').then(
       m => new m.TestGenerator(this.config.testing)
     );
-    await testGenerator.generateTests(components);
+    // Convert ComponentTemplate[] to ComponentConfig[] for TestGenerator
+    const componentConfigs = components.map(comp => ({
+      name: comp.name,
+      path: comp.path,
+      content: comp.content,
+    }));
+    await testGenerator.generateTests(componentConfigs);
   }
 
   public async build(components: ComponentTemplate[]): Promise<void> {
@@ -203,7 +214,7 @@ export class WebsiteGenerator {
       assets: this.config.build.assets,
     };
 
-    const builder = await import('./Builder').then(m => new m.Builder(buildConfig));
+    const builder = await import('./Builder.js').then(m => new m.Builder(buildConfig));
     await builder.build(components);
   }
 

@@ -2,7 +2,7 @@ import express from 'express';
 import * as http from 'http';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as WebSocket from 'ws';
+import { WebSocketServer } from 'ws';
 import * as chalk from 'chalk';
 
 /**
@@ -14,7 +14,7 @@ import * as chalk from 'chalk';
 export function startDevServer(outputDir: string, port = 3000): () => void {
   const app = express();
   const server = http.createServer(app);
-  const wss = new WebSocket.Server({ server });
+  const wss = new WebSocketServer({ server });
 
   // Serve static files from the output directory
   app.use(express.static(outputDir));

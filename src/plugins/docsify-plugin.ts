@@ -1,6 +1,6 @@
-import { Plugin } from '../../types/plugin';
-import { ParsedContent } from '../../types/parser';
-import { ComponentTemplate } from '../../types/component';
+import { Plugin } from '../../types/plugin.js';
+import { ParsedContent } from '../../types/parser.js';
+import { ComponentTemplate } from '../../types/component.js';
 
 interface DocsifyPluginOptions {
   basePath?: string;
@@ -128,25 +128,34 @@ export class DocsifyPlugin implements Plugin {
 
   private createNavbarComponent(): ComponentTemplate {
     return {
+      name: 'navbar',
+      path: 'components/navbar.html',
       type: 'navbar',
       content: '<nav class="app-nav"></nav>',
       metadata: { docsify: true },
+      generate: async (element, designSystem) => '<nav class="app-nav"></nav>',
     };
   }
 
   private createSidebarComponent(): ComponentTemplate {
     return {
+      name: 'sidebar',
+      path: 'components/sidebar.html',
       type: 'sidebar',
       content: '<aside class="sidebar"></aside>',
       metadata: { docsify: true },
+      generate: async (element, designSystem) => '<aside class="sidebar"></aside>',
     };
   }
 
   private createCoverpageComponent(): ComponentTemplate {
     return {
+      name: 'coverpage',
+      path: 'components/coverpage.html',
       type: 'coverpage',
       content: '<section class="cover show"></section>',
       metadata: { docsify: true },
+      generate: async (element, designSystem) => '<section class="cover show"></section>',
     };
   }
 }

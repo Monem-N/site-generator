@@ -1,8 +1,13 @@
-import { ParsedContent, ContentNode } from '../../types/parser';
-import { Asset, Reference } from '../../types/parser';
-import { Parser } from './Parser';
+import { ParsedContent, ContentNode } from '../../types/parser.js';
+import { Asset, Reference } from '../../types/parser.js';
+import { Parser } from './Parser.js';
 import { marked } from 'marked';
-import frontMatter from 'front-matter';
+// Import front-matter dynamically to avoid ESM issues
+let frontMatterModule;
+
+async function loadFrontMatter() {
+  frontMatterModule = await import('front-matter');
+}
 
 export class DocsifyMarkdownParser implements Parser {
   // Options are not currently used but may be needed in the future
@@ -46,6 +51,11 @@ export class DocsifyMarkdownParser implements Parser {
     const content = source;
     const filePath = options?.filePath as string | undefined;
     try {
+      // Load front-matter if not already loaded
+      if (!frontMatterModule) {
+        await loadFrontMatter();
+      }
+
       // Apply plugins (pre-processing)
       let processedContent = content;
       for (const plugin of this.plugins) {
@@ -55,7 +65,7 @@ export class DocsifyMarkdownParser implements Parser {
       }
 
       // Extract frontmatter
-      const { attributes, body } = frontMatter(processedContent);
+      const { attributes, body } = frontMatterModule.default(processedContent);
       const metadata = attributes as Record<string, unknown>;
 
       // Parse markdown to HTML

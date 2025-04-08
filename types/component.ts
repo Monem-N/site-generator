@@ -1,18 +1,18 @@
 // Component generator types
 
-import { DesignSystem } from './design';
-import { ContentElement } from './cms';
+import { DesignSystem } from './design.js';
+import { ContentElement } from './cms.js';
 
 /**
  * Interface for component templates
  */
 export interface ComponentTemplate {
-  name?: string;
-  path?: string;
-  content?: string;
+  name: string;
+  path: string;
+  content: string;
   type?: string;
-  metadata?: Record<string, any>;
-  generate?(element: ContentElement, designSystem: DesignSystem): Promise<string>;
+  metadata?: Record<string, unknown>;
+  generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }
 
 /**

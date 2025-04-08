@@ -1,4 +1,6 @@
-import { ComponentTemplate, DesignSystem } from '../../types';
+import { ComponentTemplate } from '../../types/component.js';
+import { DesignSystem } from '../../types/design.js';
+import { ContentElement } from '../../types/cms.js';
 
 export class DocsifyTemplateManager {
   private designSystem: DesignSystem;
@@ -23,7 +25,7 @@ export class DocsifyTemplateManager {
 
 class MarkdownTemplate implements ComponentTemplate {
   name = 'markdown-template';
-  path = '';
+  path = 'templates/markdown.html';
   content = '';
   type = 'markdown';
   private designSystem: DesignSystem;
@@ -32,7 +34,8 @@ class MarkdownTemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: { title?: string; body: string }): Promise<string> {
+  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+    const content = element as unknown as { title?: string; body: string };
     const { title, body } = content;
     return `
       <div class="markdown-section ${this.designSystem.classNames?.markdownContainer || ''}">
@@ -55,7 +58,7 @@ class MarkdownTemplate implements ComponentTemplate {
 
 class APITemplate implements ComponentTemplate {
   name = 'api-template';
-  path = '';
+  path = 'templates/api.html';
   content = '';
   type = 'api';
   private designSystem: DesignSystem;
@@ -64,12 +67,13 @@ class APITemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: {
-    method: string;
-    endpoint: string;
-    parameters?: Array<{ name: string; type: string; description: string }>;
-    responses?: Record<string, { description: string; example?: unknown }>;
-  }): Promise<string> {
+  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+    const content = element as unknown as {
+      method: string;
+      endpoint: string;
+      parameters?: Array<{ name: string; type: string; description: string }>;
+      responses?: Record<string, { description: string; example?: unknown }>;
+    };
     const { method, endpoint, parameters, responses } = content;
     return `
       <div class="api-section ${this.designSystem.classNames?.apiContainer || ''}">
@@ -149,7 +153,7 @@ class APITemplate implements ComponentTemplate {
 
 class CodeTemplate implements ComponentTemplate {
   name = 'code-template';
-  path = '';
+  path = 'templates/code.html';
   content = '';
   type = 'code';
   private designSystem: DesignSystem;
@@ -158,7 +162,8 @@ class CodeTemplate implements ComponentTemplate {
     this.designSystem = designSystem;
   }
 
-  async generate(content: { language: string; code: string; filename?: string }): Promise<string> {
+  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+    const content = element as unknown as { language: string; code: string; filename?: string };
     const { language, code, filename } = content;
     return `
       <div class="code-section ${this.designSystem.classNames?.codeContainer || ''}">
