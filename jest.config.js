@@ -3,9 +3,12 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: 'tsconfig.json'
-    }]
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+      },
+    ],
   },
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$',
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
@@ -19,5 +22,5 @@ module.exports = {
   // Disable watchman for file watching
   watchman: false,
   // Set a timeout for each test
-  testTimeout: 10000
+  testTimeout: 10000,
 };

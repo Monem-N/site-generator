@@ -1,0 +1,1 @@
+[{"filePath":"/Users/monemnaifer/Library/CloudStorage/GoogleDrive-monemmacos@gmail.com/My Drive/Strategic AI Integration/Site_Generator/src/utils/cache.js","messages":[],"suppressedMessages":[],"errorCount":0,"fatalErrorCount":0,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"usedDeprecatedRules":[]}]

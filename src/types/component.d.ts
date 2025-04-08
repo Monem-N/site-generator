@@ -1,5 +1,5 @@
-import { DesignSystem } from './design';
-import { ContentElement } from './cms';
+import { DesignSystem } from './design.js';
+import { ContentElement } from './cms.js';
 /**
  * Interface for component templates
  */

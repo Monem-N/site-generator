@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as chokidar from 'chokidar';
 import { WebSocketServer, WebSocket as WS } from 'ws';
-import { logger } from './utils/logger.js';
+import { logger } from './logger.js';
 
 /**
  * Options for the DevServer

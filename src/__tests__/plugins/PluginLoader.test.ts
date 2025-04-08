@@ -2,7 +2,7 @@ import { PluginLoader } from '../../plugins/PluginLoader.js';
 import { Plugin } from '../../../types/plugin.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from './utils/logger.js';
+import { logger } from '../../utils/logger.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -84,7 +84,7 @@ describe('PluginLoader', () => {
         version: '1.0.0',
         hooks: {
           beforeParse: (content: string) => 'Modified by test-plugin: ' + content,
-          afterParse: (parsed: any) => ({
+          afterParse: (parsed: unknown) => ({
             ...parsed,
             title: 'Enhanced by test-plugin: ' + parsed.title,
           }),
@@ -102,7 +102,7 @@ describe('PluginLoader', () => {
           option1: 'default-value',
         },
         hooks: {
-          beforeParse: (content: string, options: any) =>
+          beforeParse: (content: string, options: unknown) =>
             'Modified by another-plugin with ' + options.option1 + ': ' + content,
         },
       }),

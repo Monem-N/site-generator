@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CMSConfig, ContentModel, PageTemplate } from './types';
+import { CMSConfig, ContentModel, PageTemplate } from './types.js';
 
 /**
  * CMSIntegrationService handles connecting to various CMS systems

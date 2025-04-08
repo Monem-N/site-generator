@@ -74,7 +74,7 @@ describe('WebsiteGenerator', () => {
       writeFile: jest.fn(),
       readdir: jest.fn(),
     };
-    
+
     generator = new WebsiteGenerator({
       sourceDir: '/test/source',
       outputDir: '/test/output',
@@ -102,7 +102,7 @@ describe('WebsiteGenerator', () => {
 
     // Verify the result
     expect(result).toBe(true);
-    
+
     // Verify the methods were called
     expect((generator as any).parseDocumentation).toHaveBeenCalled();
     expect((generator as any).generateComponents).toHaveBeenCalled();
@@ -133,7 +133,7 @@ describe('DocsifyWebsiteGenerator', () => {
       readdir: jest.fn(),
       copyFile: jest.fn(),
     };
-    
+
     generator = new DocsifyWebsiteGenerator({
       sourceDir: '/test/source',
       outputDir: '/test/output',
@@ -151,7 +151,7 @@ describe('DocsifyWebsiteGenerator', () => {
     jest.spyOn(generator as any, 'parseDocumentation').mockResolvedValue([]);
     jest.spyOn(generator as any, 'generateComponents').mockResolvedValue([]);
     jest.spyOn(generator as any, 'build').mockResolvedValue(true);
-    
+
     // Mock the writeFile method
     mockFileSystem.writeFile.mockResolvedValue(undefined);
 
@@ -171,7 +171,7 @@ describe('DocsifyWebsiteGenerator', () => {
     jest.spyOn(generator as any, 'parseDocumentation').mockResolvedValue([]);
     jest.spyOn(generator as any, 'generateComponents').mockResolvedValue([]);
     jest.spyOn(generator as any, 'build').mockResolvedValue(true);
-    
+
     // Mock the copyFile method
     mockFileSystem.copyFile.mockResolvedValue(undefined);
 
@@ -197,7 +197,7 @@ describe('ParserService', () => {
       writeFile: jest.fn(),
       readdir: jest.fn(),
     };
-    
+
     parserService = new ParserService({
       fileSystem: mockFileSystem,
       extensions: ['md', 'markdown'],
@@ -242,8 +242,8 @@ describe('ParserService', () => {
     const mockPlugin = {
       name: 'MockPlugin',
       hooks: {
-        beforeParse: jest.fn().mockImplementation((content) => `Modified: ${content}`),
-        afterParse: jest.fn().mockImplementation((parsed) => ({
+        beforeParse: jest.fn().mockImplementation(content => `Modified: ${content}`),
+        afterParse: jest.fn().mockImplementation(parsed => ({
           ...parsed,
           title: `Enhanced: ${parsed.title}`,
         })),
@@ -283,9 +283,9 @@ describe('End-to-End Generation Process', () => {
       copyFile: jest.fn(),
       mkdir: jest.fn(),
     };
-    
+
     // Mock the readdir method to return a list of files
-    mockFileSystem.readdir.mockImplementation((dirPath) => {
+    mockFileSystem.readdir.mockImplementation(dirPath => {
       if (dirPath === '/test/source') {
         return Promise.resolve(['document1.md', 'document2.md']);
       }
@@ -293,7 +293,7 @@ describe('End-to-End Generation Process', () => {
     });
 
     // Mock the readFile method to return file content
-    mockFileSystem.readFile.mockImplementation((filePath) => {
+    mockFileSystem.readFile.mockImplementation(filePath => {
       if (filePath === '/test/source/document1.md') {
         return Promise.resolve('# Document 1\n\nThis is document 1.');
       }
@@ -344,9 +344,9 @@ describe('Plugin Integration', () => {
       writeFile: jest.fn(),
       readdir: jest.fn(),
     };
-    
+
     // Mock the readdir method to return a list of files
-    mockFileSystem.readdir.mockImplementation((dirPath) => {
+    mockFileSystem.readdir.mockImplementation(dirPath => {
       if (dirPath === '/test/source') {
         return Promise.resolve(['document.md']);
       }
@@ -354,7 +354,7 @@ describe('Plugin Integration', () => {
     });
 
     // Mock the readFile method to return file content
-    mockFileSystem.readFile.mockImplementation((filePath) => {
+    mockFileSystem.readFile.mockImplementation(filePath => {
       if (filePath === '/test/source/document.md') {
         return Promise.resolve('# Test Document\n\nThis is a test document.');
       }
@@ -365,16 +365,16 @@ describe('Plugin Integration', () => {
     mockPlugin = {
       name: 'MockPlugin',
       hooks: {
-        beforeParse: jest.fn().mockImplementation((content) => `Modified: ${content}`),
-        afterParse: jest.fn().mockImplementation((parsed) => ({
+        beforeParse: jest.fn().mockImplementation(content => `Modified: ${content}`),
+        afterParse: jest.fn().mockImplementation(parsed => ({
           ...parsed,
           title: `Enhanced: ${parsed.title}`,
         })),
-        beforeGenerate: jest.fn().mockImplementation((component) => ({
+        beforeGenerate: jest.fn().mockImplementation(component => ({
           ...component,
           content: `Modified: ${component.content}`,
         })),
-        afterGenerate: jest.fn().mockImplementation((component) => ({
+        afterGenerate: jest.fn().mockImplementation(component => ({
           ...component,
           content: `Enhanced: ${component.content}`,
         })),
@@ -434,7 +434,7 @@ describe('CLI Commands', () => {
     };
 
     // Mock the readdir method to return a list of files
-    mockFileSystem.readdir.mockImplementation((dirPath) => {
+    mockFileSystem.readdir.mockImplementation(dirPath => {
       if (dirPath === '/test/source') {
         return Promise.resolve(['document.md']);
       }
@@ -442,7 +442,7 @@ describe('CLI Commands', () => {
     });
 
     // Mock the readFile method to return file content
-    mockFileSystem.readFile.mockImplementation((filePath) => {
+    mockFileSystem.readFile.mockImplementation(filePath => {
       if (filePath === '/test/source/document.md') {
         return Promise.resolve('# Test Document\n\nThis is a test document.');
       }
@@ -583,26 +583,26 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'
-    - name: Install dependencies
-      run: npm ci
-    - name: Run tests
-      run: npm test
-    - name: Upload coverage
-      uses: codecov/codecov-action@v2
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
 ```
 
 ### 2. Jest Configuration

@@ -2,7 +2,7 @@ import { MarkdownEnhancerPlugin } from '../../plugins/MarkdownEnhancerPlugin.js'
 import { PluginSystem } from '../../plugins/PluginSystem.js';
 import { ParsedContent } from '../../../types/parser.js';
 import { Plugin } from '../../../types/plugin.js';
-import { logger } from './utils/logger.js';
+import { logger } from '../../utils/logger.js';
 
 describe('MarkdownEnhancerPlugin', () => {
   // Sample parsed content

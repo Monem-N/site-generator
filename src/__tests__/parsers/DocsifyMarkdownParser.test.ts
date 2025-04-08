@@ -1,6 +1,6 @@
 import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser.js';
 import { ParsedContent } from '../../../types/parser.js';
-import { logger } from './utils/logger.js';
+import { logger } from '../../utils/logger.js';
 
 describe('DocsifyMarkdownParser', () => {
   let parser: DocsifyMarkdownParser;

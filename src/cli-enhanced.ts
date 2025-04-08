@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { logger as systemLogger } from './utils/logger.js';
 
 import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator.js';
 import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config.js';

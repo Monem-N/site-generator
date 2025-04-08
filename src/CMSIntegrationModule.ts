@@ -1,6 +1,6 @@
 import { createClient, ContentfulClientApi } from 'contentful';
 import { ParsedContent } from '../types/parser.js';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 export class CMSIntegrationModule {
   private client: ContentfulClientApi<any>;

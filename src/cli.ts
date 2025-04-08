@@ -3,7 +3,7 @@
 import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator.js';
 import * as path from 'path';
 import * as fs from 'fs';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 // Parse command line arguments
 const args = process.argv.slice(2);

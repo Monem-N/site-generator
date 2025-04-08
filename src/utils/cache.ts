@@ -2,6 +2,7 @@ import * as fs from 'fs/promises'; // Use fs/promises for async operations
 import * as path from 'path';
 import * as crypto from 'crypto';
 import { FileSystemError } from './errors.js';
+import { logger } from './logger.js';
 // import * as os from 'os'; // Optional: if considering os.tmpdir() as default
 
 /**
@@ -229,7 +230,7 @@ export class ContentCache<T> {
         return null;
       }
       // Log other unexpected errors during read/parse
-      logger.warn(`[ContentCache] Error reading cache file ${filePath}:`, error);
+      logger.warn(`[ContentCache] Error reading cache file ${filePath}:`, { error });
       return null; // Treat other errors as cache misses
     }
   }
@@ -243,7 +244,7 @@ export class ContentCache<T> {
     } catch (error: unknown) {
       const errorDetails = error as { code?: string }; // Type guard
       if (errorDetails?.code !== 'ENOENT') {
-        logger.warn(`[ContentCache] Failed to delete cache file ${filePath}:`, error);
+        logger.warn(`[ContentCache] Failed to delete cache file ${filePath}:`, { error });
       }
     }
   }
@@ -273,7 +274,7 @@ export class ContentCache<T> {
         await fs.writeFile(filePath, JSON.stringify(item, null, 2), 'utf-8'); // Use null, 2 for pretty printing JSON
       } catch (_error: unknown) {
         // If write fails, we might want to disable cache or just log
-        logger.error(`[ContentCache] Failed to write to cache file: ${filePath}`, _error);
+        logger.error(`[ContentCache] Failed to write to cache file: ${filePath}`, { error: _error });
         // Optionally throw a FileSystemError, but this might halt application. Logging might be sufficient.
         // throw new FileSystemError(`Failed to write to cache file: ${key}`, { key, error: _error });
       }
@@ -379,7 +380,7 @@ export class ContentCache<T> {
         // Log other errors during readdir
         logger.error(
           `[ContentCache] Failed to read cache directory for clearing: ${this.cacheDir}`,
-          error
+          { error }
         );
         // Optionally throw FileSystemError
         // throw new FileSystemError(`Failed to read cache directory for clearing: ${this.cacheDir}`, { directory: this.cacheDir, error });
@@ -445,7 +446,7 @@ export class ContentCache<T> {
             // Log error reading directory for stats
             logger.warn(
               `[ContentCache] Failed to read cache directory for stats: ${this.cacheDir}`,
-              error
+              { error }
             );
             size = 0; // Report 0 size on error
           }
@@ -471,7 +472,7 @@ export class ContentCache<T> {
 async function main() {
   // Example FileSystemError import (replace with your actual path)
   // class FileSystemError extends Error { constructor(message, options) { super(message);
-import { logger } from './utils/logger.js'; this.options = options; } }
+import { logger } from './logger.js'; this.options = options; } }
 
   const cache = new ContentCache<string>({
     enabled: true,

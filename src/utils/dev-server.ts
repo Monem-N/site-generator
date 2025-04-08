@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { WebSocketServer } from 'ws';
 import * as chalk from 'chalk';
-import { logger } from './utils/logger.js';
+import { logger } from './logger.js';
 
 /**
  * Creates and starts a development server for the generated website

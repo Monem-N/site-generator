@@ -6,7 +6,7 @@ import { PrismPlugin } from './plugins/PrismPlugin.js';
 import { NavigationGenerator } from './navigation/NavigationGenerator.js';
 import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter.js';
 import * as path from 'path';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 export class DocsifyIntegration {
   private parserFactory: ParserFactory;

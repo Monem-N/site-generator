@@ -26,7 +26,7 @@ describe('ParserFactory', () => {
     const jsonParser = { parse: jest.fn() };
 
     parserFactory.register('md', markdownParser);
-    parserFactory.register('json', jsonParser as any);
+    parserFactory.register('json', jsonParser as unknown);
 
     expect(parserFactory.getParsers()).toHaveProperty('md');
     expect(parserFactory.getParsers()).toHaveProperty('json');

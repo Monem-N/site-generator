@@ -2,6 +2,7 @@ import type { WebsiteGeneratorConfig } from '../config/generator.config.js';
 import { ComponentConfig } from '../types/component.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import { logger } from './utils/logger.js';
 
 export class TestGenerator {
   constructor(private config: WebsiteGeneratorConfig['testing']) {}
@@ -71,7 +72,7 @@ describe('${name}', () => {
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from '${this.config.framework}';
 import ${name} from '${importPath}';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 describe('${name} Integration', () => {
   it('integrates with other components', () => {

@@ -2,7 +2,7 @@ import { ParsedContent, ContentNode } from '../../types/parser.js';
 import { Asset, Reference } from '../../types/parser.js';
 import { Parser } from './Parser.js';
 import { marked } from 'marked';
-import { logger } from './utils/logger.js';
+import { logger } from '../utils/logger.js';
 // Import front-matter dynamically to avoid ESM issues
 let frontMatterModule;
 

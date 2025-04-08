@@ -1,4 +1,4 @@
-import { DesignSystemConfig, ParserConfig, GeneratorConfig, CMSConfig } from '../types';
+import { DesignSystemConfig, ParserConfig, GeneratorConfig, CMSConfig } from '../types/index.js';
 
 export interface WebsiteGeneratorConfig {
   // Core configuration

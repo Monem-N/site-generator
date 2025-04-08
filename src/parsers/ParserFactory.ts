@@ -2,7 +2,7 @@ import { DocsifyMarkdownParser } from './DocsifyMarkdownParser.js';
 import { OpenAPIParser } from '../OpenAPIParser.js';
 import { CMSIntegrationModule } from '../CMSIntegrationModule.js';
 import { Parser } from './Parser.js';
-import { logger } from './utils/logger.js';
+import { logger } from '../utils/logger.js';
 
 export class ParserFactory {
   private parsers: Map<string, Parser> = new Map();
@@ -26,7 +26,7 @@ export class ParserFactory {
       this.register('contentful', new CMSIntegrationModule('', ''));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.warn('Contentful integration not available:', errorMessage);
+      logger.warn('Contentful integration not available:', { error: errorMessage });
     }
   }
 

@@ -1,6 +1,6 @@
 // Plugin system types
-import { ParsedContent } from './parser';
-import { ComponentTemplate } from './component';
+import { ParsedContent } from './parser.js';
+import { ComponentTemplate } from './component.js';
 
 /**
  * Plugin interface for extending functionality

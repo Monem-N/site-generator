@@ -3,7 +3,7 @@ import { ContentCache, CacheOptions } from '../utils/cache.js';
 import { ParserError } from '../utils/errors.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from './utils/logger.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Parser service configuration
@@ -272,8 +272,9 @@ export class ParserService extends BaseService {
   /**
    * Get cache statistics
    */
-  getCacheStats(): Record<string, unknown> {
-    return this.cache.getStats();
+  async getCacheStats(): Promise<Record<string, unknown>> {
+    const stats = await this.cache.getStats();
+    return stats as unknown as Record<string, unknown>;
   }
 
   /**

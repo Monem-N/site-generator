@@ -1,0 +1,363 @@
+Analyzing ESLint report...
+
+ESLint Issues by Folder (sorted by error count):
+
+--------------------------------------------------------------------------------
+
+utils (2108 issues)
+----------------------------------------
+  cache.js: 249 issues
+  dependency-graph.js: 236 issues
+  config-validator.js: 234 issues
+  incremental.js: 222 issues
+  config-presets.js: 179 issues
+  dev-server-class.js: 167 issues
+  performance.js: 108 issues
+  errors.js: 107 issues
+  dependency-graph.d.ts: 106 issues
+  logger.js: 95 issues
+  file-watcher.js: 70 issues
+  dev-server.js: 68 issues
+  cache.d.ts: 62 issues
+  logger.d.ts: 52 issues
+  incremental.d.ts: 43 issues
+  dev-server-class.d.ts: 40 issues
+  performance.d.ts: 39 issues
+  errors.d.ts: 30 issues
+  file-watcher.d.ts: 1 issues
+
+plugins (1225 issues)
+----------------------------------------
+  SiteMapGenerator.js: 172 issues
+  docsify-plugin.js: 125 issues
+  TableOfContentsPlugin.js: 114 issues
+  MarkdownEnhancerPlugin.js: 110 issues
+  PluginManager.js: 99 issues
+  SyntaxHighlightPlugin.js: 96 issues
+  PluginLoader.js: 82 issues
+  SiteMapGenerator.d.ts: 67 issues
+  PrismPlugin.js: 57 issues
+  TableOfContentsPlugin.d.ts: 50 issues
+  SyntaxHighlightPlugin.d.ts: 42 issues
+  PluginManager.d.ts: 41 issues
+  CrossReferencePlugin.js: 39 issues
+  MarkdownEnhancerPlugin.d.ts: 33 issues
+  MermaidPlugin.js: 32 issues
+  docsify-plugin.d.ts: 26 issues
+  PluginLoader.d.ts: 17 issues
+  PrismPlugin.d.ts: 14 issues
+  CrossReferencePlugin.d.ts: 6 issues
+  MermaidPlugin.d.ts: 3 issues
+
+src (1005 issues)
+----------------------------------------
+  WebsiteGenerator.js: 195 issues
+  Builder.js: 183 issues
+  DocsifyWebsiteGenerator.js: 150 issues
+  cli-enhanced.js: 133 issues
+  TestGenerator.js: 78 issues
+  OpenAPIParser.js: 54 issues
+  cli.js: 47 issues
+  CMSIntegrationModule.js: 46 issues
+  DocsifyIntegration.js: 45 issues
+  DocsifyWebsiteGenerator.d.ts: 15 issues
+  DocsifyIntegration.d.ts: 14 issues
+  WebsiteGenerator.d.ts: 14 issues
+  Builder.d.ts: 13 issues
+  TestGenerator.d.ts: 12 issues
+  CMSIntegrationModule.d.ts: 4 issues
+  OpenAPIParser.d.ts: 2 issues
+
+templates (809 issues)
+----------------------------------------
+  HandlebarsTemplateEngine.js: 222 issues
+  EjsTemplateEngine.js: 111 issues
+  TemplateManager.js: 103 issues
+  docsify-templates.js: 93 issues
+  TemplateEngine.js: 74 issues
+  TemplateManager.d.ts: 63 issues
+  HandlebarsTemplateEngine.d.ts: 52 issues
+  TemplateEngine.d.ts: 47 issues
+  EjsTemplateEngine.d.ts: 41 issues
+  docsify-templates.d.ts: 3 issues
+
+parsers (658 issues)
+----------------------------------------
+  OpenAPIParser.js: 304 issues
+  DocsifyMarkdownParser.js: 201 issues
+  OpenAPIParser.d.ts: 92 issues
+  ParserFactory.js: 35 issues
+  DocsifyMarkdownParser.d.ts: 12 issues
+  Parser.d.ts: 7 issues
+  ParserFactory.d.ts: 7 issues
+
+types (610 issues)
+----------------------------------------
+  parser.d.ts: 140 issues
+  openapi.d.ts: 138 issues
+  index.d.ts: 74 issues
+  design.d.ts: 69 issues
+  build.d.ts: 56 issues
+  cms.d.ts: 54 issues
+  component.d.ts: 44 issues
+  plugin.d.ts: 35 issues
+
+types (507 issues)
+----------------------------------------
+  openapi.d.ts: 138 issues
+  index.d.ts: 78 issues
+  design.d.ts: 69 issues
+  build.d.ts: 56 issues
+  cms.d.ts: 54 issues
+  component.d.ts: 43 issues
+  plugin.d.ts: 35 issues
+  parser.d.ts: 34 issues
+
+services (436 issues)
+----------------------------------------
+  ParserService.js: 243 issues
+  BaseService.js: 91 issues
+  BaseService.d.ts: 55 issues
+  ParserService.d.ts: 47 issues
+
+themes (237 issues)
+----------------------------------------
+  DocsifyThemeAdapter.js: 99 issues
+  docsify-theme-manager.js: 81 issues
+  docsify-theme-manager.d.ts: 45 issues
+  DocsifyThemeAdapter.d.ts: 12 issues
+
+optimization (185 issues)
+----------------------------------------
+  performance-optimizer.js: 148 issues
+  performance-optimizer.d.ts: 37 issues
+
+config (175 issues)
+----------------------------------------
+  generator.config.d.ts: 96 issues
+  generator.config.js: 79 issues
+
+utils (153 issues)
+----------------------------------------
+  test-helpers.js: 101 issues
+  test-helpers.d.ts: 52 issues
+
+tools (137 issues)
+----------------------------------------
+  plugin-docs-generator.js: 114 issues
+  plugin-docs-generator.d.ts: 23 issues
+
+navigation (132 issues)
+----------------------------------------
+  NavigationGenerator.js: 117 issues
+  NavigationGenerator.d.ts: 15 issues
+
+src (129 issues)
+----------------------------------------
+  WebsiteGenerator.js: 26 issues
+  DocsifyWebsiteGenerator.js: 24 issues
+  Builder.js: 21 issues
+  DocsifyIntegration.js: 10 issues
+  DocsifyWebsiteGenerator.ts: 10 issues
+  cli-enhanced.js: 8 issues
+  TestGenerator.js: 6 issues
+  cli.js: 6 issues
+  CMSIntegrationModule.js: 4 issues
+  OpenAPIParser.js: 3 issues
+  cli.ts: 3 issues
+  CMSIntegrationModule.ts: 2 issues
+  WebsiteGenerator.ts: 2 issues
+  Builder.ts: 1 issues
+  DocsifyIntegration.ts: 1 issues
+  OpenAPIParser.ts: 1 issues
+  cli-enhanced.ts: 1 issues
+
+scripts (124 issues)
+----------------------------------------
+  fix-logic-errors-issues.js: 36 issues
+  fix-module-system.js: 16 issues
+  run-improvements.js: 16 issues
+  fix-type-safety.js: 12 issues
+  fix-logic-errors.js: 11 issues
+  fix-type-safety-issues.js: 11 issues
+  fix-module-system-issues.js: 9 issues
+  fix-linting.js: 7 issues
+  fix-import-extensions.js: 6 issues
+
+utils (86 issues)
+----------------------------------------
+  dev-server-class.js: 13 issues
+  errors.ts: 13 issues
+  dev-server.js: 12 issues
+  file-watcher.js: 10 issues
+  file-watcher.ts: 7 issues
+  dev-server-class.ts: 6 issues
+  dev-server.ts: 6 issues
+  errors.js: 5 issues
+  incremental.js: 5 issues
+  config-validator.js: 2 issues
+  logger.js: 2 issues
+  logger.ts: 2 issues
+  cache.ts: 1 issues
+  config-validator.ts: 1 issues
+  performance.ts: 1 issues
+
+helpers (66 issues)
+----------------------------------------
+  component-helper.js: 66 issues
+
+utils (55 issues)
+----------------------------------------
+  cache.test.ts: 23 issues
+  incremental.test.ts: 14 issues
+  config-validator.test.ts: 12 issues
+  dev-server.test.ts: 6 issues
+
+component-generator (53 issues)
+----------------------------------------
+  index.js: 36 issues
+  index.d.ts: 17 issues
+
+plugins (52 issues)
+----------------------------------------
+  PluginLoader.js: 15 issues
+  PluginManager.js: 6 issues
+  docsify-plugin.ts: 6 issues
+  docsify-plugin.js: 5 issues
+  CrossReferencePlugin.js: 4 issues
+  SiteMapGenerator.js: 3 issues
+  MermaidPlugin.js: 2 issues
+  PluginManager.ts: 2 issues
+  PrismPlugin.js: 2 issues
+  PrismPlugin.ts: 2 issues
+  MarkdownEnhancerPlugin.js: 1 issues
+  MarkdownEnhancerPlugin.ts: 1 issues
+  PluginSystem.js: 1 issues
+  SyntaxHighlightPlugin.js: 1 issues
+  TableOfContentsPlugin.js: 1 issues
+
+templates (44 issues)
+----------------------------------------
+  HandlebarsTemplateEngine.js: 17 issues
+  EjsTemplateEngine.js: 7 issues
+  TemplateEngine.js: 4 issues
+  TemplateManager.js: 4 issues
+  docsify-templates.js: 4 issues
+  docsify-templates.ts: 3 issues
+  EjsTemplateEngine.ts: 2 issues
+  TemplateManager.ts: 2 issues
+  HandlebarsTemplateEngine.ts: 1 issues
+
+types (43 issues)
+----------------------------------------
+  plugin.d.ts: 12 issues
+  plugin.ts: 12 issues
+  index.d.ts: 6 issues
+  index.ts: 6 issues
+  design.d.ts: 3 issues
+  design.ts: 3 issues
+  component.d.ts: 1 issues
+
+types (32 issues)
+----------------------------------------
+  handlebars.d.ts: 20 issues
+  design.d.ts: 3 issues
+  design.ts: 3 issues
+  workbox.d.ts: 2 issues
+  component.d.ts: 1 issues
+  component.ts: 1 issues
+  index.d.ts: 1 issues
+  plugin.ts: 1 issues
+
+Site_Generator (27 issues)
+----------------------------------------
+  cms-integration.ts: 18 issues
+  parser-implementation.js: 7 issues
+  component-generator.d.ts: 2 issues
+
+__tests__ (24 issues)
+----------------------------------------
+  DocsifyWebsiteGenerator.test.ts: 7 issues
+  WebsiteGenerator.test.ts: 7 issues
+  Builder.test.ts: 5 issues
+  TestGenerator.test.ts: 5 issues
+
+plugins (24 issues)
+----------------------------------------
+  SiteMapGenerator.test.ts: 18 issues
+  PluginLoader.test.ts: 4 issues
+  MarkdownEnhancerPlugin.test.ts: 1 issues
+  TableOfContentsPlugin.test.ts: 1 issues
+
+parsers (22 issues)
+----------------------------------------
+  DocsifyMarkdownParser.js: 9 issues
+  OpenAPIParser.js: 8 issues
+  ParserFactory.js: 5 issues
+
+services (20 issues)
+----------------------------------------
+  ParserService.js: 13 issues
+  BaseService.js: 5 issues
+  ParserService.ts: 2 issues
+
+navigation (17 issues)
+----------------------------------------
+  NavigationGenerator.js: 17 issues
+
+dist (15 issues)
+----------------------------------------
+  component-generator.d.ts: 15 issues
+
+tools (10 issues)
+----------------------------------------
+  plugin-docs-generator.js: 5 issues
+  plugin-docs-generator.ts: 5 issues
+
+config (8 issues)
+----------------------------------------
+  generator.config.d.ts: 4 issues
+  generator.config.ts: 4 issues
+
+optimization (7 issues)
+----------------------------------------
+  performance-optimizer.ts: 5 issues
+  performance-optimizer.js: 2 issues
+
+__tests__ (6 issues)
+----------------------------------------
+  simple-test.js: 6 issues
+
+parsers (6 issues)
+----------------------------------------
+  DocsifyMarkdownParser.test.ts: 3 issues
+  OpenAPIParser.test.ts: 2 issues
+  ParserFactory.test.ts: 1 issues
+
+tools (5 issues)
+----------------------------------------
+  plugin-docs-generator.test.ts: 5 issues
+
+services (3 issues)
+----------------------------------------
+  ParserService.test.ts: 3 issues
+
+templates (2 issues)
+----------------------------------------
+  HandlebarsTemplateEngine.test.ts: 1 issues
+  TemplateManager.test.ts: 1 issues
+
+component-generator (2 issues)
+----------------------------------------
+  index.js: 1 issues
+  index.ts: 1 issues
+
+navigation (1 issues)
+----------------------------------------
+  NavigationGenerator.test.ts: 1 issues
+
+helpers (1 issues)
+----------------------------------------
+  component-helper.js: 1 issues
+
+Analysis complete.

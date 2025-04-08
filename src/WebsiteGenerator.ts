@@ -8,7 +8,7 @@ import { DocumentationParserFactory } from '../parser-implementation.js';
 import { ComponentGenerator } from '../component-generator.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 export class WebsiteGenerator {
   private config: WebsiteGeneratorConfig;

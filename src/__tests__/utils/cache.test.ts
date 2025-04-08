@@ -1,10 +1,24 @@
+//import { logger } from '../../utils/logger.js';
 import { ContentCache, CacheOptions } from '../../utils/cache.js';
 import * as fs from 'fs';
 import * as path from 'path';
-
 // Mock dependencies
 jest.mock('fs');
 jest.mock('path');
+jest.mock('../../utils/logger.js');
+
+// Define a type for our test data to replace 'any'
+interface TestDocument {
+  title: string;
+  content: string;
+  [key: string]: unknown; // Allow for additional properties if needed
+}
+
+// Define a type for test items with numeric IDs
+interface TestItem {
+  id: number;
+  [key: string]: unknown; // Allow for additional properties if needed
+}
 
 describe('ContentCache', () => {
   // Sample cache options
@@ -23,7 +37,7 @@ describe('ContentCache', () => {
   };
 
   // Sample cache data
-  const sampleData = {
+  const sampleData: TestDocument = {
     title: 'Test Document',
     content: 'Test content',
   };
@@ -37,12 +51,12 @@ describe('ContentCache', () => {
     });
 
     // Mock fs.mkdirSync
-    (fs.mkdirSync as jest.Mock).mockImplementation((dirPath: string, _options) => {
+    (fs.mkdirSync as jest.Mock).mockImplementation(() => {
       return undefined;
     });
 
     // Mock fs.writeFileSync
-    (fs.writeFileSync as jest.Mock).mockImplementation((filePath: string, _content: string) => {
+    (fs.writeFileSync as jest.Mock).mockImplementation(() => {
       return undefined;
     });
 
@@ -65,7 +79,7 @@ describe('ContentCache', () => {
     });
 
     // Mock fs.unlinkSync
-    (fs.unlinkSync as jest.Mock).mockImplementation((filePath: string) => {
+    (fs.unlinkSync as jest.Mock).mockImplementation(() => {
       return undefined;
     });
 
@@ -84,12 +98,12 @@ describe('ContentCache', () => {
   });
 
   test('should initialize with memory storage', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
     expect(cache).toBeDefined();
   });
 
   test('should initialize with filesystem storage', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
     expect(cache).toBeDefined();
     expect(fs.existsSync).toHaveBeenCalledWith('/test/cache');
   });
@@ -100,12 +114,12 @@ describe('ContentCache', () => {
       return dirPath !== '/test/cache';
     });
 
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
     expect(fs.mkdirSync).toHaveBeenCalledWith('/test/cache', { recursive: true });
   });
 
   test('should set and get item from memory cache', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
 
     cache.set('test-key', sampleData);
     const result = cache.get('test-key');
@@ -114,7 +128,7 @@ describe('ContentCache', () => {
   });
 
   test('should set and get item from filesystem cache', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
     cache.set('test-key', sampleData);
 
@@ -131,7 +145,7 @@ describe('ContentCache', () => {
   });
 
   test('should return null for non-existent item', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
 
     const result = cache.get('non-existent-key');
 
@@ -139,7 +153,7 @@ describe('ContentCache', () => {
   });
 
   test('should check if item exists in memory cache', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
 
     cache.set('test-key', sampleData);
 
@@ -148,7 +162,7 @@ describe('ContentCache', () => {
   });
 
   test('should check if item exists in filesystem cache', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
     // Mock fs.existsSync to return true for valid cache file
     (fs.existsSync as jest.Mock).mockImplementation((filePath: string) => {
@@ -160,7 +174,7 @@ describe('ContentCache', () => {
   });
 
   test('should delete item from memory cache', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
 
     cache.set('test-key', sampleData);
     expect(cache.has('test-key')).toBe(true);
@@ -170,7 +184,7 @@ describe('ContentCache', () => {
   });
 
   test('should delete item from filesystem cache', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
     // Mock fs.existsSync to return true for cache file
     (fs.existsSync as jest.Mock).mockImplementation((filePath: string) => {
@@ -183,7 +197,7 @@ describe('ContentCache', () => {
   });
 
   test('should clear memory cache', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
 
     cache.set('test-key-1', sampleData);
     cache.set('test-key-2', sampleData);
@@ -195,7 +209,7 @@ describe('ContentCache', () => {
   });
 
   test('should clear filesystem cache', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
     cache.clear();
 
@@ -204,7 +218,7 @@ describe('ContentCache', () => {
   });
 
   test('should handle expired items in memory cache', () => {
-    const cache = new ContentCache<any>({
+    const cache = new ContentCache<TestDocument>({
       ...memoryCacheOptions,
       ttl: 1000, // 1 second
     });
@@ -218,7 +232,7 @@ describe('ContentCache', () => {
   });
 
   test('should handle expired items in filesystem cache', () => {
-    const cache = new ContentCache<any>(filesystemCacheOptions);
+    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
     // Mock fs.existsSync to return true for expired cache file
     (fs.existsSync as jest.Mock).mockImplementation((filePath: string) => {
@@ -230,7 +244,7 @@ describe('ContentCache', () => {
   });
 
   test('should enforce maximum cache size', () => {
-    const cache = new ContentCache<any>({
+    const cache = new ContentCache<TestItem>({
       ...memoryCacheOptions,
       maxSize: 2, // Only allow 2 items
     });
@@ -246,8 +260,8 @@ describe('ContentCache', () => {
     expect(cache.has('test-key-3')).toBe(true);
   });
 
-  test('should get cache statistics', () => {
-    const cache = new ContentCache<any>(memoryCacheOptions);
+  test('should get cache statistics', async () => {
+    const cache = new ContentCache<TestItem>(memoryCacheOptions);
 
     cache.set('test-key-1', { id: 1 });
     cache.set('test-key-2', { id: 2 });
@@ -255,15 +269,16 @@ describe('ContentCache', () => {
     const stats = cache.getStats();
 
     expect(stats).toBeDefined();
-    expect(stats.enabled).toBe(true);
-    expect(stats.storageType).toBe('memory');
-    expect(stats.size).toBe(2);
-    expect(stats.maxSize).toBe(10);
-    expect(stats.ttl).toBe(3600000);
+    console.log('stats', stats);
+    expect((await stats).enabled).toBe(true);
+    expect((await stats).storageType).toBe('memory');
+    expect((await stats).size).toBe(2);
+    expect((await stats).maxSize).toBe(10);
+    expect((await stats).ttl).toBe(3600000);
   });
 
   test('should do nothing when cache is disabled', () => {
-    const cache = new ContentCache<any>({
+    const cache = new ContentCache<TestDocument>({
       ...memoryCacheOptions,
       enabled: false,
     });

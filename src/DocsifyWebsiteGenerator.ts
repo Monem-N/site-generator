@@ -6,6 +6,10 @@ import { Builder } from './Builder.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import { logger } from './utils/logger.js';
+import { ComponentConfig, ComponentTemplate } from '../types/component.js';
+import { ContentModel } from '../types/cms.js';
+import { BuildConfig } from '../types/build.js';
+import type { BuildConfig as IndexBuildConfig } from '../types/index.js';
 
 export class DocsifyWebsiteGenerator {
   private config: WebsiteGeneratorConfig;
@@ -67,13 +71,13 @@ export class DocsifyWebsiteGenerator {
 
       try {
         // Parse file using Docsify integration
-        const parsed = await this.docsifyIntegration.parseFile(file);
+        const parsed = await this.docsifyIntegration.parseFile(file) as ParsedContent;
 
         // Add navigation data
-        parsed.navigation = navigation;
+        (parsed as any).navigation = navigation;
 
         // Add theme data
-        parsed.theme = this.docsifyIntegration.getThemeStyles();
+        (parsed as any).theme = this.docsifyIntegration.getThemeStyles();
 
         parsedContent.push(parsed);
       } catch (error) {
@@ -84,16 +88,16 @@ export class DocsifyWebsiteGenerator {
     return parsedContent;
   }
 
-  private async generateComponents(parsedContent: ParsedContent[]): Promise<any[]> {
+  private async generateComponents(parsedContent: ParsedContent[]): Promise<ComponentConfig[]> {
     logger.debug('Generating components...');
 
-    const components: unknown[] = [];
+    const components: ComponentConfig[] = [];
 
     for (const content of parsedContent) {
       try {
         // Generate component using the component generator
         // Cast content to any to bypass type checking
-        const component = await this.componentGenerator.generatePage(content as unknown);
+        const component = await this.componentGenerator.generatePage(content as unknown as ContentModel);
 
         components.push({
           name: this.getComponentName(content.title),
@@ -132,13 +136,13 @@ export class DocsifyWebsiteGenerator {
     const testGenerator = await import('./TestGenerator.js').then(
       m => new m.TestGenerator(this.config.testing)
     );
-    await testGenerator.generateTests(components as unknown);
+    await testGenerator.generateTests(components as ComponentConfig[]);
   }
 
-  private async build(components: unknown[]): Promise<void> {
+  private async build(components: ComponentConfig[]): Promise<void> {
     logger.debug('Building website...');
 
-    const buildConfig: unknown = {
+    const buildConfig: BuildConfig & IndexBuildConfig = {
       target: 'production',
       outDir: this.config.outputDir,
       optimization: this.config.build.optimization,
@@ -146,7 +150,7 @@ export class DocsifyWebsiteGenerator {
     };
 
     const builder = new Builder(buildConfig);
-    await builder.build(components as unknown);
+    await builder.build(components as ComponentTemplate[]);
   }
 
   private async getDocumentationFiles(sourceDir: string): Promise<string[]> {

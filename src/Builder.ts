@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { rollup } from 'rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { logger } from './utils/logger.js';
+import { logger } from 'utils/logger.js';
 
 // Import these dynamically to avoid ESM issues
 let babel;

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "plugins": [{ "transform": "typescript-transform-paths" }],
     "target": "es2018",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "lib": ["es2018", "dom"],
     "declaration": true,
     "outDir": "./dist",

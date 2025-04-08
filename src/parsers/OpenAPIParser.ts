@@ -272,7 +272,7 @@ ${description}
       content += '| Name | In | Required | Type | Description |\n';
       content += '| ---- | -- | -------- | ---- | ----------- |\n';
 
-      for (const param of operation.parameters) {
+      for (const param of operation.parameters as any[]) {
         const name = param.name || '';
         const inType = param.in || '';
         const required = param.required ? 'Yes' : 'No';

@@ -1,9 +1,9 @@
 /* eslint-disable */
 
 // Core component generator
-import { ContentModel } from './types/cms';
-import { DesignSystem } from './types/design';
-import { ContentElement } from './types/cms';
+import { ContentModel } from './types/cms.js';
+import { DesignSystem } from './types/design.js';
+import { ContentElement } from './types/cms.js';
 
 export class ComponentGenerator {
   private designSystem: DesignSystem;
@@ -129,7 +129,9 @@ class SectionTemplate implements IComponentTemplate {
 
     return `
 <section className="${dsConfig?.classMapping?.sectionContainer || ''}">
-  <${HeadingTag} className="${dsConfig?.classMapping?.[`heading${level}`] || ''}">${title}</${HeadingTag}>
+  <${HeadingTag} className="${
+      dsConfig?.classMapping?.[`heading${level}`] || ''
+    }">${title}</${HeadingTag}>
   <div className="${dsConfig?.classMapping?.contentContainer || ''}">
     ${this.renderContent(content, dsConfig)}
   </div>
@@ -141,7 +143,9 @@ class SectionTemplate implements IComponentTemplate {
     return content
       .map(item => {
         if (item.type === 'paragraph') {
-          return `<p className="${dsConfig?.classMapping?.paragraph || ''}">${item.content.join(' ')}</p>`;
+          return `<p className="${dsConfig?.classMapping?.paragraph || ''}">${item.content.join(
+            ' '
+          )}</p>`;
         }
         // Handle other content types
         return '';
@@ -177,7 +181,7 @@ class CodeBlockTemplate implements IComponentTemplate {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
   }
-  }
+}
 
 class APIEndpointTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
@@ -186,7 +190,9 @@ class APIEndpointTemplate implements IComponentTemplate {
 
     return `
 <div className="${dsConfig?.classMapping?.apiEndpointContainer || ''}">
-  <div className="${dsConfig?.classMapping?.endpointHeader || ''} ${dsConfig?.classMapping?.[`method${method.toLowerCase()}`] || ''}">
+  <div className="${dsConfig?.classMapping?.endpointHeader || ''} ${
+      dsConfig?.classMapping?.[`method${method.toLowerCase()}`] || ''
+    }">
     <span className="${dsConfig?.classMapping?.httpMethod || ''}">${method}</span>
     <span className="${dsConfig?.classMapping?.endpointPath || ''}">${endpoint}</span>
   </div>
@@ -228,7 +234,7 @@ class APIEndpointTemplate implements IComponentTemplate {
           </tr>
           `
             )
-          .join('')}
+            .join('')}
       </table>
     </div>
     `;
@@ -253,7 +259,7 @@ class APIEndpointTemplate implements IComponentTemplate {
         </div>
         `
           )
-        .join('')}
+          .join('')}
       </div>
     </div>
     `;
@@ -279,7 +285,10 @@ class TableTemplate implements IComponentTemplate {
     <thead>
       <tr>
         ${headers
-          .map((header: string) => `<th className="${dsConfig?.classMapping?.tableHeader || ''}">${header}</th>`)
+          .map(
+            (header: string) =>
+              `<th className="${dsConfig?.classMapping?.tableHeader || ''}">${header}</th>`
+          )
           .join('\n        ')}
       </tr>
     </thead>
@@ -288,7 +297,12 @@ class TableTemplate implements IComponentTemplate {
         .map(
           (row: string[]) => `
       <tr className="${dsConfig?.classMapping?.tableRow || ''}">
-        ${row.map((cell: string) => `<td className="${dsConfig?.classMapping?.tableCell || ''}">${cell}</td>`).join('\n        ')}
+        ${row
+          .map(
+            (cell: string) =>
+              `<td className="${dsConfig?.classMapping?.tableCell || ''}">${cell}</td>`
+          )
+          .join('\n        ')}
       </tr>
       `
         )
@@ -312,7 +326,9 @@ class NavigationTemplate implements IComponentTemplate {
       .map(
         (item: any) => `
     <li className="${dsConfig?.classMapping?.navItem || ''}">
-      <a href="${item.path}" className="${dsConfig?.classMapping?.navLink || ''}${item.active ? ' ' + (dsConfig?.classMapping?.navLinkActive || '') : ''}">
+      <a href="${item.path}" className="${dsConfig?.classMapping?.navLink || ''}${
+          item.active ? ' ' + (dsConfig?.classMapping?.navLinkActive || '') : ''
+        }">
         ${item.label}
       </a>
       ${item.children ? this.renderSubItems(item.children, dsConfig) : ''}
@@ -332,7 +348,9 @@ class NavigationTemplate implements IComponentTemplate {
         .map(
           (item: any) => `
       <li className="${dsConfig?.classMapping?.navSubitem || ''}">
-        <a href="${item.path}" className="${dsConfig?.classMapping?.navSublink || ''}${item.active ? ' ' + (dsConfig?.classMapping?.navSublinkActive || '') : ''}">
+        <a href="${item.path}" className="${dsConfig?.classMapping?.navSublink || ''}${
+            item.active ? ' ' + (dsConfig?.classMapping?.navSublinkActive || '') : ''
+          }">
           ${item.label}
         </a>
       </li>
@@ -344,7 +362,6 @@ class NavigationTemplate implements IComponentTemplate {
   }
 }
 
-
 // Test
 
 async function testComponentGenerator() {
@@ -352,15 +369,15 @@ async function testComponentGenerator() {
     type: 'custom',
     importPath: 'test',
     classNames: {
-      pageContainer: 'test'
-    }
+      pageContainer: 'test',
+    },
   };
   const componentGenerator = new ComponentGenerator(designSystem);
   const contentElement: ContentElement = {
     type: 'section',
     title: 'Test Section',
     level: 1,
-    content: []
+    content: [],
   };
   await componentGenerator.generateComponent(contentElement);
 
@@ -373,10 +390,10 @@ async function testComponentGenerator() {
     metadata: {
       createdAt: '2024-04-07',
       updatedAt: '2024-04-07',
-      locale: 'en-US'
+      locale: 'en-US',
     },
     fields: {},
-    elements: [contentElement]
+    elements: [contentElement],
   };
   await componentGenerator.generatePage(contentModel);
 }

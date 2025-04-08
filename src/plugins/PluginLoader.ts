@@ -2,7 +2,7 @@ import { Plugin } from '../types/plugin.js';
 import { FileSystemError } from '../utils/errors.js';
 import * as path from 'path';
 import * as fs from 'fs';
-import { logger } from './utils/logger.js';
+import { logger } from '../utils/logger.js';
 
 /**
  * Plugin loader class

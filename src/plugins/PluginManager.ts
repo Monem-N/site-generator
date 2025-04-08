@@ -1,6 +1,6 @@
 import { Plugin } from '../../types/plugin.js';
 import { ParsedContent } from '../../types/parser.js';
-import { logger } from './utils/logger.js';
+import { logger } from '../utils/logger.js';
 
 export class PluginManager {
   private plugins: Plugin[] = [];

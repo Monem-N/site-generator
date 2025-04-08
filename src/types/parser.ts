@@ -36,6 +36,16 @@ export interface ParsedContent {
    * References
    */
   references?: ContentReference[];
+
+  /**
+   * Navigation
+   */
+  navigation?: any;
+
+  /**
+   * Theme
+   */
+  theme?: any;
 }
 
 /**

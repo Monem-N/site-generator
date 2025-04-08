@@ -1,4 +1,4 @@
-import { logger } from './utils/logger.js';
+import { logger } from './logger.js';
 
 /**
  * Base error class for all site generator errors

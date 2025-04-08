@@ -15,7 +15,7 @@ describe('SiteMapGenerator', () => {
     jest.clearAllMocks();
 
     // Mock fs.promises.writeFile to do nothing
-    (fs.promises as any) = {
+    (fs.promises as unknown) = {
       writeFile: jest.fn().mockResolvedValue(undefined),
     };
 
@@ -66,11 +66,11 @@ describe('SiteMapGenerator', () => {
     generator.hooks.afterParse(parsedContent);
 
     // Verify that the URL was added
-    expect((generator as any).urls).toHaveLength(1);
-    expect((generator as any).urls[0].loc).toBe('https://example.com/content/test-page/');
-    expect((generator as any).urls[0].lastmod).toBe('2021-07-01');
-    expect((generator as any).urls[0].changefreq).toBe('weekly');
-    expect((generator as any).urls[0].priority).toBe(0.5);
+    expect((generator as unknown).urls).toHaveLength(1);
+    expect((generator as unknown).urls[0].loc).toBe('https://example.com/content/test-page/');
+    expect((generator as unknown).urls[0].lastmod).toBe('2021-07-01');
+    expect((generator as unknown).urls[0].changefreq).toBe('weekly');
+    expect((generator as unknown).urls[0].priority).toBe(0.5);
   });
 
   test('should handle index files correctly', () => {
@@ -92,8 +92,8 @@ describe('SiteMapGenerator', () => {
     generator.hooks.afterParse(parsedContent);
 
     // Verify that the URL was added with the correct path
-    expect((generator as any).urls).toHaveLength(1);
-    expect((generator as any).urls[0].loc).toBe('https://example.com/content/');
+    expect((generator as unknown).urls).toHaveLength(1);
+    expect((generator as unknown).urls[0].loc).toBe('https://example.com/content/');
   });
 
   test('should exclude paths based on patterns', () => {
@@ -146,8 +146,8 @@ describe('SiteMapGenerator', () => {
     excludeGenerator.hooks.afterParse(publicContent);
 
     // Verify that only the public page was added
-    expect((excludeGenerator as any).urls).toHaveLength(1);
-    expect((excludeGenerator as any).urls[0].loc).toBe('https://example.com/public/page/');
+    expect((excludeGenerator as unknown).urls).toHaveLength(1);
+    expect((excludeGenerator as unknown).urls[0].loc).toBe('https://example.com/public/page/');
   });
 
   test('should use custom change frequency and priority from metadata', () => {
@@ -170,9 +170,9 @@ describe('SiteMapGenerator', () => {
     generator.hooks.afterParse(parsedContent);
 
     // Verify that the custom values were used
-    expect((generator as any).urls).toHaveLength(1);
-    expect((generator as any).urls[0].changefreq).toBe('daily');
-    expect((generator as any).urls[0].priority).toBe(0.9);
+    expect((generator as unknown).urls).toHaveLength(1);
+    expect((generator as unknown).urls[0].changefreq).toBe('daily');
+    expect((generator as unknown).urls[0].priority).toBe(0.9);
   });
 
   test('should generate sitemap.xml after build', async () => {
@@ -231,7 +231,7 @@ describe('SiteMapGenerator', () => {
     expect(sitemapContent).toContain('<priority>0.5</priority>');
 
     // Verify that the URLs list was reset
-    expect((generator as any).urls).toHaveLength(0);
+    expect((generator as unknown).urls).toHaveLength(0);
 
     // Restore process.cwd
     process.cwd = originalCwd;
@@ -287,9 +287,9 @@ describe('SiteMapGenerator', () => {
     generator.hooks.afterParse(noLastMod);
 
     // Verify the lastmod values
-    expect((generator as any).urls[0].lastmod).toBe('2021-07-01');
-    expect((generator as any).urls[1].lastmod).toBe('2021-07-02');
-    expect((generator as any).urls[2].lastmod).toBe('2021-07-03');
+    expect((generator as unknown).urls[0].lastmod).toBe('2021-07-01');
+    expect((generator as unknown).urls[1].lastmod).toBe('2021-07-02');
+    expect((generator as unknown).urls[2].lastmod).toBe('2021-07-03');
 
     // Restore Date.now
     Date.now = originalDateNow;
@@ -320,7 +320,7 @@ describe('SiteMapGenerator', () => {
     noLastModGenerator.hooks.afterParse(parsedContent);
 
     // Verify that lastmod is undefined
-    expect((noLastModGenerator as any).urls[0].lastmod).toBeUndefined();
+    expect((noLastModGenerator as unknown).urls[0].lastmod).toBeUndefined();
   });
 
   test('should escape XML special characters in URLs', async () => {

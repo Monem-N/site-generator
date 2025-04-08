@@ -33,18 +33,21 @@ These enhancements will significantly increase the value proposition of the Docs
 ### 3.1 Core Components
 
 1. **User Profile Manager**
+
    - User identification and authentication integration
    - Profile data storage and retrieval
    - Role and permission management
    - Preference persistence
 
 2. **Personalization Engine**
+
    - Rule-based content filtering
    - Navigation customization logic
    - Content recommendation algorithms
    - A/B testing capabilities
 
 3. **Branding Manager**
+
    - Theme customization beyond predefined options
    - Dynamic CSS generation
    - Brand asset management
@@ -161,16 +164,19 @@ interface BrandConfiguration {
 ### 4.1 Navigation Personalization Features
 
 1. **Role-Based Navigation**
+
    - Show/hide navigation items based on user roles
    - Highlight recommended paths for specific roles
    - Customize navigation depth based on user expertise level
 
 2. **Preference-Based Navigation**
+
    - Allow users to pin/favorite important sections
    - Remember expanded/collapsed state of navigation items
    - Support custom ordering of navigation items
 
 3. **Behavior-Based Navigation**
+
    - Recently viewed pages section
    - Most frequently accessed pages
    - Continuation suggestions based on browsing patterns
@@ -188,63 +194,63 @@ export class PersonalizedNavigationGenerator {
   private config: NavigationConfig;
   private userProfile?: UserProfile;
   private siteStructure: SiteStructure;
-  
+
   constructor(config: NavigationConfig, siteStructure: SiteStructure) {
     this.config = config;
     this.siteStructure = siteStructure;
   }
-  
+
   // Set current user profile for personalization
   setUserProfile(profile: UserProfile): void {
     this.userProfile = profile;
   }
-  
+
   // Generate personalized navigation
   generateNavigation(): NavigationTree {
     // Start with complete navigation tree
     let navTree = this.buildBaseNavigationTree();
-    
+
     // Apply role-based filtering
     navTree = this.applyRoleBasedFiltering(navTree);
-    
+
     // Apply user preferences
     navTree = this.applyUserPreferences(navTree);
-    
+
     // Apply behavior-based customizations
     navTree = this.applyBehaviorBasedCustomizations(navTree);
-    
+
     // Apply contextual enhancements
     navTree = this.applyContextualEnhancements(navTree);
-    
+
     return navTree;
   }
-  
+
   // Build base navigation from site structure
   private buildBaseNavigationTree(): NavigationTree {
     // Implementation to build navigation from directory structure
   }
-  
+
   // Filter navigation based on user roles
   private applyRoleBasedFiltering(navTree: NavigationTree): NavigationTree {
     if (!this.userProfile) return navTree;
-    
+
     // Implementation to filter navigation items based on roles
   }
-  
+
   // Apply user navigation preferences
   private applyUserPreferences(navTree: NavigationTree): NavigationTree {
     if (!this.userProfile?.preferences.navigation) return navTree;
-    
+
     // Implementation to apply user preferences to navigation
   }
-  
+
   // Apply customizations based on user behavior
   private applyBehaviorBasedCustomizations(navTree: NavigationTree): NavigationTree {
     if (!this.userProfile?.history) return navTree;
-    
+
     // Implementation to customize navigation based on user behavior
   }
-  
+
   // Add contextual enhancements to navigation
   private applyContextualEnhancements(navTree: NavigationTree): NavigationTree {
     // Implementation to add contextual navigation elements
@@ -257,12 +263,14 @@ export class PersonalizedNavigationGenerator {
 Create new navigation templates that support personalization:
 
 1. **Adaptive Sidebar Template**
+
    - Sections for pinned/favorite items
    - Recently viewed pages
    - Role-specific recommended paths
    - Collapsible sections with memory
 
 2. **Personalized Header Navigation**
+
    - Quick access to frequently used sections
    - User-specific shortcuts
    - Breadcrumb with alternative paths
@@ -277,18 +285,21 @@ Create new navigation templates that support personalization:
 ### 5.1 Branding Features
 
 1. **Theme Customization**
+
    - Custom color schemes beyond predefined themes
    - Typography customization (fonts, sizes, weights)
    - Spacing and layout adjustments
    - Component styling variations
 
 2. **Brand Asset Management**
+
    - Logo integration (light/dark versions)
    - Favicon and mobile icons
    - Custom header and footer designs
    - Branded code block styles
 
 3. **CSS Generation**
+
    - Dynamic CSS variable generation
    - CSS-in-JS support for theme customization
    - Scoped CSS for component-level branding
@@ -306,100 +317,109 @@ Create new navigation templates that support personalization:
 export class BrandManager {
   private brandConfig: BrandConfiguration;
   private themeVariables: Record<string, string>;
-  
+
   constructor(brandConfig: BrandConfiguration) {
     this.brandConfig = brandConfig;
     this.themeVariables = this.generateThemeVariables();
   }
-  
+
   // Generate CSS variables from brand configuration
   private generateThemeVariables(): Record<string, string> {
     const variables: Record<string, string> = {};
-    
+
     // Color variables
     Object.entries(this.brandConfig.colors).forEach(([key, value]) => {
       variables[`--color-${key}`] = value;
     });
-    
+
     // Typography variables
     variables['--font-heading'] = this.brandConfig.typography.headingFont;
     variables['--font-body'] = this.brandConfig.typography.bodyFont;
     variables['--font-code'] = this.brandConfig.typography.codeFont;
     variables['--font-size-base'] = this.brandConfig.typography.baseFontSize;
     variables['--line-height'] = this.brandConfig.typography.lineHeight;
-    
+
     // Component variables
     variables['--button-style'] = this.brandConfig.components.buttonStyle;
     variables['--card-style'] = this.brandConfig.components.cardStyle;
-    
+
     return variables;
   }
-  
+
   // Generate CSS from theme variables
   generateCSS(): string {
     let css = ':root {\n';
-    
+
     // Add all theme variables
     Object.entries(this.themeVariables).forEach(([key, value]) => {
       css += `  ${key}: ${value};\n`;
     });
-    
+
     css += '}\n\n';
-    
+
     // Add component-specific styles
     css += this.generateComponentStyles();
-    
+
     // Add custom CSS if provided
     if (this.brandConfig.customCss) {
       css += this.brandConfig.customCss;
     }
-    
+
     return css;
   }
-  
+
   // Generate component-specific styles
   private generateComponentStyles(): string {
     let css = '';
-    
+
     // Button styles
     css += `.button {
   font-family: var(--font-body);
   background-color: var(--color-primary);
   color: var(--color-background);
-  border-radius: ${this.brandConfig.components.buttonStyle === 'rounded' ? '4px' : 
-                  this.brandConfig.components.buttonStyle === 'pill' ? '999px' : '0'};
+  border-radius: ${
+    this.brandConfig.components.buttonStyle === 'rounded'
+      ? '4px'
+      : this.brandConfig.components.buttonStyle === 'pill'
+      ? '999px'
+      : '0'
+  };
 }\n\n`;
 
     // Card styles
     css += `.card {
   background-color: var(--color-background);
   color: var(--color-text);
-  border: ${this.brandConfig.components.cardStyle === 'outlined' ? '1px solid var(--color-primary)' : 'none'};
-  box-shadow: ${this.brandConfig.components.cardStyle === 'raised' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'};
+  border: ${
+    this.brandConfig.components.cardStyle === 'outlined' ? '1px solid var(--color-primary)' : 'none'
+  };
+  box-shadow: ${
+    this.brandConfig.components.cardStyle === 'raised' ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'
+  };
 }\n\n`;
 
     // Additional component styles...
-    
+
     return css;
   }
-  
+
   // Get logo URL based on theme
   getLogo(isDarkTheme: boolean): string {
     return isDarkTheme ? this.brandConfig.logo.dark : this.brandConfig.logo.light;
   }
-  
+
   // Get favicon URL
   getFavicon(): string {
     return this.brandConfig.logo.favicon;
   }
-  
+
   // Apply branding to HTML document
   applyBranding(document: Document): void {
     // Create style element
     const styleElement = document.createElement('style');
     styleElement.id = 'brand-styles';
     styleElement.textContent = this.generateCSS();
-    
+
     // Add or replace style element
     const existingStyle = document.getElementById('brand-styles');
     if (existingStyle) {
@@ -407,16 +427,18 @@ export class BrandManager {
     } else {
       document.head.appendChild(styleElement);
     }
-    
+
     // Update favicon
-    const faviconLink = document.querySelector('link[rel="icon"]') || document.createElement('link');
+    const faviconLink =
+      document.querySelector('link[rel="icon"]') || document.createElement('link');
     faviconLink.setAttribute('rel', 'icon');
     faviconLink.setAttribute('href', this.getFavicon());
     document.head.appendChild(faviconLink);
-    
+
     // Update title
-    document.title = document.title.includes(this.brandConfig.name) ? 
-      document.title : `${document.title} | ${this.brandConfig.name}`;
+    document.title = document.title.includes(this.brandConfig.name)
+      ? document.title
+      : `${document.title} | ${this.brandConfig.name}`;
   }
 }
 ```
@@ -426,12 +448,14 @@ export class BrandManager {
 Develop a brand configuration UI that allows users to:
 
 1. **Visual Theme Editor**
+
    - Color picker with palette suggestions
    - Font selector with preview
    - Component style previewer
    - Live preview of changes
 
 2. **Asset Manager**
+
    - Logo upload and cropping
    - Favicon generator
    - Image optimization
@@ -448,12 +472,14 @@ Develop a brand configuration UI that allows users to:
 ### 6.1 Preference Storage Options
 
 1. **Local Storage**
+
    - Client-side storage for anonymous users
    - Fast access without authentication
    - Limited storage capacity
    - Device-specific preferences
 
 2. **Server-side Storage**
+
    - User account-linked preferences
    - Cross-device consistency
    - Unlimited storage capacity
@@ -473,12 +499,12 @@ export class PreferenceManager {
   private storage: StorageAdapter;
   private userId?: string;
   private defaultPreferences: UserPreferences;
-  
+
   constructor(storageType: 'local' | 'server' | 'hybrid', defaultPreferences: UserPreferences) {
     this.storage = this.createStorageAdapter(storageType);
     this.defaultPreferences = defaultPreferences;
   }
-  
+
   // Create appropriate storage adapter
   private createStorageAdapter(type: 'local' | 'server' | 'hybrid'): StorageAdapter {
     switch (type) {
@@ -492,19 +518,19 @@ export class PreferenceManager {
         return new LocalStorageAdapter();
     }
   }
-  
+
   // Set user ID for authenticated users
   setUserId(id: string): void {
     this.userId = id;
     this.storage.setUserId(id);
   }
-  
+
   // Get all user preferences
   async getPreferences(): Promise<UserPreferences> {
     if (!this.userId) {
       return this.getAnonymousPreferences();
     }
-    
+
     try {
       const preferences = await this.storage.get<UserPreferences>('preferences');
       return preferences || this.defaultPreferences;
@@ -513,7 +539,7 @@ export class PreferenceManager {
       return this.defaultPreferences;
     }
   }
-  
+
   // Get anonymous user preferences
   private getAnonymousPreferences(): UserPreferences {
     try {
@@ -523,13 +549,13 @@ export class PreferenceManager {
       return this.defaultPreferences;
     }
   }
-  
+
   // Save user preferences
   async savePreferences(preferences: UserPreferences): Promise<void> {
     if (!this.userId) {
       return this.saveAnonymousPreferences(preferences);
     }
-    
+
     try {
       await this.storage.set('preferences', preferences);
     } catch (error) {
@@ -538,7 +564,7 @@ export class PreferenceManager {
       this.storage.setLocal('preferences', preferences);
     }
   }
-  
+
   // Save anonymous user preferences
   private saveAnonymousPreferences(preferences: UserPreferences): void {
     try {
@@ -547,27 +573,27 @@ export class PreferenceManager {
       console.error('Failed to save anonymous preferences:', error);
     }
   }
-  
+
   // Update specific preference category
   async updatePreference<K extends keyof UserPreferences>(
     category: K,
     values: Partial<UserPreferences[K]>
   ): Promise<void> {
     const preferences = await this.getPreferences();
-    
+
     preferences[category] = {
       ...preferences[category],
-      ...values
+      ...values,
     };
-    
+
     await this.savePreferences(preferences);
   }
-  
+
   // Reset preferences to defaults
   async resetPreferences(): Promise<void> {
     await this.savePreferences(this.defaultPreferences);
   }
-  
+
   // Import preferences from JSON
   async importPreferences(json: string): Promise<void> {
     try {
@@ -577,7 +603,7 @@ export class PreferenceManager {
       throw new Error('Invalid preference data format');
     }
   }
-  
+
   // Export preferences to JSON
   async exportPreferences(): Promise<string> {
     const preferences = await this.getPreferences();
@@ -589,12 +615,14 @@ export class PreferenceManager {
 ### 6.3 Preference UI Components
 
 1. **Preference Panel**
+
    - Accessible from navigation
    - Organized by categories
    - Real-time preview of changes
    - Import/export functionality
 
 2. **Quick Preference Controls**
+
    - Theme toggle (light/dark)
    - Font size adjuster
    - Navigation view switcher
@@ -611,16 +639,19 @@ export class PreferenceManager {
 ### 7.1 Conditional Content Features
 
 1. **Role-Based Content**
+
    - Show/hide content based on user roles
    - Alternative content for different roles
    - Role-specific examples and use cases
 
 2. **Expertise-Level Content**
+
    - Beginner/intermediate/advanced versions
    - Optional detailed explanations
    - Skill-level appropriate examples
 
 3. **Interest-Based Content**
+
    - Content tailored to user interests
    - Examples from relevant domains
    - Personalized case studies
@@ -637,53 +668,53 @@ export class PreferenceManager {
 export class ContentPersonalizer {
   private userProfile?: UserProfile;
   private contentRules: ContentRule[];
-  
+
   constructor(contentRules: ContentRule[]) {
     this.contentRules = contentRules;
   }
-  
+
   // Set current user profile
   setUserProfile(profile: UserProfile): void {
     this.userProfile = profile;
   }
-  
+
   // Process content with personalization directives
   processContent(content: string): string {
     if (!this.userProfile) return content;
-    
+
     // Process role-based content blocks
     content = this.processRoleBasedContent(content);
-    
+
     // Process expertise-level content blocks
     content = this.processExpertiseLevelContent(content);
-    
+
     // Process interest-based content blocks
     content = this.processInterestBasedContent(content);
-    
+
     // Process context-aware content blocks
     content = this.processContextAwareContent(content);
-    
+
     return content;
   }
-  
+
   // Process role-based content blocks
   private processRoleBasedContent(content: string): string {
     // Implementation for role-based content personalization
     return content;
   }
-  
+
   // Process expertise-level content blocks
   private processExpertiseLevelContent(content: string): string {
     // Implementation for expertise-level content personalization
     return content;
   }
-  
+
   // Process interest-based content blocks
   private processInterestBasedContent(content: string): string {
     // Implementation for interest-based content personalization
     return content;
   }
-  
+
   // Process context-aware content blocks
   private processContextAwareContent(content: string): string {
     // Implementation for context-aware content personalization
@@ -697,6 +728,7 @@ export class ContentPersonalizer {
 Extend Markdown syntax to support personalization directives:
 
 1. **Role-Based Content**
+
 ```markdown
 ::: role[admin,developer]
 This content is only visible to administrators and developers.
@@ -710,6 +742,7 @@ This content is only visible to administrators and developers.
 ```
 
 2. **Expertise-Level Content**
+
 ```markdown
 ::: level[beginner]
 This is a simplified explanation for beginners.
@@ -725,6 +758,7 @@ This includes in-depth implementation details for advanced users.
 ```
 
 3. **Interest-Based Content**
+
 ```markdown
 ::: interest[frontend,design]
 This content is relevant for those interested in frontend development and design.
@@ -732,6 +766,7 @@ This content is relevant for those interested in frontend development and design
 ```
 
 4. **Context-Aware Content**
+
 ```markdown
 ::: context[project=e-commerce]
 This example is specific to e-commerce applications.
@@ -743,18 +778,21 @@ This example is specific to e-commerce applications.
 ### Phase 1: Foundation (Weeks 1-4)
 
 1. **Week 1: Architecture & Planning**
+
    - Finalize personalization framework architecture
    - Define data models and interfaces
    - Create detailed implementation plan
    - Set up development environment
 
 2. **Week 2: User Profile & Preference Management**
+
    - Implement UserProfile data model
    - Develop PreferenceManager with storage adapters
    - Create basic preference UI components
    - Implement preference import/export
 
 3. **Week 3: Branding Foundation**
+
    - Implement BrandConfiguration data model
    - Develop BrandManager for CSS generation
    - Create theme variable system
@@ -769,18 +807,21 @@ This example is specific to e-commerce applications.
 ### Phase 2: Core Features (Weeks 5-8)
 
 5. **Week 5: Role-Based Personalization**
+
    - Implement role-based navigation filtering
    - Develop role-based content directives
    - Create role management UI
    - Implement role-based permission system
 
 6. **Week 6: Preference-Based Personalization**
+
    - Implement preference-based navigation customization
    - Develop preference-based content adaptation
    - Create comprehensive preference UI
    - Implement preference synchronization
 
 7. **Week 7: Behavior-Based Personalization**
+
    - Implement user behavior tracking
    - Develop recently viewed and frequently used features
    - Create behavior-based navigation enhancements
@@ -795,18 +836,21 @@ This example is specific to e-commerce applications.
 ### Phase 3: Advanced Features (Weeks 9-12)
 
 9. **Week 9: Content Personalization**
+
    - Implement Markdown extensions for personalization
    - Develop content personalization engine
    - Create conditional content rendering
    - Implement content adaptation based on user attributes
 
 10. **Week 10: Contextual Personalization**
+
     - Implement context-aware navigation
     - Develop contextual content adaptation
     - Create related content suggestions
     - Implement next steps recommendations
 
 11. **Week 11: Analytics & Optimization**
+
     - Implement personalization analytics
     - Develop effectiveness measurement
     - Create A/B testing framework

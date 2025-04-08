@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import { FileSystemError } from './errors.js';
-import { logger } from './utils/logger.js';
+import { logger } from './logger.js';
 
 /**
  * File state for tracking changes

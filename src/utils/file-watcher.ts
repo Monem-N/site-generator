@@ -1,7 +1,7 @@
 import * as chokidar from 'chokidar';
 import * as path from 'path';
 import * as chalk from 'chalk';
-import { logger } from './utils/logger.js';
+import { logger } from './logger.js';
 
 /**
  * Watches for file changes in the source directory
