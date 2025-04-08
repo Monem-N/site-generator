@@ -1,8 +1,70 @@
 import { Parser } from './Parser';
 import { ParsedContent, ContentNode } from '../../types/parser';
+// Define OpenAPI types inline for now
+interface OpenAPISpec {
+  openapi?: string;
+  swagger?: string; // For OpenAPI 2.0
+  info: {
+    title: string;
+    version: string;
+    description?: string;
+  };
+  paths: Record<string, PathItem>;
+  components?: {
+    schemas?: Record<string, SchemaObject>;
+  };
+}
+
+interface PathItem {
+  summary?: string;
+  description?: string;
+  get?: OperationObject;
+  put?: OperationObject;
+  post?: OperationObject;
+  delete?: OperationObject;
+  options?: OperationObject;
+  head?: OperationObject;
+  patch?: OperationObject;
+  trace?: OperationObject;
+  // Allow indexing with string
+  [key: string]: OperationObject | string | undefined;
+}
+
+interface OperationObject {
+  tags?: string[];
+  summary?: string;
+  description?: string;
+  operationId?: string;
+  parameters?: any[];
+  requestBody?: {
+    content: Record<string, MediaTypeObject>;
+    description?: string;
+    required?: boolean;
+  };
+  responses?: Record<string, any>;
+  // Allow indexing with string
+  [key: string]: any;
+}
+
+interface SchemaObject {
+  type?: string;
+  format?: string;
+  description?: string;
+  properties?: Record<string, SchemaObject>;
+  required?: string[];
+  items?: SchemaObject;
+}
+
+interface MediaTypeObject {
+  schema?: SchemaObject;
+  example?: unknown;
+  examples?: Record<string, unknown>;
+}
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+// Import error types if needed
+// import { FileSystemError, ParserError } from '../utils/errors';
 
 /**
  * Options for the OpenAPIParser
@@ -47,18 +109,19 @@ export class OpenAPIParser implements Parser {
 
       // Parse OpenAPI specification based on file extension
       const extension = path.extname(filePath).toLowerCase();
-      let spec: any;
+      let spec: OpenAPISpec;
 
       try {
         if (extension === '.json') {
-          spec = JSON.parse(content);
+          spec = JSON.parse(content) as OpenAPISpec;
         } else if (extension === '.yaml' || extension === '.yml') {
-          spec = yaml.load(content);
+          spec = yaml.load(content) as OpenAPISpec;
         } else {
           throw new Error(`Unsupported file extension: ${extension}`);
         }
-      } catch (error: any) {
-        throw new Error(`Failed to parse OpenAPI specification: ${error.message}`);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        throw new Error(`Failed to parse OpenAPI specification: ${errorMessage}`);
       }
 
       // Validate schema if enabled
@@ -115,7 +178,7 @@ ${description}
       }
 
       // Create metadata
-      const metadata: Record<string, any> = {
+      const metadata: Record<string, unknown> = {
         originalPath: filePath,
         title,
         description,
@@ -137,7 +200,7 @@ ${description}
         assets: [],
         references: [],
       };
-    } catch (error: any) {
+    } catch (error) {
       throw error;
     }
   }
@@ -146,7 +209,7 @@ ${description}
    * Validate the OpenAPI schema
    * @param spec OpenAPI specification
    */
-  validateSchema(spec: any): void {
+  validateSchema(spec: OpenAPISpec): void {
     // Basic validation
     if (!spec) {
       throw new Error('Invalid OpenAPI specification: empty or null');
@@ -174,14 +237,14 @@ ${description}
    * @param pathItem Path item object
    * @returns Markdown content for the path
    */
-  private generatePathContent(path: string, pathItem: any): string {
+  private generatePathContent(path: string, pathItem: PathItem): string {
     let content = `## ${path}\n\n`;
 
     // Add operations
     const operations = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
     for (const operation of operations) {
       if (pathItem[operation]) {
-        const operationObj = pathItem[operation];
+        const operationObj = pathItem[operation] as OperationObject;
         content += this.generateOperationContent(operation, operationObj);
       }
     }
@@ -195,7 +258,7 @@ ${description}
    * @param operation Operation object
    * @returns Markdown content for the operation
    */
-  private generateOperationContent(method: string, operation: any): string {
+  private generateOperationContent(method: string, operation: OperationObject): string {
     let content = `### ${method.toUpperCase()}\n\n`;
 
     // Add summary and description
@@ -239,7 +302,7 @@ ${description}
           content += `**Media Type:** ${mediaType}\n\n`;
 
           // Add type assertion for mediaTypeObj
-          const typedMediaObj = mediaTypeObj as { schema?: any };
+          const typedMediaObj = mediaTypeObj as MediaTypeObject;
           if (typedMediaObj.schema) {
             content += '```json\n';
             content += JSON.stringify(typedMediaObj.schema, null, 2);
@@ -257,9 +320,14 @@ ${description}
 
       for (const [status, response] of Object.entries(operation.responses)) {
         // Add type assertion for response
-        const typedResponse = response as { description?: string; content?: Record<string, any> };
+        const typedResponse = response as {
+          description?: string;
+          content?: Record<string, unknown>;
+        };
         const description = typedResponse.description || '';
-        const contentTypes = typedResponse.content ? Object.keys(typedResponse.content).join(', ') : '';
+        const contentTypes = typedResponse.content
+          ? Object.keys(typedResponse.content).join(', ')
+          : '';
 
         content += `| ${status} | ${description} | ${contentTypes} |\n`;
       }
@@ -276,7 +344,7 @@ ${description}
    * @param schema Schema object
    * @returns Markdown content for the schema
    */
-  private generateSchemaContent(name: string, schema: any): string {
+  private generateSchemaContent(name: string, schema: SchemaObject): string {
     let content = `## ${name}\n\n`;
 
     if (schema.description) {
@@ -318,8 +386,8 @@ ${description}
    * @param spec OpenAPI specification
    * @returns Examples object
    */
-  private extractExamples(spec: any): Record<string, any> {
-    const examples: Record<string, any> = {};
+  private extractExamples(spec: OpenAPISpec): Record<string, unknown> {
+    const examples: Record<string, unknown> = {};
 
     // Extract examples from paths
     if (spec.paths) {
@@ -328,15 +396,17 @@ ${description}
 
         for (const operation of operations) {
           // Add type assertion for pathItem
-          const typedPathItem = pathItem as Record<string, any>;
+          const typedPathItem = pathItem as Record<string, unknown>;
           if (typedPathItem[operation]) {
-            const operationObj = typedPathItem[operation];
+            const operationObj = typedPathItem[operation] as OperationObject;
 
             // Extract examples from request body
             if (operationObj.requestBody?.content) {
-              for (const [mediaType, mediaTypeObj] of Object.entries(operationObj.requestBody.content)) {
+              for (const [mediaType, mediaTypeObj] of Object.entries(
+                operationObj.requestBody.content
+              )) {
                 // Add type assertion for mediaTypeObj
-                const typedMediaObj = mediaTypeObj as { examples?: any; example?: any };
+                const typedMediaObj = mediaTypeObj as MediaTypeObject;
                 if (typedMediaObj.examples) {
                   examples[`${path}.${operation}.request.${mediaType}`] = typedMediaObj.examples;
                 } else if (typedMediaObj.example) {
@@ -349,15 +419,17 @@ ${description}
             if (operationObj.responses) {
               for (const [status, response] of Object.entries(operationObj.responses)) {
                 // Add type assertion for response
-                const typedResponse = response as { content?: Record<string, any> };
+                const typedResponse = response as { content?: Record<string, unknown> };
                 if (typedResponse.content) {
                   for (const [mediaType, mediaTypeObj] of Object.entries(typedResponse.content)) {
                     // Add type assertion for mediaTypeObj
-                    const typedMediaObj = mediaTypeObj as { examples?: any; example?: any };
+                    const typedMediaObj = mediaTypeObj as MediaTypeObject;
                     if (typedMediaObj.examples) {
-                      examples[`${path}.${operation}.response.${status}.${mediaType}`] = typedMediaObj.examples;
+                      examples[`${path}.${operation}.response.${status}.${mediaType}`] =
+                        typedMediaObj.examples;
                     } else if (typedMediaObj.example) {
-                      examples[`${path}.${operation}.response.${status}.${mediaType}`] = typedMediaObj.example;
+                      examples[`${path}.${operation}.response.${status}.${mediaType}`] =
+                        typedMediaObj.example;
                     }
                   }
                 }

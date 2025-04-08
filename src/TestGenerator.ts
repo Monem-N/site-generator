@@ -1,7 +1,7 @@
 import type { WebsiteGeneratorConfig } from '../config/generator.config';
 import { ComponentConfig } from '../types/component';
-import path from 'path';
-import fs from 'fs/promises';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 export class TestGenerator {
   constructor(private config: WebsiteGeneratorConfig['testing']) {}
@@ -94,7 +94,7 @@ describe('${name} Integration', () => {
 
     if (component.content.includes('onClick')) {
       tests.push(`
-  it('handles click events', async () => {
+  it('handles click events', _async () => {
     const user = userEvent.setup();
     render(<${component.name} />);
     const element = screen.getByRole('button');
@@ -105,7 +105,7 @@ describe('${name} Integration', () => {
 
     if (component.content.includes('onChange')) {
       tests.push(`
-  it('handles input changes', async () => {
+  it('handles input changes', _async () => {
     const user = userEvent.setup();
     render(<${component.name} />);
     const input = screen.getByRole('textbox');
@@ -122,7 +122,7 @@ describe('${name} Integration', () => {
     const scenarios: string[] = [];
 
     scenarios.push(`
-  it('maintains state across component interactions', async () => {
+  it('maintains state across component interactions', _async () => {
     const user = userEvent.setup();
     render(
       <div>

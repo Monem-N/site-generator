@@ -4,27 +4,42 @@ import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator';
 import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config';
 import { validateConfig } from './utils/config-validator';
 import { loadPreset } from './utils/config-presets';
-import path from 'path';
-import fs from 'fs';
-import chalk from 'chalk';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as chalk from 'chalk';
 
 // Set up logger
 const logger = {
-  info: (message: string) => console.log(chalk.blue(`[INFO] ${message}`)),
-  success: (message: string) => console.log(chalk.green(`[SUCCESS] ${message}`)),
-  warning: (message: string) => console.log(chalk.yellow(`[WARNING] ${message}`)),
-  error: (message: string) => console.error(chalk.red(`[ERROR] ${message}`)),
-  debug: (message: string, data?: any) => {
+  info: (message: string) => process.stdout.write(chalk.blue(`[INFO] ${message}\n`)),
+  success: (message: string) => process.stdout.write(chalk.green(`[SUCCESS] ${message}\n`)),
+  warning: (message: string) => process.stdout.write(chalk.yellow(`[WARNING] ${message}\n`)),
+  error: (message: string) => process.stderr.write(chalk.red(`[ERROR] ${message}\n`)),
+  debug: (message: string, data?: unknown) => {
     if (options.verbose) {
-      console.log(chalk.gray(`[DEBUG] ${message}`));
-      if (data) console.log(chalk.gray(JSON.stringify(data, null, 2)));
+      process.stdout.write(chalk.gray(`[DEBUG] ${message}\n`));
+      if (data) process.stdout.write(chalk.gray(JSON.stringify(data, null, 2) + '\n'));
     }
   },
 };
 
 // Parse command line arguments
 const args = process.argv.slice(2);
-const options: any = {
+interface CliOptions {
+  sourceDir: string;
+  outputDir: string;
+  theme: string;
+  ignorePatterns: string[];
+  preset: string | null;
+  configFile: string | null;
+  verbose: boolean;
+  validate: boolean;
+  plugins: string[];
+  watch: boolean;
+  serve: boolean;
+  port: number;
+}
+
+const options: CliOptions = {
   sourceDir: '.',
   outputDir: './dist',
   theme: 'vue',
@@ -190,7 +205,10 @@ if (config.parser) {
 
 // Add plugins
 if (options.plugins.length > 0) {
-  config.plugins = [...(config.plugins || []), ...options.plugins.map((name: string) => ({ name }))];
+  config.plugins = [
+    ...(config.plugins || []),
+    ...options.plugins.map((name: string) => ({ name })),
+  ];
 }
 
 // Check if source directory exists
@@ -200,8 +218,19 @@ if (!fs.existsSync(options.sourceDir)) {
 }
 
 // Resolve paths
-options.sourceDir = path.resolve(options.sourceDir);
-options.outputDir = path.resolve(options.outputDir);
+// Sanitize input paths
+const sanitizedSource = path.resolve(process.cwd(), options.sourceDir);
+if (!sanitizedSource.startsWith(process.cwd())) {
+  logger.error(`Invalid source directory: ${options.sourceDir}`);
+  process.exit(1);
+}
+options.sourceDir = sanitizedSource;
+const sanitizedOutput = path.resolve(process.cwd(), options.outputDir);
+if (!sanitizedOutput.startsWith(process.cwd())) {
+  logger.error(`Invalid output directory: ${options.outputDir}`);
+  process.exit(1);
+}
+options.outputDir = sanitizedOutput;
 
 // Validate configuration
 if (options.validate) {

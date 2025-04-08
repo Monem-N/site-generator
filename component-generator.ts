@@ -122,26 +122,26 @@ interface IComponentTemplate {
 class SectionTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { title, level, content } = element;
+    const dsConfig = designSystem?.getConfigForType?.('section');
 
     // Determine heading level
     const HeadingTag = `h${level}`;
 
     return `
-<section className="{section-container}">
-  <${HeadingTag} className="{heading-${level}}">${title}</${HeadingTag}>
-  <div className="{content-container}">
-    ${this.renderContent(content, designSystem)}
+<section className="${dsConfig?.classMapping?.sectionContainer || ''}">
+  <${HeadingTag} className="${dsConfig?.classMapping?.[`heading${level}`] || ''}">${title}</${HeadingTag}>
+  <div className="${dsConfig?.classMapping?.contentContainer || ''}">
+    ${this.renderContent(content, dsConfig)}
   </div>
 </section>
 `;
   }
 
-  private renderContent(content: any[], designSystem: DesignSystem): string {
-    // Implementation would render different content types
+  private renderContent(content: any[], dsConfig: any): string {
     return content
       .map(item => {
         if (item.type === 'paragraph') {
-          return `<p className="{paragraph}">${item.content.join(' ')}</p>`;
+          return `<p className="${dsConfig?.classMapping?.paragraph || ''}">${item.content.join(' ')}</p>`;
         }
         // Handle other content types
         return '';
@@ -172,40 +172,42 @@ class CodeBlockTemplate implements IComponentTemplate {
     // Escape HTML special characters
     return code
       .replace(/&/g, '&amp;')
-      .replace(/</g, '<')
-      .replace(/>/g, '>')
-      .replace(/"/g, '"')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
   }
-}
+  }
 
 class APIEndpointTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { method, endpoint, parameters, responses } = element;
+    const dsConfig = designSystem?.getConfigForType?.('api-endpoint');
 
     return `
-<div className="{api-endpoint-container}">
-  <div className="{endpoint-header} {method-${method.toLowerCase()}}">
-    <span className="{http-method}">${method}</span>
-    <span className="{endpoint-path}">${endpoint}</span>
+<div className="${dsConfig?.classMapping?.apiEndpointContainer || ''}">
+  <div className="${dsConfig?.classMapping?.endpointHeader || ''} ${dsConfig?.classMapping?.[`method${method.toLowerCase()}`] || ''}">
+    <span className="${dsConfig?.classMapping?.httpMethod || ''}">${method}</span>
+    <span className="${dsConfig?.classMapping?.endpointPath || ''}">${endpoint}</span>
   </div>
-  <div className="{endpoint-body}">
-    ${this.renderParameters(parameters)}
-    ${this.renderResponses(responses)}
+  <div className="${dsConfig?.classMapping?.endpointBody || ''}">
+    ${this.renderParameters(parameters, designSystem)}
+    ${this.renderResponses(responses, designSystem)}
   </div>
 </div>
 `;
   }
 
-  private renderParameters(parameters: any[]): string {
+  private renderParameters(parameters: any[], designSystem: DesignSystem): string {
+    const dsConfig = designSystem?.getConfigForType?.('api-endpoint');
     if (!parameters || parameters.length === 0) {
       return '';
     }
 
     return `
-    <div className="{parameters-section}">
-      <h4 className="{section-title}">Parameters</h4>
-      <table className="{parameters-table}">
+    <div className="${dsConfig?.classMapping?.parametersSection || ''}">
+      <h4 className="${dsConfig?.classMapping?.sectionTitle || ''}">Parameters</h4>
+      <table className="${dsConfig?.classMapping?.parametersTable || ''}">
         <thead>
           <tr>
             <th>Name</th>
@@ -232,15 +234,16 @@ class APIEndpointTemplate implements IComponentTemplate {
     `;
   }
 
-  private renderResponses(responses: any): string {
+  private renderResponses(responses: any, designSystem: DesignSystem): string {
+    const dsConfig = designSystem?.getConfigForType?.('api-endpoint');
     if (!responses || Object.keys(responses).length === 0) {
       return '';
     }
 
     return `
-    <div className="{responses-section}">
-      <h4 className="{section-title}">Responses</h4>
-      <div className="{responses-container}">
+    <div className="${dsConfig?.classMapping?.responsesSection || ''}">
+      <h4 className="${dsConfig?.classMapping?.sectionTitle || ''}">Responses</h4>
+      <div className="${dsConfig?.classMapping?.responsesContainer || ''}">
         ${Object.entries(responses)
           .map(
             ([code, response]: [string, any]) => `
@@ -268,14 +271,15 @@ class APIEndpointTemplate implements IComponentTemplate {
 class TableTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { headers, rows } = element;
+    const dsConfig = designSystem?.getConfigForType?.('table');
 
     return `
-<div className="{table-container}">
-  <table className="{table}">
+<div className="${dsConfig?.classMapping?.tableContainer || ''}">
+  <table className="${dsConfig?.classMapping?.table || ''}">
     <thead>
       <tr>
         ${headers
-          .map((header: string) => `<th className="{table-header}">${header}</th>`)
+          .map((header: string) => `<th className="${dsConfig?.classMapping?.tableHeader || ''}">${header}</th>`)
           .join('\n        ')}
       </tr>
     </thead>
@@ -283,8 +287,8 @@ class TableTemplate implements IComponentTemplate {
       ${rows
         .map(
           (row: string[]) => `
-      <tr className="{table-row}">
-        ${row.map((cell: string) => `<td className="{table-cell}">${cell}</td>`).join('\n        ')}
+      <tr className="${dsConfig?.classMapping?.tableRow || ''}">
+        ${row.map((cell: string) => `<td className="${dsConfig?.classMapping?.tableCell || ''}">${cell}</td>`).join('\n        ')}
       </tr>
       `
         )
@@ -299,18 +303,19 @@ class TableTemplate implements IComponentTemplate {
 class NavigationTemplate implements IComponentTemplate {
   async generate(element: any, designSystem: DesignSystem): Promise<string> {
     const { items } = element;
+    const dsConfig = designSystem?.getConfigForType?.('navigation');
 
     return `
-<nav className="{navigation-container}">
-  <ul className="{nav-list}">
+<nav className="${dsConfig?.classMapping?.navigationContainer || ''}">
+  <ul className="${dsConfig?.classMapping?.navList || ''}">
     ${items
       .map(
         (item: any) => `
-    <li className="{nav-item}">
-      <a href="${item.path}" className="{nav-link}${item.active ? ' {nav-link-active}' : ''}">
+    <li className="${dsConfig?.classMapping?.navItem || ''}">
+      <a href="${item.path}" className="${dsConfig?.classMapping?.navLink || ''}${item.active ? ' ' + (dsConfig?.classMapping?.navLinkActive || '') : ''}">
         ${item.label}
       </a>
-      ${item.children ? this.renderSubItems(item.children) : ''}
+      ${item.children ? this.renderSubItems(item.children, dsConfig) : ''}
     </li>
     `
       )
@@ -320,16 +325,14 @@ class NavigationTemplate implements IComponentTemplate {
 `;
   }
 
-  private renderSubItems(items: any[]): string {
+  private renderSubItems(items: any[], dsConfig?: any): string {
     return `
-    <ul className="{nav-sublist}">
+    <ul className="${dsConfig?.classMapping?.navSublist || ''}">
       ${items
         .map(
           (item: any) => `
-      <li className="{nav-subitem}">
-        <a href="${item.path}" className="{nav-sublink}${
-            item.active ? ' {nav-sublink-active}' : ''
-          }">
+      <li className="${dsConfig?.classMapping?.navSubitem || ''}">
+        <a href="${item.path}" className="${dsConfig?.classMapping?.navSublink || ''}${item.active ? ' ' + (dsConfig?.classMapping?.navSublinkActive || '') : ''}">
           ${item.label}
         </a>
       </li>

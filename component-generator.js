@@ -1,238 +1,229 @@
 "use strict";
 /* eslint-disable */
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComponentGenerator = void 0;
-var ComponentGenerator = /** @class */ (function () {
-    function ComponentGenerator(designSystem) {
+class ComponentGenerator {
+    constructor(designSystem) {
         this.designSystem = designSystem;
         this.templateRegistry = new Map();
         this.registerDefaultTemplates();
     }
-    ComponentGenerator.prototype.registerDefaultTemplates = function () {
+    registerDefaultTemplates() {
         // Register built-in component templates
         this.registerTemplate('section', new SectionTemplate());
         this.registerTemplate('code-block', new CodeBlockTemplate());
         this.registerTemplate('api-endpoint', new APIEndpointTemplate());
         this.registerTemplate('table', new TableTemplate());
         this.registerTemplate('navigation', new NavigationTemplate());
-    };
-    ComponentGenerator.prototype.registerTemplate = function (type, template) {
+    }
+    registerTemplate(type, template) {
         this.templateRegistry.set(type, template);
-    };
-    ComponentGenerator.prototype.generateComponent = function (contentElement) {
-        return __awaiter(this, void 0, void 0, function () {
-            var elementType, template, componentCode;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log('contentElement:', contentElement);
-                        elementType = contentElement.type;
-                        template = this.templateRegistry.get(elementType);
-                        if (!template) {
-                            throw new Error("No template registered for element type: ".concat(elementType));
-                        }
-                        return [4 /*yield*/, template.generate(contentElement, this.designSystem)];
-                    case 1:
-                        componentCode = _a.sent();
-                        return [2 /*return*/, this.applyDesignSystem(componentCode, elementType)];
-                }
-            });
-        });
-    };
-    ComponentGenerator.prototype.applyDesignSystem = function (componentCode, elementType) {
+    }
+    async generateComponent(contentElement) {
+        console.log('contentElement:', contentElement);
+        const elementType = contentElement.type;
+        const template = this.templateRegistry.get(elementType);
+        if (!template) {
+            throw new Error(`No template registered for element type: ${elementType}`);
+        }
+        // Generate component based on content model and design system
+        const componentCode = await template.generate(contentElement, this.designSystem);
+        return this.applyDesignSystem(componentCode, elementType);
+    }
+    applyDesignSystem(componentCode, elementType) {
         var _a, _b;
         // Apply design system styling and components
         if (!this.designSystem)
             return componentCode;
-        var dsConfig = (_b = (_a = this.designSystem).getConfigForType) === null || _b === void 0 ? void 0 : _b.call(_a, elementType);
+        const dsConfig = (_b = (_a = this.designSystem).getConfigForType) === null || _b === void 0 ? void 0 : _b.call(_a, elementType);
         // Replace placeholder classes with design system classes
-        var styledCode = componentCode;
-        for (var _i = 0, _c = Object.entries((dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) || {}); _i < _c.length; _i++) {
-            var _d = _c[_i], placeholder = _d[0], actualClass = _d[1];
-            styledCode = styledCode.replace(new RegExp("{".concat(placeholder, "}"), 'g'), actualClass);
+        let styledCode = componentCode;
+        for (const [placeholder, actualClass] of Object.entries((dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) || {})) {
+            styledCode = styledCode.replace(new RegExp(`{${placeholder}}`, 'g'), actualClass);
         }
         // Add design system imports if needed
-        var imports = this.generateImports((dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.components) || []);
-        return "".concat(imports, "\n\n").concat(styledCode);
-    };
-    ComponentGenerator.prototype.generateImports = function (components) {
+        const imports = this.generateImports((dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.components) || []);
+        return `${imports}\n\n${styledCode}`;
+    }
+    generateImports(components) {
         if (components.length === 0)
             return '';
-        var importSource = this.designSystem.importPath;
-        return "import { ".concat(components.join(', '), " } from '").concat(importSource, "';");
-    };
-    ComponentGenerator.prototype.generatePage = function (contentModel) {
-        return __awaiter(this, void 0, void 0, function () {
-            var components, _i, _a, element, component;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        components = [];
-                        // Generate individual components
-                        if (!(contentModel === null || contentModel === void 0 ? void 0 : contentModel.elements))
-                            return [2 /*return*/, ''];
-                        _i = 0, _a = contentModel.elements;
-                        _b.label = 1;
-                    case 1:
-                        if (!(_i < _a.length)) return [3 /*break*/, 4];
-                        element = _a[_i];
-                        return [4 /*yield*/, this.generateComponent(element)];
-                    case 2:
-                        component = _b.sent();
-                        components.push(component);
-                        _b.label = 3;
-                    case 3:
-                        _i++;
-                        return [3 /*break*/, 1];
-                    case 4: 
-                    // Combine into page component
-                    return [2 /*return*/, this.assemblePage(components, contentModel.metadata)];
-                }
-            });
-        });
-    };
-    ComponentGenerator.prototype.assemblePage = function (components, metadata) {
+        const importSource = this.designSystem.importPath;
+        return `import { ${components.join(', ')} } from '${importSource}';`;
+    }
+    async generatePage(contentModel) {
+        const components = [];
+        // Generate individual components
+        if (!(contentModel === null || contentModel === void 0 ? void 0 : contentModel.elements))
+            return '';
+        for (const element of contentModel.elements) {
+            const component = await this.generateComponent(element);
+            components.push(component);
+        }
+        // Combine into page component
+        return this.assemblePage(components, contentModel.metadata);
+    }
+    assemblePage(components, metadata) {
         var _a, _b;
         console.log('metadata:', metadata);
-        var pageTitle = metadata.title || 'Generated Page';
-        var imports = this.generatePageImports();
-        return "\n".concat(imports, "\n\nexport default function ").concat(this.sanitizeComponentName(pageTitle), "() {\n  return (\n    <div className={").concat(((_b = (_a = this.designSystem) === null || _a === void 0 ? void 0 : _a.classNames) === null || _b === void 0 ? void 0 : _b.pageContainer) || '', "}>\n      ").concat(components.join('\n      '), "\n    </div>\n  );\n}\n");
-    };
-    ComponentGenerator.prototype.generatePageImports = function () {
+        const pageTitle = metadata.title || 'Generated Page';
+        const imports = this.generatePageImports();
+        return `
+${imports}
+
+export default function ${this.sanitizeComponentName(pageTitle)}() {
+  return (
+    <div className={${((_b = (_a = this.designSystem) === null || _a === void 0 ? void 0 : _a.classNames) === null || _b === void 0 ? void 0 : _b.pageContainer) || ''}}>
+      ${components.join('\n      ')}
+    </div>
+  );
+}
+`;
+    }
+    generatePageImports() {
         var _a, _b;
         if (!this.designSystem)
             return '';
-        var baseImports = "import React from 'react';";
-        var dsImports = "import { ".concat((_b = (_a = this.designSystem) === null || _a === void 0 ? void 0 : _a.pageComponents) === null || _b === void 0 ? void 0 : _b.join(', '), " } from '").concat(this.designSystem.importPath, "';");
-        return "".concat(baseImports, "\n").concat(dsImports);
-    };
-    ComponentGenerator.prototype.sanitizeComponentName = function (name) {
+        const baseImports = `import React from 'react';`;
+        const dsImports = `import { ${(_b = (_a = this.designSystem) === null || _a === void 0 ? void 0 : _a.pageComponents) === null || _b === void 0 ? void 0 : _b.join(', ')} } from '${this.designSystem.importPath}';`;
+        return `${baseImports}\n${dsImports}`;
+    }
+    sanitizeComponentName(name) {
         // Convert page title to valid component name
         return name.replace(/[^a-zA-Z0-9]/g, '').replace(/^[0-9]/, 'Page');
-    };
-    return ComponentGenerator;
-}());
-exports.ComponentGenerator = ComponentGenerator;
-var SectionTemplate = /** @class */ (function () {
-    function SectionTemplate() {
     }
-    SectionTemplate.prototype.generate = function (element, designSystem) {
-        return __awaiter(this, void 0, void 0, function () {
-            var title, level, content, HeadingTag;
-            return __generator(this, function (_a) {
-                title = element.title, level = element.level, content = element.content;
-                HeadingTag = "h".concat(level);
-                return [2 /*return*/, "\n<section className=\"{section-container}\">\n  <".concat(HeadingTag, " className=\"{heading-").concat(level, "}\">").concat(title, "</").concat(HeadingTag, ">\n  <div className=\"{content-container}\">\n    ").concat(this.renderContent(content, designSystem), "\n  </div>\n</section>\n")];
-            });
-        });
-    };
-    SectionTemplate.prototype.renderContent = function (content, designSystem) {
-        // Implementation would render different content types
+}
+exports.ComponentGenerator = ComponentGenerator;
+class SectionTemplate {
+    async generate(element, designSystem) {
+        var _a, _b, _c, _d;
+        const { title, level, content } = element;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'section');
+        // Determine heading level
+        const HeadingTag = `h${level}`;
+        return `
+<section className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.sectionContainer) || ''}">
+  <${HeadingTag} className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c[`heading${level}`]) || ''}">${title}</${HeadingTag}>
+  <div className="${((_d = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _d === void 0 ? void 0 : _d.contentContainer) || ''}">
+    ${this.renderContent(content, dsConfig)}
+  </div>
+</section>
+`;
+    }
+    renderContent(content, dsConfig) {
         return content
-            .map(function (item) {
+            .map(item => {
+            var _a;
             if (item.type === 'paragraph') {
-                return "<p className=\"{paragraph}\">".concat(item.content.join(' '), "</p>");
+                return `<p className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.paragraph) || ''}">${item.content.join(' ')}</p>`;
             }
             // Handle other content types
             return '';
         })
             .join('\n    ');
-    };
-    return SectionTemplate;
-}());
-var CodeBlockTemplate = /** @class */ (function () {
-    function CodeBlockTemplate() {
     }
-    CodeBlockTemplate.prototype.generate = function (element, designSystem) {
-        return __awaiter(this, void 0, void 0, function () {
-            var language, content;
-            return __generator(this, function (_a) {
-                language = element.language, content = element.content;
-                return [2 /*return*/, "\n<div className=\"{code-block-container}\">\n  <div className=\"{code-block-header}\">\n    <span className=\"{code-language-badge}\">".concat(language, "</span>\n  </div>\n  <pre className=\"{code-pre}\">\n    <code className=\"{code} {code-").concat(language, "}\">\n      ").concat(this.escapeCode(content.join('\n')), "\n    </code>\n  </pre>\n</div>\n")];
-            });
-        });
-    };
-    CodeBlockTemplate.prototype.escapeCode = function (code) {
+}
+class CodeBlockTemplate {
+    async generate(element, designSystem) {
+        const { language, content } = element;
+        return `
+<div className="{code-block-container}">
+  <div className="{code-block-header}">
+    <span className="{code-language-badge}">${language}</span>
+  </div>
+  <pre className="{code-pre}">
+    <code className="{code} {code-${language}}">
+      ${this.escapeCode(content.join('\n'))}
+    </code>
+  </pre>
+</div>
+`;
+    }
+    escapeCode(code) {
         // Escape HTML special characters
         return code
             .replace(/&/g, '&amp;')
-            .replace(/</g, '<')
-            .replace(/>/g, '>')
-            .replace(/"/g, '"')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
-    };
-    return CodeBlockTemplate;
-}());
-var APIEndpointTemplate = /** @class */ (function () {
-    function APIEndpointTemplate() {
     }
-    APIEndpointTemplate.prototype.generate = function (element, designSystem) {
-        return __awaiter(this, void 0, void 0, function () {
-            var method, endpoint, parameters, responses;
-            return __generator(this, function (_a) {
-                method = element.method, endpoint = element.endpoint, parameters = element.parameters, responses = element.responses;
-                return [2 /*return*/, "\n<div className=\"{api-endpoint-container}\">\n  <div className=\"{endpoint-header} {method-".concat(method.toLowerCase(), "}\">\n    <span className=\"{http-method}\">").concat(method, "</span>\n    <span className=\"{endpoint-path}\">").concat(endpoint, "</span>\n  </div>\n  <div className=\"{endpoint-body}\">\n    ").concat(this.renderParameters(parameters), "\n    ").concat(this.renderResponses(responses), "\n  </div>\n</div>\n")];
-            });
-        });
-    };
-    APIEndpointTemplate.prototype.renderParameters = function (parameters) {
+}
+class APIEndpointTemplate {
+    async generate(element, designSystem) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        const { method, endpoint, parameters, responses } = element;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'api-endpoint');
+        return `
+<div className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.apiEndpointContainer) || ''}">
+  <div className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.endpointHeader) || ''} ${((_d = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _d === void 0 ? void 0 : _d[`method${method.toLowerCase()}`]) || ''}">
+    <span className="${((_e = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _e === void 0 ? void 0 : _e.httpMethod) || ''}">${method}</span>
+    <span className="${((_f = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _f === void 0 ? void 0 : _f.endpointPath) || ''}">${endpoint}</span>
+  </div>
+  <div className="${((_g = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _g === void 0 ? void 0 : _g.endpointBody) || ''}">
+    ${this.renderParameters(parameters, designSystem)}
+    ${this.renderResponses(responses, designSystem)}
+  </div>
+</div>
+`;
+    }
+    renderParameters(parameters, designSystem) {
+        var _a, _b, _c, _d;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'api-endpoint');
         if (!parameters || parameters.length === 0) {
             return '';
         }
-        return "\n    <div className=\"{parameters-section}\">\n      <h4 className=\"{section-title}\">Parameters</h4>\n      <table className=\"{parameters-table}\">\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Type</th>\n            <th>Description</th>\n            <th>Required</th>\n          </tr>\n        </thead>\n        <tbody>\n          ".concat(parameters
-            .map(function (param) { return "\n          <tr>\n            <td>".concat(param.name, "</td>\n            <td>").concat(param.type, "</td>\n            <td>").concat(param.description, "</td>\n            <td>").concat(param.required ? 'Yes' : 'No', "</td>\n          </tr>\n          "); })
-            .join(''), "\n      </table>\n    </div>\n    ");
-    };
-    APIEndpointTemplate.prototype.renderResponses = function (responses) {
-        var _this = this;
+        return `
+    <div className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.parametersSection) || ''}">
+      <h4 className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.sectionTitle) || ''}">Parameters</h4>
+      <table className="${((_d = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _d === void 0 ? void 0 : _d.parametersTable) || ''}">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${parameters
+            .map(param => `
+          <tr>
+            <td>${param.name}</td>
+            <td>${param.type}</td>
+            <td>${param.description}</td>
+            <td>${param.required ? 'Yes' : 'No'}</td>
+          </tr>
+          `)
+            .join('')}
+      </table>
+    </div>
+    `;
+    }
+    renderResponses(responses, designSystem) {
+        var _a, _b, _c, _d;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'api-endpoint');
         if (!responses || Object.keys(responses).length === 0) {
             return '';
         }
-        return "\n    <div className=\"{responses-section}\">\n      <h4 className=\"{section-title}\">Responses</h4>\n      <div className=\"{responses-container}\">\n        ".concat(Object.entries(responses)
-            .map(function (_a) {
-            var code = _a[0], response = _a[1];
-            return "\n        <div className=\"{response-item} {response-".concat(_this.getResponseClass(code), "}\">\n          <div className=\"{response-code}\">").concat(code, "</div>\n          <div className=\"{response-description}\">").concat(response.description, "</div>\n        </div>\n        ");
-        })
-            .join(''), "\n      </div>\n    </div>\n    ");
-    };
-    APIEndpointTemplate.prototype.getResponseClass = function (code) {
-        var codeNum = parseInt(code, 10);
+        return `
+    <div className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.responsesSection) || ''}">
+      <h4 className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.sectionTitle) || ''}">Responses</h4>
+      <div className="${((_d = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _d === void 0 ? void 0 : _d.responsesContainer) || ''}">
+        ${Object.entries(responses)
+            .map(([code, response]) => `
+        <div className="{response-item} {response-${this.getResponseClass(code)}}">
+          <div className="{response-code}">${code}</div>
+          <div className="{response-description}">${response.description}</div>
+        </div>
+        `)
+            .join('')}
+      </div>
+    </div>
+    `;
+    }
+    getResponseClass(code) {
+        const codeNum = parseInt(code, 10);
         if (codeNum < 300)
             return 'success';
         if (codeNum < 400)
@@ -240,93 +231,116 @@ var APIEndpointTemplate = /** @class */ (function () {
         if (codeNum < 500)
             return 'client-error';
         return 'server-error';
-    };
-    return APIEndpointTemplate;
-}());
-var TableTemplate = /** @class */ (function () {
-    function TableTemplate() {
     }
-    TableTemplate.prototype.generate = function (element, designSystem) {
-        return __awaiter(this, void 0, void 0, function () {
-            var headers, rows;
-            return __generator(this, function (_a) {
-                headers = element.headers, rows = element.rows;
-                return [2 /*return*/, "\n<div className=\"{table-container}\">\n  <table className=\"{table}\">\n    <thead>\n      <tr>\n        ".concat(headers
-                        .map(function (header) { return "<th className=\"{table-header}\">".concat(header, "</th>"); })
-                        .join('\n        '), "\n      </tr>\n    </thead>\n    <tbody>\n      ").concat(rows
-                        .map(function (row) { return "\n      <tr className=\"{table-row}\">\n        ".concat(row.map(function (cell) { return "<td className=\"{table-cell}\">".concat(cell, "</td>"); }).join('\n        '), "\n      </tr>\n      "); })
-                        .join('\n      '), "\n    </tbody>\n  </table>\n</div>\n")];
-            });
-        });
-    };
-    return TableTemplate;
-}());
-var NavigationTemplate = /** @class */ (function () {
-    function NavigationTemplate() {
+}
+class TableTemplate {
+    async generate(element, designSystem) {
+        var _a, _b, _c;
+        const { headers, rows } = element;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'table');
+        return `
+<div className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.tableContainer) || ''}">
+  <table className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.table) || ''}">
+    <thead>
+      <tr>
+        ${headers
+            .map((header) => { var _a; return `<th className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.tableHeader) || ''}">${header}</th>`; })
+            .join('\n        ')}
+      </tr>
+    </thead>
+    <tbody>
+      ${rows
+            .map((row) => {
+            var _a;
+            return `
+      <tr className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.tableRow) || ''}">
+        ${row.map((cell) => { var _a; return `<td className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.tableCell) || ''}">${cell}</td>`; }).join('\n        ')}
+      </tr>
+      `;
+        })
+            .join('\n      ')}
+    </tbody>
+  </table>
+</div>
+`;
     }
-    NavigationTemplate.prototype.generate = function (element, designSystem) {
-        return __awaiter(this, void 0, void 0, function () {
-            var items;
-            var _this = this;
-            return __generator(this, function (_a) {
-                items = element.items;
-                return [2 /*return*/, "\n<nav className=\"{navigation-container}\">\n  <ul className=\"{nav-list}\">\n    ".concat(items
-                        .map(function (item) { return "\n    <li className=\"{nav-item}\">\n      <a href=\"".concat(item.path, "\" className=\"{nav-link}").concat(item.active ? ' {nav-link-active}' : '', "\">\n        ").concat(item.label, "\n      </a>\n      ").concat(item.children ? _this.renderSubItems(item.children) : '', "\n    </li>\n    "); })
-                        .join('\n    '), "\n  </ul>\n</nav>\n")];
-            });
-        });
-    };
-    NavigationTemplate.prototype.renderSubItems = function (items) {
-        return "\n    <ul className=\"{nav-sublist}\">\n      ".concat(items
-            .map(function (item) { return "\n      <li className=\"{nav-subitem}\">\n        <a href=\"".concat(item.path, "\" className=\"{nav-sublink}").concat(item.active ? ' {nav-sublink-active}' : '', "\">\n          ").concat(item.label, "\n        </a>\n      </li>\n      "); })
-            .join('\n      '), "\n    </ul>\n    ");
-    };
-    return NavigationTemplate;
-}());
+}
+class NavigationTemplate {
+    async generate(element, designSystem) {
+        var _a, _b, _c;
+        const { items } = element;
+        const dsConfig = (_a = designSystem === null || designSystem === void 0 ? void 0 : designSystem.getConfigForType) === null || _a === void 0 ? void 0 : _a.call(designSystem, 'navigation');
+        return `
+<nav className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.navigationContainer) || ''}">
+  <ul className="${((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.navList) || ''}">
+    ${items
+            .map((item) => {
+            var _a, _b, _c;
+            return `
+    <li className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.navItem) || ''}">
+      <a href="${item.path}" className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.navLink) || ''}${item.active ? ' ' + (((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.navLinkActive) || '') : ''}">
+        ${item.label}
+      </a>
+      ${item.children ? this.renderSubItems(item.children, dsConfig) : ''}
+    </li>
+    `;
+        })
+            .join('\n    ')}
+  </ul>
+</nav>
+`;
+    }
+    renderSubItems(items, dsConfig) {
+        var _a;
+        return `
+    <ul className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.navSublist) || ''}">
+      ${items
+            .map((item) => {
+            var _a, _b, _c;
+            return `
+      <li className="${((_a = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _a === void 0 ? void 0 : _a.navSubitem) || ''}">
+        <a href="${item.path}" className="${((_b = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _b === void 0 ? void 0 : _b.navSublink) || ''}${item.active ? ' ' + (((_c = dsConfig === null || dsConfig === void 0 ? void 0 : dsConfig.classMapping) === null || _c === void 0 ? void 0 : _c.navSublinkActive) || '') : ''}">
+          ${item.label}
+        </a>
+      </li>
+      `;
+        })
+            .join('\n      ')}
+    </ul>
+    `;
+    }
+}
 // Test
-function testComponentGenerator() {
-    return __awaiter(this, void 0, void 0, function () {
-        var designSystem, componentGenerator, contentElement, contentModel;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    designSystem = {
-                        type: 'custom',
-                        importPath: 'test',
-                        classNames: {
-                            pageContainer: 'test'
-                        }
-                    };
-                    componentGenerator = new ComponentGenerator(designSystem);
-                    contentElement = {
-                        type: 'section',
-                        title: 'Test Section',
-                        level: 1,
-                        content: []
-                    };
-                    return [4 /*yield*/, componentGenerator.generateComponent(contentElement)];
-                case 1:
-                    _a.sent();
-                    contentModel = {
-                        id: 'test',
-                        contentType: 'page',
-                        title: 'Test Page',
-                        slug: 'test-page',
-                        content: 'test content',
-                        metadata: {
-                            createdAt: '2024-04-07',
-                            updatedAt: '2024-04-07',
-                            locale: 'en-US'
-                        },
-                        fields: {},
-                        elements: [contentElement]
-                    };
-                    return [4 /*yield*/, componentGenerator.generatePage(contentModel)];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
+async function testComponentGenerator() {
+    const designSystem = {
+        type: 'custom',
+        importPath: 'test',
+        classNames: {
+            pageContainer: 'test'
+        }
+    };
+    const componentGenerator = new ComponentGenerator(designSystem);
+    const contentElement = {
+        type: 'section',
+        title: 'Test Section',
+        level: 1,
+        content: []
+    };
+    await componentGenerator.generateComponent(contentElement);
+    const contentModel = {
+        id: 'test',
+        contentType: 'page',
+        title: 'Test Page',
+        slug: 'test-page',
+        content: 'test content',
+        metadata: {
+            createdAt: '2024-04-07',
+            updatedAt: '2024-04-07',
+            locale: 'en-US'
+        },
+        fields: {},
+        elements: [contentElement]
+    };
+    await componentGenerator.generatePage(contentModel);
 }
 testComponentGenerator();

@@ -83,4 +83,3 @@ exports.defaultConfig = {
     },
     plugins: [],
 };
-//# sourceMappingURL=generator.config.js.map

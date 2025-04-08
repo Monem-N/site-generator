@@ -99,6 +99,24 @@ export class NotImplementedError extends SiteGeneratorError {
 }
 
 /**
+ * Error thrown when there's an issue with templates
+ */
+export class TemplateError extends SiteGeneratorError {
+  constructor(message: string, context?: Record<string, any>) {
+    super(message, 'TEMPLATE_ERROR', context);
+  }
+}
+
+/**
+ * Error thrown when there's an issue with validation
+ */
+export class ValidationError extends SiteGeneratorError {
+  constructor(message: string, context?: Record<string, any>) {
+    super(message, 'VALIDATION_ERROR', context);
+  }
+}
+
+/**
  * Global error handler for uncaught exceptions
  */
 export function setupGlobalErrorHandler(verbose = false): void {
@@ -164,4 +182,41 @@ export function withErrorHandling<T extends any[], R>(
       }
     }
   };
+}
+
+/**
+ * Try-catch wrapper for async functions
+ * @param fn Function to execute
+ * @param errorHandler Optional error handler
+ * @returns Result of the function or error handler
+ */
+export async function tryCatch<T>(
+  fn: () => Promise<T>,
+  errorHandler?: (error: unknown) => T | Promise<T>
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (errorHandler) {
+      return await errorHandler(error);
+    }
+    throw error;
+  }
+}
+
+/**
+ * Try-catch wrapper for sync functions
+ * @param fn Function to execute
+ * @param errorHandler Optional error handler
+ * @returns Result of the function or error handler
+ */
+export function tryCatchSync<T>(fn: () => T, errorHandler?: (error: unknown) => T): T {
+  try {
+    return fn();
+  } catch (error) {
+    if (errorHandler) {
+      return errorHandler(error);
+    }
+    throw error;
+  }
 }

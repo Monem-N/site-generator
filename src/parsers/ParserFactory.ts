@@ -1,9 +1,10 @@
 import { DocsifyMarkdownParser } from './DocsifyMarkdownParser';
 import { OpenAPIParser } from '../OpenAPIParser';
 import { CMSIntegrationModule } from '../CMSIntegrationModule';
+import { Parser } from './Parser';
 
 export class ParserFactory {
-  private parsers: Map<string, any> = new Map();
+  private parsers: Map<string, Parser> = new Map();
 
   constructor() {
     this.registerCoreFormats();
@@ -28,7 +29,7 @@ export class ParserFactory {
     }
   }
 
-  register(format: string, parser: any) {
+  register(format: string, parser: Parser) {
     this.parsers.set(format.toLowerCase(), parser);
     return this; // For method chaining
   }

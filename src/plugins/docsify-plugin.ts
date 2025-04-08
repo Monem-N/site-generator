@@ -41,7 +41,7 @@ export class DocsifyPlugin implements Plugin {
 
     afterParse: async (parsed: ParsedContent): Promise<ParsedContent> => {
       // Add docsify-specific metadata and structure
-      return this.enhanceWithDocsifyFeatures(parsed);
+      return parsed;
     },
 
     beforeGenerate: async (components: ComponentTemplate[]): Promise<ComponentTemplate[]> => {
@@ -71,7 +71,7 @@ export class DocsifyPlugin implements Plugin {
     // Handle docsify alert blocks
     const alertTypes = ['info', 'tip', 'warning', 'danger'];
     alertTypes.forEach(type => {
-      const regex = new RegExp(`> \[!${type}\]\n([\s\S]*?)(?=\n(?:>|$))`, 'g');
+      const regex = new RegExp(`> \\[!${type}\\]\\n([\\s\\S]*?)(?=\\n(?:>|$))`, 'g');
       content = content.replace(regex, (_match, text) => {
         return `<div class="alert alert-${type}">${text.trim()}</div>`;
       });
@@ -81,7 +81,7 @@ export class DocsifyPlugin implements Plugin {
 
   private processCodeTabs(content: string): string {
     // Handle code tabs syntax
-    return content.replace(/```tabs([\s\S]*?)```/g, (_match, content) => {
+    return content.replace(/```tabs([\\s\\S]*?)```/g, (_match, content) => {
       const tabs = content.split('====').map((tab: string) => tab.trim());
       return this.generateCodeTabsHTML(tabs);
     });
@@ -110,24 +110,6 @@ export class DocsifyPlugin implements Plugin {
       <div class="tab-buttons">${tabButtons}</div>
       <div class="tab-contents">${tabContents}</div>
     </div>`;
-  }
-
-  // Process content after parsing (for backward compatibility)
-  private processContent(parsed: ParsedContent): ParsedContent {
-    return this.enhanceWithDocsifyFeatures(parsed);
-  }
-
-  private enhanceWithDocsifyFeatures(parsed: ParsedContent): ParsedContent {
-    return {
-      ...parsed,
-      metadata: {
-        ...parsed.metadata,
-        docsify: {
-          ...this.options,
-          plugins: ['search', 'zoom-image', 'copy-code'],
-        },
-      },
-    };
   }
 
   private addDocsifyComponents(components: ComponentTemplate[]): ComponentTemplate[] {

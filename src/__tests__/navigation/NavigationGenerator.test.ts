@@ -1,7 +1,7 @@
 import { NavigationGenerator } from '../../navigation/NavigationGenerator';
 import { ParsedContent } from '../../../types/parser';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Mock dependencies
 jest.mock('fs');
@@ -120,10 +120,10 @@ describe('NavigationGenerator', () => {
         '/test/source/index.md': 'index.md',
         '/test/source/getting-started.md': 'getting-started.md',
         '/test/source/api/index.md': 'api/index.md',
-        '/test/source/api/users.md': 'api/users.md'
+        '/test/source/api/users.md': 'api/users.md',
       };
 
-      if (from === '/test/source' && to in paths) {
+      if (_from === '/test/source' && to in paths) {
         return paths[to];
       }
 

@@ -1,7 +1,7 @@
 import { ComponentGenerator } from '../../component-generator';
 import { ParsedContent } from '../../../types/parser';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Mock dependencies
 jest.mock('fs');
@@ -44,7 +44,8 @@ describe('ComponentGenerator', () => {
   // Sample templates
   const sampleTemplates = {
     page: 'export const {{componentName}} = () => {\n  return (\n    <div>\n      <h1>{{title}}</h1>\n      <div>{{content}}</div>\n    </div>\n  );\n};\n',
-    section: 'export const {{componentName}} = () => {\n  return (\n    <section>\n      <h{{level}}>{{title}}</h{{level}}>\n      <div>{{content}}</div>\n    </section>\n  );\n};\n',
+    section:
+      'export const {{componentName}} = () => {\n  return (\n    <section>\n      <h{{level}}>{{title}}</h{{level}}>\n      <div>{{content}}</div>\n    </section>\n  );\n};\n',
   };
 
   beforeEach(() => {
@@ -281,7 +282,8 @@ describe('ComponentGenerator', () => {
 
   test('should handle custom templates', async () => {
     // Add a custom template
-    const customTemplate = 'export const {{componentName}} = () => {\n  return (\n    <custom>\n      <title>{{title}}</title>\n      <content>{{content}}</content>\n    </custom>\n  );\n};\n';
+    const customTemplate =
+      'export const {{componentName}} = () => {\n  return (\n    <custom>\n      <title>{{title}}</title>\n      <content>{{content}}</content>\n    </custom>\n  );\n};\n';
 
     (fs.readFileSync as jest.Mock).mockImplementation((filePath: string) => {
       if (filePath.includes('page.tsx')) {
@@ -313,7 +315,9 @@ describe('ComponentGenerator', () => {
     expect(component).toBeDefined();
     expect(component.content).toContain('<custom>');
     expect(component.content).toContain('<title>Test Document</title>');
-    expect(component.content).toContain('<content>This is a test document with some content.</content>');
+    expect(component.content).toContain(
+      '<content>This is a test document with some content.</content>'
+    );
   });
 
   test('should handle errors when reading templates', async () => {
@@ -334,6 +338,8 @@ describe('ComponentGenerator', () => {
 
     const generator = new ComponentGenerator(config);
 
-    await expect(generator.generateComponent(sampleParsedContent)).rejects.toThrow('Failed to read template');
+    await expect(generator.generateComponent(sampleParsedContent)).rejects.toThrow(
+      'Failed to read template'
+    );
   });
 });

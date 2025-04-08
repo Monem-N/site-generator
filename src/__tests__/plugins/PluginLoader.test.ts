@@ -1,7 +1,7 @@
 import { PluginLoader } from '../../plugins/PluginLoader';
 import { Plugin } from '../../../types/plugin';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Mock dependencies
 jest.mock('fs');
@@ -15,7 +15,7 @@ describe('PluginLoader', () => {
         name: 'test-plugin',
         version: '1.0.0',
         hooks: {
-          beforeParse: (content) => 'Modified by test-plugin: ' + content,
+          beforeParse: (_content) => 'Modified by test-plugin: ' + content,
           afterParse: (parsed) => ({ ...parsed, title: 'Enhanced by test-plugin: ' + parsed.title })
         }
       };
@@ -59,7 +59,7 @@ describe('PluginLoader', () => {
 
     // Mock fs.readdirSync to return plugin files
     (fs.readdirSync as jest.Mock).mockImplementation((dirPath: string) => {
-      if (dirPath === '/plugins') {
+      if (_dirPath === '/plugins') {
         return ['test-plugin.js', 'another-plugin.js', 'invalid-plugin.js', 'error-plugin.js'];
       }
       return [];
@@ -76,34 +76,54 @@ describe('PluginLoader', () => {
     });
 
     // Mock require to return plugin modules
-    jest.mock('/plugins/test-plugin.js', () => ({
-      name: 'test-plugin',
-      version: '1.0.0',
-      hooks: {
-        beforeParse: (content: string) => 'Modified by test-plugin: ' + content,
-        afterParse: (parsed: any) => ({ ...parsed, title: 'Enhanced by test-plugin: ' + parsed.title }),
-      },
-    }), { virtual: true });
+    jest.mock(
+      '/plugins/test-plugin.js',
+      () => ({
+        name: 'test-plugin',
+        version: '1.0.0',
+        hooks: {
+          beforeParse: (content: string) => 'Modified by test-plugin: ' + content,
+          afterParse: (parsed: any) => ({
+            ...parsed,
+            title: 'Enhanced by test-plugin: ' + parsed.title,
+          }),
+        },
+      }),
+      { virtual: true }
+    );
 
-    jest.mock('/plugins/another-plugin.js', () => ({
-      name: 'another-plugin',
-      version: '1.0.0',
-      options: {
-        option1: 'default-value',
-      },
-      hooks: {
-        beforeParse: (content: string, options: any) => 'Modified by another-plugin with ' + options.option1 + ': ' + content,
-      },
-    }), { virtual: true });
+    jest.mock(
+      '/plugins/another-plugin.js',
+      () => ({
+        name: 'another-plugin',
+        version: '1.0.0',
+        options: {
+          option1: 'default-value',
+        },
+        hooks: {
+          beforeParse: (content: string, options: any) =>
+            'Modified by another-plugin with ' + options.option1 + ': ' + content,
+        },
+      }),
+      { virtual: true }
+    );
 
-    jest.mock('/plugins/invalid-plugin.js', () => ({
-      // Not a valid plugin
-      notAPlugin: true,
-    }), { virtual: true });
+    jest.mock(
+      '/plugins/invalid-plugin.js',
+      () => ({
+        // Not a valid plugin
+        notAPlugin: true,
+      }),
+      { virtual: true }
+    );
 
-    jest.mock('/plugins/error-plugin.js', () => {
-      throw new Error('Plugin error');
-    }, { virtual: true });
+    jest.mock(
+      '/plugins/error-plugin.js',
+      () => {
+        throw new Error('Plugin error');
+      },
+      { virtual: true }
+    );
   });
 
   test('should initialize with plugin directory', () => {
@@ -137,19 +157,25 @@ describe('PluginLoader', () => {
   test('should handle invalid plugin files', async () => {
     const loader = new PluginLoader('/plugins');
 
-    await expect(loader.loadPluginFromFile('/plugins/invalid-plugin.js')).rejects.toThrow('Invalid plugin format');
+    await expect(loader.loadPluginFromFile('/plugins/invalid-plugin.js')).rejects.toThrow(
+      'Invalid plugin format'
+    );
   });
 
   test('should handle errors when loading plugins', async () => {
     const loader = new PluginLoader('/plugins');
 
-    await expect(loader.loadPluginFromFile('/plugins/error-plugin.js')).rejects.toThrow('Plugin error');
+    await expect(loader.loadPluginFromFile('/plugins/error-plugin.js')).rejects.toThrow(
+      'Plugin error'
+    );
   });
 
   test('should handle non-existent plugin files', async () => {
     const loader = new PluginLoader('/plugins');
 
-    await expect(loader.loadPluginFromFile('/plugins/non-existent-plugin.js')).rejects.toThrow('Plugin file not found');
+    await expect(loader.loadPluginFromFile('/plugins/non-existent-plugin.js')).rejects.toThrow(
+      'Plugin file not found'
+    );
   });
 
   test('should load all plugins from directory', async () => {
@@ -170,7 +196,9 @@ describe('PluginLoader', () => {
 
     const loader = new PluginLoader('/plugins');
 
-    await expect(loader.loadPluginsFromDirectory()).rejects.toThrow('Failed to load plugins from directory');
+    await expect(loader.loadPluginsFromDirectory()).rejects.toThrow(
+      'Failed to load plugins from directory'
+    );
   });
 
   test('should load plugins with custom options', async () => {
@@ -199,7 +227,9 @@ describe('PluginLoader', () => {
   test('should handle non-existent plugins when loading by name', async () => {
     const loader = new PluginLoader('/plugins');
 
-    await expect(loader.loadPluginsByName(['non-existent-plugin'])).rejects.toThrow('Plugin not found');
+    await expect(loader.loadPluginsByName(['non-existent-plugin'])).rejects.toThrow(
+      'Plugin not found'
+    );
   });
 
   test('should validate plugin structure', () => {

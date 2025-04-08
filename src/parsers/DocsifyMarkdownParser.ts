@@ -1,11 +1,18 @@
 import { ParsedContent, ContentNode } from '../../types/parser';
 import { Asset, Reference } from '../../types/parser';
+import { Parser } from './Parser';
 import { marked } from 'marked';
 import frontMatter from 'front-matter';
 
-export class DocsifyMarkdownParser {
+export class DocsifyMarkdownParser implements Parser {
   // Options are not currently used but may be needed in the future
-  private plugins: any[] = [];
+  private plugins: Array<{
+    beforeParse?: (content: string, filePath?: string) => string | Promise<string>;
+    afterParse?: (
+      content: ParsedContent,
+      filePath?: string
+    ) => ParsedContent | Promise<ParsedContent>;
+  }> = [];
 
   constructor(_options = {}) {
     // Options are stored for future use
@@ -24,12 +31,20 @@ export class DocsifyMarkdownParser {
     });
   }
 
-  use(plugin: any) {
+  use(plugin: {
+    beforeParse?: (content: string, filePath?: string) => string | Promise<string>;
+    afterParse?: (
+      content: ParsedContent,
+      filePath?: string
+    ) => ParsedContent | Promise<ParsedContent>;
+  }) {
     this.plugins.push(plugin);
     return this;
   }
 
-  async parse(content: string, filePath?: string): Promise<ParsedContent> {
+  async parse(source: string, options?: Record<string, unknown>): Promise<ParsedContent> {
+    const content = source;
+    const filePath = options?.filePath as string | undefined;
     try {
       // Apply plugins (pre-processing)
       let processedContent = content;
@@ -41,14 +56,14 @@ export class DocsifyMarkdownParser {
 
       // Extract frontmatter
       const { attributes, body } = frontMatter(processedContent);
-      const metadata = attributes as Record<string, any>;
+      const metadata = attributes as Record<string, unknown>;
 
       // Parse markdown to HTML
       const html = marked(body);
 
       // Extract title from the first heading or use filename
-      const title = this.extractTitle(body) || metadata.title || 'Untitled';
-      const description = metadata.description || '';
+      const title = this.extractTitle(body) || (metadata.title as string) || 'Untitled';
+      const description = (metadata.description as string) || '';
 
       // Extract sections, assets, and references
       const sections = this.extractSections(body);

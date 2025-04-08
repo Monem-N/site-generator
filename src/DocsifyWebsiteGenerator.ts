@@ -3,8 +3,8 @@ import { ParsedContent } from '../types/parser';
 import { DocsifyIntegration } from './DocsifyIntegration';
 import { ComponentGenerator } from '../component-generator';
 import { Builder } from './Builder';
-import path from 'path';
-import fs from 'fs/promises';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 export class DocsifyWebsiteGenerator {
   private config: WebsiteGeneratorConfig;
@@ -86,7 +86,7 @@ export class DocsifyWebsiteGenerator {
   private async generateComponents(parsedContent: ParsedContent[]): Promise<any[]> {
     console.log('Generating components...');
 
-    const components: any[] = [];
+    const components: unknown[] = [];
 
     for (const content of parsedContent) {
       try {
@@ -107,7 +107,7 @@ export class DocsifyWebsiteGenerator {
     return components;
   }
 
-  private async applyDesignSystem(components: any[]): Promise<any[]> {
+  private async applyDesignSystem(components: unknown[]): Promise<any[]> {
     console.log('Applying design system...');
 
     // Generate theme CSS
@@ -121,7 +121,7 @@ export class DocsifyWebsiteGenerator {
     return components;
   }
 
-  private async generateTests(components: any[]): Promise<void> {
+  private async generateTests(components: unknown[]): Promise<void> {
     if (!this.config.testing.components.unit && !this.config.testing.components.integration) {
       return;
     }
@@ -131,10 +131,10 @@ export class DocsifyWebsiteGenerator {
     const testGenerator = await import('./TestGenerator').then(
       m => new m.TestGenerator(this.config.testing)
     );
-    await testGenerator.generateTests(components);
+    await testGenerator.generateTests(components as any);
   }
 
-  private async build(components: any[]): Promise<void> {
+  private async build(components: unknown[]): Promise<void> {
     console.log('Building website...');
 
     const buildConfig: any = {
@@ -145,7 +145,7 @@ export class DocsifyWebsiteGenerator {
     };
 
     const builder = new Builder(buildConfig);
-    await builder.build(components);
+    await builder.build(components as any);
   }
 
   private async getDocumentationFiles(sourceDir: string): Promise<string[]> {

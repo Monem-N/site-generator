@@ -1,6 +1,6 @@
 import { Plugin } from '../../types/plugin';
 import { ParsedContent } from '../../types/parser';
-import path from 'path';
+import * as path from 'path';
 
 export class CrossReferencePlugin implements Plugin {
   name = 'crossReference';

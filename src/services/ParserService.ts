@@ -1,8 +1,8 @@
 import { BaseService } from './BaseService';
 import { ContentCache, CacheOptions } from '../utils/cache';
 import { ParserError } from '../utils/errors';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Parser service configuration
@@ -18,7 +18,7 @@ export interface ParserServiceConfig {
  * Parser result
  */
 export interface ParseResult {
-  content: any;
+  content: Record<string, unknown>;
   metadata: {
     filePath: string;
     lastModified: number;
@@ -32,7 +32,7 @@ export interface ParseResult {
 export class ParserService extends BaseService {
   private config: ParserServiceConfig;
   private cache: ContentCache<ParseResult>;
-  private parsers: Map<string, (content: string, filePath: string) => any>;
+  private parsers: Map<string, (content: string, filePath: string) => Record<string, unknown>>;
 
   constructor(config: ParserServiceConfig) {
     super('parser-service');
@@ -94,7 +94,10 @@ export class ParserService extends BaseService {
   /**
    * Register a parser for a file extension
    */
-  registerParser(extension: string, parser: (content: string, filePath: string) => any): void {
+  registerParser(
+    extension: string,
+    parser: (content: string, filePath: string) => Record<string, unknown>
+  ): void {
     this.parsers.set(extension.toLowerCase(), parser);
     this.setMetric('parsers', this.parsers.size);
   }
@@ -268,7 +271,7 @@ export class ParserService extends BaseService {
   /**
    * Get cache statistics
    */
-  getCacheStats(): any {
+  getCacheStats(): Record<string, unknown> {
     return this.cache.getStats();
   }
 
@@ -285,7 +288,7 @@ export class ParserService extends BaseService {
    * Parse Markdown content
    * This is a simple implementation - in a real app, you'd use a proper Markdown parser
    */
-  private parseMarkdown(content: string, filePath: string): any {
+  private parseMarkdown(content: string, filePath: string): Record<string, unknown> {
     // Extract front matter if present
     let metadata = {};
     let mainContent = content;

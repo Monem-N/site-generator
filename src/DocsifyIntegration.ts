@@ -5,7 +5,7 @@ import { CrossReferencePlugin } from './plugins/CrossReferencePlugin';
 import { PrismPlugin } from './plugins/PrismPlugin';
 import { NavigationGenerator } from './navigation/NavigationGenerator';
 import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter';
-import path from 'path';
+import * as path from 'path';
 
 export class DocsifyIntegration {
   private parserFactory: ParserFactory;
@@ -48,7 +48,7 @@ export class DocsifyIntegration {
 
       // Parse content
       const parser = this.parserFactory.getParser(fileExtension || 'markdown');
-      let parsedContent = await parser.parse(processedContent, filePath);
+      let parsedContent = await parser.parse(processedContent, { filePath });
 
       // Apply plugins after parsing
       parsedContent = await this.pluginManager.applyAfterParse(parsedContent, filePath);

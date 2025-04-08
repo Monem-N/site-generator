@@ -1,7 +1,7 @@
 import { DocsifyWebsiteGenerator } from '../DocsifyWebsiteGenerator';
 import { WebsiteGeneratorConfig } from '../../config/generator.config';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { ParsedContent } from '../../types/parser';
 
 // Mock dependencies
@@ -128,11 +128,13 @@ describe('DocsifyWebsiteGenerator', () => {
     });
 
     // Mock path.join to concatenate paths
-    (path.join as jest.Mock).mockImplementation((...paths: string[]) => paths.join('/').replace(/\/+/g, '/'));
+    (path.join as jest.Mock).mockImplementation((...paths: string[]) =>
+      paths.join('/').replace(/\/+/g, '/')
+    );
 
     // Mock fs.readdir to return mock directory contents
-    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, options) => {
-      if (dirPath === '/test/source') {
+    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, _options) => {
+      if (_dirPath === '/test/source') {
         return Promise.resolve([
           { name: 'README.md', isDirectory: () => false },
           { name: '_sidebar.md', isDirectory: () => false },
@@ -154,12 +156,12 @@ describe('DocsifyWebsiteGenerator', () => {
     });
 
     // Mock fs.writeFile
-    (fs.writeFile as jest.Mock).mockImplementation((filePath: string, content: string) => {
+    (fs.writeFile as jest.Mock).mockImplementation((filePath: string, _content: string) => {
       return Promise.resolve();
     });
 
     // Mock fs.copyFile
-    (fs.copyFile as jest.Mock).mockImplementation((src: string, dest: string) => {
+    (fs.copyFile as jest.Mock).mockImplementation((src: string, _dest: string) => {
       return Promise.resolve();
     });
   });
@@ -265,10 +267,7 @@ describe('DocsifyWebsiteGenerator', () => {
     await generator.generate();
 
     // Verify that fs.copyFile was called for .nojekyll
-    expect(fs.copyFile).toHaveBeenCalledWith(
-      '/test/source/.nojekyll',
-      '/test/output/.nojekyll'
-    );
+    expect(fs.copyFile).toHaveBeenCalledWith('/test/source/.nojekyll', '/test/output/.nojekyll');
 
     // Verify that fs.copyFile was called for _sidebar.md
     expect(fs.copyFile).toHaveBeenCalledWith(
@@ -277,10 +276,7 @@ describe('DocsifyWebsiteGenerator', () => {
     );
 
     // Verify that fs.copyFile was called for _navbar.md
-    expect(fs.copyFile).toHaveBeenCalledWith(
-      '/test/source/_navbar.md',
-      '/test/output/_navbar.md'
-    );
+    expect(fs.copyFile).toHaveBeenCalledWith('/test/source/_navbar.md', '/test/output/_navbar.md');
   });
 
   test('should create .nojekyll file if it does not exist', async () => {
@@ -304,11 +300,7 @@ describe('DocsifyWebsiteGenerator', () => {
     await generator.generate();
 
     // Verify that fs.writeFile was called for .nojekyll
-    expect(fs.writeFile).toHaveBeenCalledWith(
-      '/test/output/.nojekyll',
-      '',
-      'utf-8'
-    );
+    expect(fs.writeFile).toHaveBeenCalledWith('/test/output/.nojekyll', '', 'utf-8');
   });
 
   test('should create _sidebar.md if it does not exist', async () => {
@@ -329,14 +321,14 @@ describe('DocsifyWebsiteGenerator', () => {
         title: 'Home Page',
         content: 'Welcome to the documentation',
         sections: [],
-        metadata: { originalPath: '/test/source/README.md' }
+        metadata: { originalPath: '/test/source/README.md' },
       },
       {
         title: 'Guide',
         content: 'This is a guide',
         sections: [],
-        metadata: { originalPath: '/test/source/guide.md' }
-      }
+        metadata: { originalPath: '/test/source/guide.md' },
+      },
     ]);
     (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
     (generator as any).generateTests = jest.fn().mockResolvedValue([]);
@@ -376,11 +368,7 @@ describe('DocsifyWebsiteGenerator', () => {
 
   test('should add Docsify plugins', async () => {
     const config = createTestConfig();
-    config.plugins = [
-      { name: 'search' },
-      { name: 'copy-code' },
-      { name: 'zoom-image' }
-    ];
+    config.plugins = [{ name: 'search' }, { name: 'copy-code' }, { name: 'zoom-image' }];
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Mock the parent class methods

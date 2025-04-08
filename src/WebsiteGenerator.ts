@@ -2,8 +2,8 @@ import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.confi
 import { ParsedContent, Plugin, ComponentTemplate, BuildConfig, DesignSystem } from '../types';
 import { DocumentationParserFactory } from '../parser-implementation';
 import { ComponentGenerator } from '../component-generator';
-import path from 'path';
-import fs from 'fs/promises';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 export class WebsiteGenerator {
   private config: WebsiteGeneratorConfig;
@@ -96,7 +96,7 @@ export class WebsiteGenerator {
     }
   }
 
-  private async parseDocumentation(): Promise<ParsedContent[]> {
+  public async parseDocumentation(): Promise<ParsedContent[]> {
     const sourceDir = path.resolve(this.config.sourceDir);
     const files = await this.getDocumentationFiles(sourceDir);
     const parsedContent: ParsedContent[] = [];
@@ -130,7 +130,7 @@ export class WebsiteGenerator {
     return parsedContent;
   }
 
-  private async generateComponents(parsedContent: ParsedContent[]): Promise<ComponentTemplate[]> {
+  public async generateComponents(parsedContent: ParsedContent[]): Promise<ComponentTemplate[]> {
     const components: ComponentTemplate[] = [];
 
     for (const content of parsedContent) {
@@ -165,7 +165,7 @@ export class WebsiteGenerator {
     return components;
   }
 
-  private async applyDesignSystem(components: ComponentTemplate[]): Promise<ComponentTemplate[]> {
+  public async applyDesignSystem(components: ComponentTemplate[]): Promise<ComponentTemplate[]> {
     return Promise.all(
       components.map(async component => {
         // If the content is already processed, just return the component
@@ -184,7 +184,7 @@ export class WebsiteGenerator {
     );
   }
 
-  private async generateTests(components: ComponentTemplate[]): Promise<void> {
+  public async generateTests(components: ComponentTemplate[]): Promise<void> {
     if (!this.config.testing.components.unit && !this.config.testing.components.integration) {
       return;
     }
@@ -195,7 +195,7 @@ export class WebsiteGenerator {
     await testGenerator.generateTests(components);
   }
 
-  private async build(components: ComponentTemplate[]): Promise<void> {
+  public async build(components: ComponentTemplate[]): Promise<void> {
     const buildConfig: BuildConfig = {
       target: 'production',
       outDir: this.config.outputDir,
@@ -207,7 +207,7 @@ export class WebsiteGenerator {
     await builder.build(components);
   }
 
-  private async getDocumentationFiles(sourceDir: string): Promise<string[]> {
+  public async getDocumentationFiles(sourceDir: string): Promise<string[]> {
     const files: string[] = [];
     const entries = await fs.readdir(sourceDir, { withFileTypes: true });
 
@@ -224,7 +224,7 @@ export class WebsiteGenerator {
     return files;
   }
 
-  private isDocumentationFile(filename: string): boolean {
+  public isDocumentationFile(filename: string): boolean {
     const ext = path.extname(filename).slice(1);
     return this.config.parser.extensions?.includes(ext) ?? false;
   }

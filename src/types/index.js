@@ -19,6 +19,3 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./cms"), exports);
 __exportStar(require("./component"), exports);
 __exportStar(require("./design"), exports);
-__exportStar(require("./parser"), exports);
-__exportStar(require("./plugin"), exports);
-//# sourceMappingURL=index.js.map

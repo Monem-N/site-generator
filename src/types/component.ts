@@ -12,7 +12,7 @@ export interface ComponentTemplate {
   content?: string;
   type?: string;
   metadata?: Record<string, any>;
-  generate?(element: ContentElement, designSystem: DesignSystem): Promise<string>;
+  generate?(element: ContentElement, designSystem?: DesignSystem): Promise<string>;
 }
 
 /**

@@ -6,11 +6,11 @@ export class PrismPlugin implements Plugin {
   version = '1.0.0';
   hooks = {
     beforeParse: this.beforeParse.bind(this),
-    afterParse: this.afterParse.bind(this)
+    afterParse: this.afterParse.bind(this),
   };
   options = {
     theme: 'default',
-    languages: ['javascript', 'typescript', 'html', 'css', 'json', 'markdown']
+    languages: ['javascript', 'typescript', 'html', 'css', 'json', 'markdown'],
   };
 
   async beforeParse(content: string): Promise<string> {
@@ -33,8 +33,10 @@ export class PrismPlugin implements Plugin {
       }
 
       // Add prism dependency if not already included
-      if (!Array.isArray(parsedContent.metadata.dependencies) ||
-          !parsedContent.metadata.dependencies.includes('prism')) {
+      if (
+        !Array.isArray(parsedContent.metadata.dependencies) ||
+        !parsedContent.metadata.dependencies.includes('prism')
+      ) {
         (parsedContent.metadata.dependencies as string[]).push('prism');
       }
 
@@ -50,7 +52,7 @@ export class PrismPlugin implements Plugin {
         type: 'text/javascript',
         content: `
           document.addEventListener('DOMContentLoaded', () => {
-            if (typeof Prism !== 'undefined') {
+            if (_typeof Prism !== 'undefined') {
               Prism.highlightAll();
             }
           });

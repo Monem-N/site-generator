@@ -32,11 +32,9 @@ export interface PerformanceConfig {
 export class PerformanceOptimizer {
   private config: PerformanceConfig;
   // Build configuration (currently unused but kept for future use)
-  private _buildConfig: BuildConfig;
 
-  constructor(config: Partial<PerformanceConfig>, buildConfig: BuildConfig) {
+  constructor(config: Partial<PerformanceConfig>) {
     this.config = this.mergeWithDefaultConfig(config);
-    this._buildConfig = buildConfig;
   }
 
   private mergeWithDefaultConfig(config: Partial<PerformanceConfig>): PerformanceConfig {

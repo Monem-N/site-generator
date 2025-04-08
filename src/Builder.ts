@@ -1,7 +1,7 @@
 import { BuildConfig, ComponentTemplate } from '../types/index';
 import type { InputOptions, OutputOptions, RollupBuild, ManualChunksOption } from 'rollup';
-import path from 'path';
-import fs from 'fs/promises';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 import { rollup } from 'rollup';
 import { babel } from '@rollup/plugin-babel';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -100,7 +100,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         babelHelpers: 'bundled',
       }),
       postcss({
-        plugins: [autoprefixer(), this.config.optimization?.minify && cssnano()].filter(Boolean),
+        plugins: [autoprefixer(), this.config.optimization?.minify ? cssnano() : false].filter(
+          Boolean
+        ),
         minimize: this.config.optimization?.minify,
       }),
       image(),
@@ -121,6 +123,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       if (id.includes('node_modules')) {
         return 'vendor';
       }
+      return undefined;
     };
   }
 

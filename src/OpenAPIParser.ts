@@ -1,12 +1,15 @@
 import { ParsedContent } from '../types';
-import SwaggerParser from 'swagger-parser';
+import { Parser } from './parsers/Parser';
+// Using require for SwaggerParser due to TypeScript compatibility issues
+const SwaggerParser = require('swagger-parser');
 
-export class OpenAPIParser {
-  async parse(content: string): Promise<ParsedContent> {
+export class OpenAPIParser implements Parser {
+  async parse(source: string, options?: Record<string, unknown>): Promise<ParsedContent> {
     try {
-      // Use any to bypass the type checking for SwaggerParser
-      const SwaggerParserAny = SwaggerParser as any;
-      const api = (await SwaggerParserAny.parse(content)) as {
+      // Parse the OpenAPI content using SwaggerParser
+      // Pass options to SwaggerParser if provided
+      const swaggerOptions = (options as Record<string, unknown>) || {};
+      const api = (await SwaggerParser.parse(source, swaggerOptions)) as {
         openapi: string;
         info: {
           title: string;

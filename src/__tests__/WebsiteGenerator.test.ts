@@ -1,6 +1,6 @@
 import { WebsiteGenerator } from '../WebsiteGenerator';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { WebsiteGeneratorConfig } from '../../config/generator.config';
 import { ParsedContent } from '../../types/parser';
 import { Plugin } from '../../types/plugin';
@@ -14,13 +14,13 @@ jest.mock('path');
 jest.mock('../utils/cache');
 jest.mock('../TestGenerator', () => ({
   TestGenerator: jest.fn().mockImplementation(() => ({
-    generateTests: jest.fn().mockResolvedValue(undefined)
-  }))
+    generateTests: jest.fn().mockResolvedValue(undefined),
+  })),
 }));
 jest.mock('../Builder', () => ({
   Builder: jest.fn().mockImplementation(() => ({
-    build: jest.fn().mockResolvedValue(undefined)
-  }))
+    build: jest.fn().mockResolvedValue(undefined),
+  })),
 }));
 
 // Mock DocumentationParserFactory
@@ -29,29 +29,29 @@ jest.mock('../parser-implementation', () => ({
     prototype: {
       register: jest.fn(),
       getParser: jest.fn().mockImplementation(() => ({
-        parse: jest.fn().mockImplementation((content) => ({
+        parse: jest.fn().mockImplementation(content => ({
           title: 'Test Document',
           content: content,
           sections: [],
-          metadata: { originalPath: '/test/source/test.md' }
-        }))
-      }))
-    }
-  }
+          metadata: { originalPath: '/test/source/test.md' },
+        })),
+      })),
+    },
+  },
 }));
 
 // Mock ComponentGenerator
 jest.mock('../component-generator', () => ({
   ComponentGenerator: jest.fn().mockImplementation(() => ({
-    generateComponent: jest.fn().mockImplementation((content) => ({
+    generateComponent: jest.fn().mockImplementation(content => ({
       name: 'TestComponent',
-      content: content
+      content: content,
     })),
-    generatePage: jest.fn().mockImplementation((content) => ({
+    generatePage: jest.fn().mockImplementation(content => ({
       name: 'TestPage',
-      content: content
-    }))
-  }))
+      content: content,
+    })),
+  })),
 }));
 
 // Create a minimal test configuration
@@ -171,11 +171,13 @@ describe('WebsiteGenerator', () => {
     });
 
     // Mock path.join to concatenate paths
-    (path.join as jest.Mock).mockImplementation((...paths: string[]) => paths.join('/').replace(/\/+/g, '/'));
+    (path.join as jest.Mock).mockImplementation((...paths: string[]) =>
+      paths.join('/').replace(/\/+/g, '/')
+    );
 
     // Mock fs.readdir to return mock directory contents
-    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, options) => {
-      if (dirPath === '/test/source') {
+    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, _options) => {
+      if (_dirPath === '/test/source') {
         return Promise.resolve([
           { name: 'doc1.md', isDirectory: () => false },
           { name: 'doc2.md', isDirectory: () => false },
@@ -183,14 +185,10 @@ describe('WebsiteGenerator', () => {
           { name: 'ignored', isDirectory: () => true },
           { name: 'file.txt', isDirectory: () => false },
         ]);
-      } else if (dirPath === '/test/source/subfolder') {
-        return Promise.resolve([
-          { name: 'doc3.md', isDirectory: () => false },
-        ]);
-      } else if (dirPath === '/test/source/ignored') {
-        return Promise.resolve([
-          { name: 'doc4.md', isDirectory: () => false },
-        ]);
+      } else if (_dirPath === '/test/source/subfolder') {
+        return Promise.resolve([{ name: 'doc3.md', isDirectory: () => false }]);
+      } else if (_dirPath === '/test/source/ignored') {
+        return Promise.resolve([{ name: 'doc4.md', isDirectory: () => false }]);
       }
       return Promise.resolve([]);
     });
@@ -249,10 +247,7 @@ describe('WebsiteGenerator', () => {
 
   test('should register plugins from configuration', () => {
     const config = createTestConfig();
-    config.plugins = [
-      { name: 'test-plugin' },
-      { name: 'another-plugin', options: { foo: 'bar' } }
-    ];
+    config.plugins = [{ name: 'test-plugin' }, { name: 'another-plugin', options: { foo: 'bar' } }];
 
     const generator = new WebsiteGenerator(config);
     const registeredPlugins = generator.getPlugins();
@@ -372,10 +367,10 @@ describe('WebsiteGenerator', () => {
           beforeParse: jest.fn().mockImplementation(content => `Modified ${content}`),
           afterParse: jest.fn().mockImplementation(parsed => ({
             ...parsed,
-            title: `Enhanced ${parsed.title}`
-          }))
-        }
-      }
+            title: `Enhanced ${parsed.title}`,
+          })),
+        },
+      },
     ];
 
     const generator = new WebsiteGenerator(config);
@@ -396,14 +391,14 @@ describe('WebsiteGenerator', () => {
 
     // Mock parser to throw an error
     const mockParser = {
-      parse: jest.fn().mockRejectedValue(new Error('Parse error'))
+      parse: jest.fn().mockRejectedValue(new Error('Parse error')),
     };
 
-    const mockParserFactory = {
-      getParser: jest.fn().mockReturnValue(mockParser)
-    };
+    const mockParserFactory = jest.fn().mockImplementation(() => ({
+      getParser: jest.fn().mockReturnValue(mockParser),
+    }));
 
-    generator.parserFactory = { prototype: mockParserFactory } as any;
+    generator.parserFactory = mockParserFactory as any;
 
     // Call the method and expect it to throw
     await expect(generator.parseDocumentation()).rejects.toThrow('Parse error');
@@ -419,14 +414,20 @@ describe('WebsiteGenerator', () => {
         title: 'Test Document 1',
         content: 'Content 1',
         sections: [],
-        metadata: { originalPath: '/test/source/doc1.md' }
+        metadata: { originalPath: '/test/source/doc1.md' },
+        description: '',
+        assets: [],
+        references: [],
       },
       {
         title: 'Test Document 2',
         content: 'Content 2',
         sections: [],
-        metadata: { originalPath: '/test/source/doc2.md' }
-      }
+        metadata: { originalPath: '/test/source/doc2.md' },
+        description: '',
+        assets: [],
+        references: [],
+      },
     ];
 
     // Call the method
@@ -445,7 +446,7 @@ describe('WebsiteGenerator', () => {
     // Create mock components
     const mockComponents = [
       { name: 'Component1', content: 'Content 1' },
-      { name: 'Component2', content: 'Content 2' }
+      { name: 'Component2', content: 'Content 2' },
     ];
 
     // Call the method
@@ -467,7 +468,7 @@ describe('WebsiteGenerator', () => {
     // Create mock components
     const mockComponents = [
       { name: 'Component1', content: 'Content 1' },
-      { name: 'Component2', content: 'Content 2' }
+      { name: 'Component2', content: 'Content 2' },
     ];
 
     // Call the method
@@ -484,7 +485,7 @@ describe('WebsiteGenerator', () => {
     // Create mock components
     const mockComponents = [
       { name: 'Component1', content: 'Content 1' },
-      { name: 'Component2', content: 'Content 2' }
+      { name: 'Component2', content: 'Content 2' },
     ];
 
     // Call the method
@@ -509,9 +510,11 @@ describe('WebsiteGenerator', () => {
     const generator = new WebsiteGenerator(config);
 
     // Mock fs.readdir to throw an error
-    (fs.readdir as jest.Mock).mockRejectedValue(new Error('File system error'));
+    (fs.readdir as any as jest.Mock).mockRejectedValue(new Error('File system error'));
 
     // Call the method and expect it to throw a SiteGeneratorError
-    await expect(generator.getDocumentationFiles('/test/source')).rejects.toThrow(SiteGeneratorError);
+    await expect(generator.getDocumentationFiles('/test/source')).rejects.toThrow(
+      SiteGeneratorError
+    );
   });
 });

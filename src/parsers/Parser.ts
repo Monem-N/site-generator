@@ -10,5 +10,5 @@ export interface Parser {
    * @param options Optional parsing options
    * @returns Parsed content
    */
-  parse(source: string, options?: Record<string, any>): ParsedContent | Promise<ParsedContent>;
+  parse(source: string, options?: Record<string, unknown>): ParsedContent | Promise<ParsedContent>;
 }

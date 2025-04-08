@@ -1,6 +1,6 @@
 import { WebsiteGeneratorConfig } from '../../config/generator.config';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Validates a WebsiteGeneratorConfig object
@@ -35,11 +35,11 @@ export function validateConfig(config: WebsiteGeneratorConfig): void {
         // Check if we can write to the parent directory
         try {
           fs.accessSync(parentDir, fs.constants.W_OK);
-        } catch (error) {
+        } catch (_error) {
           errors.push(`Cannot write to parent directory of output directory: ${parentDir}`);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       errors.push(`Invalid output directory path: ${config.outputDir}`);
     }
   }

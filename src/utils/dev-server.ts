@@ -1,9 +1,9 @@
 import express from 'express';
-import http from 'http';
-import path from 'path';
-import fs from 'fs';
-import WebSocket from 'ws';
-import chalk from 'chalk';
+import * as http from 'http';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as WebSocket from 'ws';
+import * as chalk from 'chalk';
 
 /**
  * Creates and starts a development server for the generated website
@@ -49,14 +49,6 @@ export function startDevServer(outputDir: string, port = 3000): () => void {
   });
 
   // Function to notify clients to reload
-  // Function to notify clients to reload (currently unused but kept for future use)
-  const _notifyReload = () => {
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({ type: 'reload' }));
-      }
-    });
-  };
 
   // Return a function to stop the server
   return () => {

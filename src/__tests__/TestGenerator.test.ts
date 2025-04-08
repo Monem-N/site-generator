@@ -1,6 +1,6 @@
 import { TestGenerator } from '../TestGenerator';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Mock dependencies
 jest.mock('fs');

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator';
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -87,7 +87,7 @@ const config = {
   },
   designSystem: {
     name: options.theme,
-    type: 'custom' as "custom",
+    type: 'custom' as const,
     importPath: '',
     theme: {},
     components: {},

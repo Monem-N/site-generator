@@ -8,20 +8,32 @@ describe('PluginSystem', () => {
       name: 'test-plugin-1',
       version: '1.0.0',
       hooks: {
-        beforeParse: jest.fn((content) => `Modified by plugin 1: ${content}`),
-        afterParse: jest.fn((parsed) => ({ ...parsed, title: `Enhanced by plugin 1: ${parsed.title}` })),
-        beforeGenerate: jest.fn((component) => ({ ...component, content: `Modified by plugin 1: ${component.content}` })),
-        afterGenerate: jest.fn((component) => ({ ...component, name: `${component.name}Enhanced1` })),
+        beforeParse: jest.fn(content => `Modified by plugin 1: ${content}`),
+        afterParse: jest.fn(parsed => ({
+          ...parsed,
+          title: `Enhanced by plugin 1: ${parsed.title}`,
+        })),
+        beforeGenerate: jest.fn(component => ({
+          ...component,
+          content: `Modified by plugin 1: ${component.content}`,
+        })),
+        afterGenerate: jest.fn(component => ({ ...component, name: `${component.name}Enhanced1` })),
       },
     },
     {
       name: 'test-plugin-2',
       version: '1.0.0',
       hooks: {
-        beforeParse: jest.fn((content) => `Modified by plugin 2: ${content}`),
-        afterParse: jest.fn((parsed) => ({ ...parsed, title: `Enhanced by plugin 2: ${parsed.title}` })),
-        beforeGenerate: jest.fn((component) => ({ ...component, content: `Modified by plugin 2: ${component.content}` })),
-        afterGenerate: jest.fn((component) => ({ ...component, name: `${component.name}Enhanced2` })),
+        beforeParse: jest.fn(content => `Modified by plugin 2: ${content}`),
+        afterParse: jest.fn(parsed => ({
+          ...parsed,
+          title: `Enhanced by plugin 2: ${parsed.title}`,
+        })),
+        beforeGenerate: jest.fn(component => ({
+          ...component,
+          content: `Modified by plugin 2: ${component.content}`,
+        })),
+        afterGenerate: jest.fn(component => ({ ...component, name: `${component.name}Enhanced2` })),
       },
     },
   ];
@@ -35,8 +47,13 @@ describe('PluginSystem', () => {
       option2: 'value2',
     },
     hooks: {
-      beforeParse: jest.fn((content, options) => `Modified with options (${options.option1}): ${content}`),
-      afterParse: jest.fn((parsed, options) => ({ ...parsed, title: `Enhanced with options (${options.option2}): ${parsed.title}` })),
+      beforeParse: jest.fn(
+        (content, options) => `Modified with options (${options.option1}): ${content}`
+      ),
+      afterParse: jest.fn((parsed, options) => ({
+        ...parsed,
+        title: `Enhanced with options (${options.option2}): ${parsed.title}`,
+      })),
     },
   };
 
@@ -46,7 +63,7 @@ describe('PluginSystem', () => {
     version: '1.0.0',
     initialize: jest.fn().mockResolvedValue(undefined),
     hooks: {
-      beforeParse: jest.fn((content) => `Modified by initialized plugin: ${content}`),
+      beforeParse: jest.fn(content => `Modified by initialized plugin: ${content}`),
     },
   };
 
@@ -112,7 +129,9 @@ describe('PluginSystem', () => {
 
     // Hooks should be executed in order
     expect(mockPlugins[0].hooks?.beforeParse).toHaveBeenCalledWith(content);
-    expect(mockPlugins[1].hooks?.beforeParse).toHaveBeenCalledWith('Modified by plugin 1: Original content');
+    expect(mockPlugins[1].hooks?.beforeParse).toHaveBeenCalledWith(
+      'Modified by plugin 1: Original content'
+    );
     expect(result).toBe('Modified by plugin 2: Modified by plugin 1: Original content');
   });
 
@@ -151,7 +170,9 @@ describe('PluginSystem', () => {
       ...component,
       content: 'Modified by plugin 1: Original component content',
     });
-    expect(result.content).toBe('Modified by plugin 2: Modified by plugin 1: Original component content');
+    expect(result.content).toBe(
+      'Modified by plugin 2: Modified by plugin 1: Original component content'
+    );
   });
 
   test('should execute afterGenerate hooks', () => {
@@ -177,7 +198,10 @@ describe('PluginSystem', () => {
     const content = 'Original content';
     const result = pluginSystem.executeHook('beforeParse', content);
 
-    expect(mockPluginWithOptions.hooks?.beforeParse).toHaveBeenCalledWith(content, mockPluginWithOptions.options);
+    expect(mockPluginWithOptions.hooks?.beforeParse).toHaveBeenCalledWith(
+      content,
+      mockPluginWithOptions.options
+    );
     expect(result).toBe('Modified with options (value1): Original content');
   });
 
@@ -280,7 +304,7 @@ describe('PluginSystem', () => {
       version: '1.0.0',
       hooks: {
         // Only has afterParse hook, no beforeParse
-        afterParse: jest.fn((parsed) => parsed),
+        afterParse: jest.fn(parsed => parsed),
       },
     };
 

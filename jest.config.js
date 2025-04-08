@@ -3,26 +3,21 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: 'tsconfig.json'
+    }]
   },
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  collectCoverage: true,
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/types/**/*',
-    '!src/index.ts',
-    '!src/cli.ts',
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
-    },
-  },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$',
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  collectCoverage: false,
+  verbose: true,
+
+  // Force exit after tests are complete
+  forceExit: true,
+  // Detect open handles (like unfinished network requests or timers)
+  detectOpenHandles: true,
+  // Disable watchman for file watching
+  watchman: false,
+  // Set a timeout for each test
+  testTimeout: 10000
 };

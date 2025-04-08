@@ -4,7 +4,6 @@ import { ParsedContent } from '../../types/parser';
 export class PluginManager {
   private plugins: Plugin[] = [];
   // Flag to track if the plugin list has been modified
-  private _dirty: boolean = false;
 
   constructor(plugins: Plugin[] = []) {
     this.plugins = [...plugins];
@@ -22,7 +21,6 @@ export class PluginManager {
    */
   registerPlugin(plugin: Plugin): void {
     this.plugins.push(plugin);
-    this._dirty = true;
   }
 
   /**
@@ -39,18 +37,18 @@ export class PluginManager {
   /**
    * Execute a specific hook for all plugins
    */
-  executeHook<T>(hookName: string, data: T, continueOnError: boolean = false): T {
+  executeHook<T>(hookName: string, data: T, continueOnError = false): T {
     let result = data;
 
     for (const plugin of this.plugins) {
       if (plugin.hooks && plugin.hooks[hookName]) {
         try {
-          // @ts-ignore - Dynamic hook access
           result = plugin.hooks[hookName](result, plugin.options);
         } catch (error) {
           if (!continueOnError) {
             throw error;
           }
+          console.warn(`Error executing hook ${hookName} for plugin ${plugin.name}: ${error}`);
         }
       }
     }
@@ -69,9 +67,9 @@ export class PluginManager {
     }
 
     try {
-      // @ts-ignore - Dynamic hook access
       return plugin.hooks[hookName](data, plugin.options);
     } catch (error) {
+      console.error(`Error executing hook ${hookName} for plugin ${pluginName}: ${error}`);
       throw error;
     }
   }
@@ -97,7 +95,6 @@ export class PluginManager {
     const index = this.plugins.findIndex(plugin => plugin.name === name);
     if (index !== -1) {
       this.plugins.splice(index, 1);
-      this._dirty = true;
     }
   }
 

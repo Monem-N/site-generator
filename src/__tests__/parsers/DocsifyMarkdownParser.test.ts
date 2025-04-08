@@ -99,7 +99,7 @@ Regular text.`;
     const result = await parser.parse(markdown);
 
     expect(result.sections[0].content).toContain('```javascript');
-    expect(result.sections[0].content).toContain('const hello = \'world\';');
+    expect(result.sections[0].content).toContain("const hello = 'world';");
     expect(result.sections[0].content).toContain('console.log(hello);');
     expect(result.sections[0].content).toContain('```');
   });

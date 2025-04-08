@@ -14,8 +14,8 @@ export interface MarkdownEnhancerOptions {
  * Plugin to enhance Markdown content with additional features
  */
 export class MarkdownEnhancerPlugin implements Plugin {
-  name: string = 'markdown-enhancer';
-  version: string = '1.0.0';
+  name = 'markdown-enhancer';
+  version = '1.0.0';
   options: MarkdownEnhancerOptions;
   hooks: any;
 
@@ -72,12 +72,9 @@ export class MarkdownEnhancerPlugin implements Plugin {
    */
   private enhanceCodeBlocks(content: string): string {
     // Simple regex to find code blocks and add language class
-    return content.replace(
-      /```(\w+)([\s\S]*?)```/g,
-      (_match, language, code) => {
-        return `\`\`\`${language} class="language-${language}"${code}\`\`\``;
-      }
-    );
+    return content.replace(/```(\w+)([\s\S]*?)```/g, (_match, language, code) => {
+      return `\`\`\`${language} class="language-${language}"${code}\`\`\``;
+    });
   }
 
   /**

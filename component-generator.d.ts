@@ -1,10 +1,11 @@
-import { ContentModel, ComponentTemplate, DesignSystem } from './types';
+import { ContentModel } from './types/cms';
+import { DesignSystem } from './types/design';
 export declare class ComponentGenerator {
     private designSystem;
     private templateRegistry;
     constructor(designSystem: DesignSystem);
     private registerDefaultTemplates;
-    registerTemplate(type: string, template: ComponentTemplate): void;
+    registerTemplate(type: string, template: IComponentTemplate): void;
     generateComponent(contentElement: any): Promise<string>;
     private applyDesignSystem;
     private generateImports;
@@ -13,7 +14,7 @@ export declare class ComponentGenerator {
     private generatePageImports;
     private sanitizeComponentName;
 }
-interface ComponentTemplate {
+interface IComponentTemplate {
     generate(element: any, designSystem: DesignSystem): Promise<string>;
 }
 export {};

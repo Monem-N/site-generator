@@ -1,7 +1,7 @@
 import { OpenAPIParser } from '../../parsers/OpenAPIParser';
 import { ParsedContent } from '../../../types/parser';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Mock dependencies
 jest.mock('fs');
@@ -266,8 +266,8 @@ components:
     const result = parser.parse('/test/api.json');
 
     // Check that paths are extracted as sections
-    const pathSections = result.sections.filter(section =>
-      section.title === '/users' || section.title === '/users/{id}'
+    const pathSections = result.sections.filter(
+      section => section.title === '/users' || section.title === '/users/{id}'
     );
 
     expect(pathSections.length).toBe(2);
@@ -370,20 +370,22 @@ components:
 
   test('should handle OpenAPI 2.0 (Swagger) specifications', () => {
     // Mock fs.readFileSync to return Swagger 2.0 spec
-    (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify({
-      swagger: '2.0',
-      info: {
-        title: 'Swagger API',
-        version: '1.0.0',
-      },
-      paths: {
-        '/users': {
-          get: {
-            summary: 'Get all users',
+    (fs.readFileSync as jest.Mock).mockReturnValue(
+      JSON.stringify({
+        swagger: '2.0',
+        info: {
+          title: 'Swagger API',
+          version: '1.0.0',
+        },
+        paths: {
+          '/users': {
+            get: {
+              summary: 'Get all users',
+            },
           },
         },
-      },
-    }));
+      })
+    );
 
     const parser = new OpenAPIParser();
     const result = parser.parse('/test/swagger.json');

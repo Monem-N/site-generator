@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import crypto from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as crypto from 'crypto';
 import { FileSystemError } from './errors';
 
 /**
@@ -72,10 +72,10 @@ export class ContentCache<T> {
     if (!fs.existsSync(this.cacheDir)) {
       try {
         fs.mkdirSync(this.cacheDir, { recursive: true });
-      } catch (error) {
+      } catch (_error) {
         throw new FileSystemError(`Failed to create cache directory: ${this.cacheDir}`, {
           directory: this.cacheDir,
-          error,
+          error: _error,
         });
       }
     }
@@ -101,16 +101,16 @@ export class ContentCache<T> {
    * Clean up expired items from memory cache
    */
   // Method to clean up memory cache (currently unused but kept for future use)
-  private _cleanupMemoryCache(): void {
-    if (!this.options.ttl) return;
-
+  private cleanExpiredItems(): void {
     const now = Date.now();
     for (const [key, item] of this.memoryCache.entries()) {
-      if (now - item.timestamp > this.options.ttl) {
+      if (this.isExpired(item)) {
         this.memoryCache.delete(key);
       }
     }
   }
+
+  /**
 
   /**
    * Enforce maximum cache size
@@ -150,10 +150,10 @@ export class ContentCache<T> {
     } else if (this.options.storageType === 'filesystem') {
       try {
         fs.writeFileSync(this.getCacheFilePath(key), JSON.stringify(item), 'utf-8');
-      } catch (error) {
+      } catch (_error) {
         throw new FileSystemError(`Failed to write to cache file: ${key}`, {
           key,
-          error,
+          error: _error,
         });
       }
     }

@@ -70,7 +70,7 @@ console.log(test);
 
     expect(result).toContain('```js');
     expect(result).toContain('// Code block');
-    expect(result).toContain('const test = \'Hello World\';');
+    expect(result).toContain("const test = 'Hello World';");
     expect(result).toContain('console.log(test);');
     expect(result).toContain('```');
 
@@ -159,7 +159,8 @@ console.log(test);
 
   test('should process footnotes when enabled', () => {
     const plugin = new MarkdownEnhancerPlugin({ enableFootnotes: true });
-    const markdownWithFootnotes = 'This is a text with a footnote[^1].\n\n[^1]: This is the footnote content.';
+    const markdownWithFootnotes =
+      'This is a text with a footnote[^1].\n\n[^1]: This is the footnote content.';
 
     const result = plugin.hooks.beforeParse?.(markdownWithFootnotes, plugin.options);
     expect(result).toContain('This is a text with a footnote');
@@ -169,7 +170,8 @@ console.log(test);
 
   test('should not process footnotes when disabled', () => {
     const plugin = new MarkdownEnhancerPlugin({ enableFootnotes: false });
-    const markdownWithFootnotes = 'This is a text with a footnote[^1].\n\n[^1]: This is the footnote content.';
+    const markdownWithFootnotes =
+      'This is a text with a footnote[^1].\n\n[^1]: This is the footnote content.';
 
     const result = plugin.hooks.beforeParse?.(markdownWithFootnotes, plugin.options);
     expect(result).not.toContain('<div class="footnote"');
