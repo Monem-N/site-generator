@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "plugins": [
-      { "transform": "typescript-transform-paths" }
-    ],
+    "plugins": [{ "transform": "typescript-transform-paths" }],
     "target": "es2018",
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "node",
     "lib": ["es2018", "dom"],
     "declaration": true,
     "outDir": "./dist",
