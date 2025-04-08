@@ -8,9 +8,31 @@ chmod +x scripts/fix-module-system-issues.js
 chmod +x scripts/fix-logic-errors-issues.js
 chmod +x scripts/analyze_eslint.py
 
+# Make sure .eslintignore exists to exclude generated files
+if [ ! -f ".eslintignore" ]; then
+  echo "Creating .eslintignore to exclude generated files..."
+  cat > .eslintignore << EOL
+# Ignore generated JavaScript files
+**/*.js
+!scripts/*.js
+
+# Don't ignore JavaScript files that are not generated from TypeScript
+# Add specific JS files or directories that are not generated here
+
+# Ignore build and dependency directories
+node_modules/
+dist/
+build/
+coverage/
+
+# Ignore configuration files
+*.config.js
+EOL
+fi
+
 # Phase 0: Analyze ESLint issues
 echo "Phase 0: Analyzing ESLint issues..."
-npx eslint --format json src/ > eslint_report.json
+npx eslint --format json "src/**/*.ts" > eslint_report.json
 python scripts/analyze_eslint.py
 
 # Phase 1: Fix formatting issues
@@ -35,7 +57,7 @@ node --experimental-modules ./scripts/fix-logic-errors-issues.js
 
 # Final analysis to see progress
 echo "Final analysis of remaining issues..."
-npx eslint --format json src/ > eslint_report.json
+npx eslint --format json "src/**/*.ts" > eslint_report.json
 python scripts/analyze_eslint.py
 
 echo "Done! Please review the changes and fix the remaining issues manually."

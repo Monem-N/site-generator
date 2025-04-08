@@ -1,0 +1,15 @@
+# Ignore generated JavaScript files
+**/*.js
+!scripts/*.js
+
+# Don't ignore JavaScript files that are not generated from TypeScript
+# Add specific JS files or directories that are not generated here
+
+# Ignore build and dependency directories
+node_modules/
+dist/
+build/
+coverage/
+
+# Ignore configuration files
+*.config.js

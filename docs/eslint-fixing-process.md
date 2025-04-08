@@ -1,6 +1,14 @@
 # ESLint Fixing Process
 
-This document outlines the process for fixing the 19,035 ESLint issues in the codebase.
+This document outlines the process for fixing ESLint issues in the codebase.
+
+## Important Note on Generated Files
+
+We should **NOT** fix JavaScript files that are generated from TypeScript files. Instead, we should:
+
+1. Focus on fixing TypeScript source files only
+2. Ignore generated JavaScript files using .eslintignore
+3. Fix only JavaScript files that are not generated from TypeScript
 
 ## Overview of Issues
 
@@ -20,9 +28,29 @@ The main categories of issues are:
 
 ## Analysis and Prioritization
 
-Before starting the fixing process, run the analysis script to identify the most problematic areas:
+Before starting the fixing process, set up proper ignoring of generated files and then run the analysis script to identify the most problematic areas:
 
 ```bash
+# Create or update .eslintignore to exclude generated files
+cat > .eslintignore << EOL
+# Ignore generated JavaScript files
+**/*.js
+!scripts/*.js
+
+# Don't ignore JavaScript files that are not generated from TypeScript
+# Add specific JS files or directories that are not generated here
+
+# Ignore build and dependency directories
+node_modules/
+dist/
+build/
+coverage/
+
+# Ignore configuration files
+*.config.js
+EOL
+
+# Run the analysis script
 python analyze_eslint.py
 ```
 
@@ -116,15 +144,16 @@ You can run all scripts in sequence with:
 
 ## Fixing a Specific Directory
 
-Based on the analysis results, fix issues in specific directories in order of priority:
+Based on the analysis results, fix issues in specific directories in order of priority, focusing only on TypeScript files:
 
 ```bash
-./scripts/fix-directory.sh src/utils    # Highest number of issues
-./scripts/fix-directory.sh src/plugins  # Second highest
-./scripts/fix-directory.sh src/parsers  # And so on...
+# Run ESLint only on TypeScript files in a directory
+npx eslint "src/utils/**/*.ts" --fix
+npx eslint "src/plugins/**/*.ts" --fix
+npx eslint "src/parsers/**/*.ts" --fix
 ```
 
-This will run all the fix scripts on just the specified directory. Focus on directories with the most issues first, then move to less problematic areas.
+Focus on directories with the most issues first, then move to less problematic areas. Remember to only fix TypeScript source files, not generated JavaScript files.
 
 ## Tracking Progress
 
