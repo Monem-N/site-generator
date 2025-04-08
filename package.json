@@ -70,7 +70,7 @@
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@types/handlebars": "^4.0.40",
-    "chalk": "^4.1.2",
+    "chalk": "^5.4.1",
     "chokidar": "^3.5.3",
     "express": "^4.18.2",
     "front-matter": "^4.0.2",
