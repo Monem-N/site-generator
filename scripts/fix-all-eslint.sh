@@ -55,6 +55,10 @@ node --experimental-modules ./scripts/fix-module-system-issues.js
 echo "Phase 5: Fixing logic and runtime errors..."
 node --experimental-modules ./scripts/fix-logic-errors-issues.js
 
+# Phase 6: Fix console statements
+echo "Phase 6: Fixing console statements..."
+node --experimental-modules ./scripts/fix-console-statements.js
+
 # Final analysis to see progress
 echo "Final analysis of remaining issues..."
 npx eslint --format json "src/**/*.ts" > eslint_report.json

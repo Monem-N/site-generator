@@ -27,6 +27,14 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"
   },
+  "overrides": [
+    {
+      "files": ["**/utils/logger.ts"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"

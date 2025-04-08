@@ -58,6 +58,10 @@ node --experimental-modules ./scripts/fix-module-system-issues.js "$DIRECTORY"
 echo "Phase 5: Fixing logic and runtime errors in $DIRECTORY..."
 node --experimental-modules ./scripts/fix-logic-errors-issues.js "$DIRECTORY"
 
+# Phase 6: Fix console statements
+echo "Phase 6: Fixing console statements in $DIRECTORY..."
+node --experimental-modules ./scripts/fix-console-statements.js "$DIRECTORY"
+
 # Final analysis to see progress
 echo "Final analysis of remaining issues in $DIRECTORY..."
 npx eslint --format json "$DIRECTORY/**/*.ts" > eslint_report.json
