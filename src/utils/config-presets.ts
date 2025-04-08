@@ -1,4 +1,4 @@
-import { WebsiteGeneratorConfig } from '../../config/generator.config';
+import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
 
 /**
  * Available configuration presets

@@ -1,4 +1,4 @@
-import { BuildConfig } from '../../types';
+import { BuildConfig } from '../../types/index.js';
 
 export interface PerformanceConfig {
   lazyLoading: {
@@ -81,7 +81,7 @@ export default Component;`;
 
     return `
 import { lazy, Suspense } from 'react';
-import LoadingPlaceholder from '../components/${this.config.lazyLoading.placeholder}';
+import LoadingPlaceholder from '../components/${this.config.lazyLoading.placeholder}.js';
 
 const Component = lazy(() => import('${componentPath}'));
 

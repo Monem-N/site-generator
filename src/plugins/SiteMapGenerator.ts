@@ -1,5 +1,5 @@
-import { Plugin } from '../../types/plugin';
-import { ParsedContent } from '../../types/parser';
+import { Plugin } from '../../types/plugin.js';
+import { ParsedContent } from '../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

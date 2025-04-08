@@ -1,5 +1,5 @@
 import * as Handlebars from 'handlebars';
-import { DesignSystem } from '../../../types/design';
+import { DesignSystem } from '../../../types/design.js';
 
 /**
  * Options for the component helper

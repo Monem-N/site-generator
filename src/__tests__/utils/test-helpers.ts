@@ -1,6 +1,6 @@
-import { ParsedContent, ContentNode } from '../../types/parser';
-import { ComponentTemplate } from '../../types/component';
-import { DesignSystem } from '../../types/design';
+import { ParsedContent, ContentNode } from '../../types/parser.js';
+import { ComponentTemplate } from '../../types/component.js';
+import { DesignSystem } from '../../types/design.js';
 
 /**
  * Create a mock parsed content object

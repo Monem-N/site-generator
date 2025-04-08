@@ -1,5 +1,5 @@
-import { validateConfig } from '../../utils/config-validator';
-import { WebsiteGeneratorConfig } from '../../../config/generator.config';
+import { validateConfig } from '../../utils/config-validator.js';
+import { WebsiteGeneratorConfig } from '../../../config/generator.config.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

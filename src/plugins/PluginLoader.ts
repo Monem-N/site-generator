@@ -1,7 +1,8 @@
-import { Plugin } from '../types/plugin';
-import { FileSystemError } from '../utils/errors';
+import { Plugin } from '../types/plugin.js';
+import { FileSystemError } from '../utils/errors.js';
 import * as path from 'path';
 import * as fs from 'fs';
+import { logger } from './utils/logger.js';
 
 /**
  * Plugin loader class
@@ -89,7 +90,7 @@ export class PluginLoader {
         const plugin = this.loadPlugin(filePath, customOptions);
         plugins.push(plugin);
       } catch (error) {
-        console.error(`Failed to load plugin: ${filePath}`, error);
+        logger.error(`Failed to load plugin: ${filePath}`, error);
       }
     }
 

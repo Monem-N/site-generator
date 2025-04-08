@@ -1,3 +1,5 @@
+import { logger } from './utils/logger.js';
+
 interface PerformanceEntry {
   name: string;
   startTime: number;
@@ -22,7 +24,7 @@ export class PerformanceMonitor {
   measure(name: string): PerformanceEntry | undefined {
     const startTime = this.activeMarks.get(name);
     if (!startTime) {
-      console.warn(`No mark found for: ${name}`);
+      logger.warn(`No mark found for: ${name}`);
       return undefined;
     }
 

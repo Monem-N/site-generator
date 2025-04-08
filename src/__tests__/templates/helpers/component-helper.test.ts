@@ -1,6 +1,6 @@
 import * as Handlebars from 'handlebars';
-import { registerComponentHelper } from '../../../templates/helpers/component-helper';
-import { DesignSystem } from '../../../../types/design';
+import { registerComponentHelper } from '../../../templates/helpers/component-helper.js';
+import { DesignSystem } from '../../../../types/design.js';
 
 describe('Component Helper', () => {
   let handlebars: typeof Handlebars;

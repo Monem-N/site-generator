@@ -1,4 +1,4 @@
-import { DesignSystem } from '../../types';
+import { DesignSystem } from '../../types/design.js';
 
 export interface DocsifyThemeConfig {
   colors: {

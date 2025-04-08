@@ -7,7 +7,7 @@ import {
   ConfigurationError,
   tryCatch,
   tryCatchSync,
-} from '../../utils/errors';
+} from '../../utils/errors.js';
 
 describe('Error Classes', () => {
   test('SiteGeneratorError should have correct properties', () => {

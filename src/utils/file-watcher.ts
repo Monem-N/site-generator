@@ -1,6 +1,7 @@
 import * as chokidar from 'chokidar';
 import * as path from 'path';
 import * as chalk from 'chalk';
+import { logger } from './utils/logger.js';
 
 /**
  * Watches for file changes in the source directory
@@ -64,30 +65,30 @@ export function watchFiles(
   // Watch for file changes
   watcher
     .on('add', filePath => {
-      console.log(chalk.blue(`[INFO] File added: ${path.relative(sourceDir, filePath)}`));
+      logger.debug(chalk.blue(`[INFO] File added: ${path.relative(sourceDir, filePath)}`));
       changedFiles.add(filePath);
       debounceChanges();
     })
     .on('change', filePath => {
-      console.log(chalk.blue(`[INFO] File changed: ${path.relative(sourceDir, filePath)}`));
+      logger.debug(chalk.blue(`[INFO] File changed: ${path.relative(sourceDir, filePath)}`));
       changedFiles.add(filePath);
       debounceChanges();
     })
     .on('unlink', filePath => {
-      console.log(chalk.blue(`[INFO] File deleted: ${path.relative(sourceDir, filePath)}`));
+      logger.debug(chalk.blue(`[INFO] File deleted: ${path.relative(sourceDir, filePath)}`));
       changedFiles.add(filePath);
       debounceChanges();
     })
     .on('error', error => {
-      console.log(chalk.red(`[ERROR] Watcher error: ${error}`));
+      logger.debug(chalk.red(`[ERROR] Watcher error: ${error}`));
     });
 
-  console.log(chalk.blue(`[INFO] Watching for changes in ${sourceDir}`));
-  console.log(chalk.blue(`[INFO] Ignoring patterns: ${ignorePatterns.join(', ')}`));
+  logger.debug(chalk.blue(`[INFO] Watching for changes in ${sourceDir}`));
+  logger.debug(chalk.blue(`[INFO] Ignoring patterns: ${ignorePatterns.join(', ')}`));
 
   // Return a function to stop watching
   return () => {
     watcher.close();
-    console.log(chalk.blue('[INFO] File watcher stopped'));
+    logger.debug(chalk.blue('[INFO] File watcher stopped'));
   };
 }

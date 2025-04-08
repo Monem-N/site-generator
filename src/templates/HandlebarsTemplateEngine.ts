@@ -1,9 +1,9 @@
-import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine';
+import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Handlebars from 'handlebars';
-import { FileSystemError } from '../utils/errors';
-import { tryCatch } from '../utils/errors';
+import { FileSystemError } from '../utils/errors.js';
+import { tryCatch } from '../utils/errors.js';
 
 /**
  * Interface for Handlebars template engine options

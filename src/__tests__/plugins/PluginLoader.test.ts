@@ -1,7 +1,8 @@
-import { PluginLoader } from '../../plugins/PluginLoader';
-import { Plugin } from '../../../types/plugin';
+import { PluginLoader } from '../../plugins/PluginLoader.js';
+import { Plugin } from '../../../types/plugin.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { logger } from './utils/logger.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -34,7 +35,7 @@ describe('PluginLoader', () => {
     `,
     '/plugins/invalid-plugin.js': `
       // This is not a valid plugin
-      console.log('This is not a plugin');
+      logger.debug('This is not a plugin');
     `,
     '/plugins/error-plugin.js': `
       throw new Error('Plugin error');

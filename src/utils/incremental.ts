@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import { FileSystemError } from './errors';
+import { FileSystemError } from './errors.js';
+import { logger } from './utils/logger.js';
 
 /**
  * File state for tracking changes
@@ -76,7 +77,7 @@ export class IncrementalManager {
       }
     } catch (error) {
       // If loading fails, start with a fresh state
-      console.warn(`Failed to load incremental state: ${error}`);
+      logger.warn(`Failed to load incremental state: ${error}`);
       this.state = {
         timestamp: 0,
         files: {},
@@ -140,7 +141,7 @@ export class IncrementalManager {
       return hash !== prevState.hash;
     } catch (error) {
       // If there's an error checking the file, assume it changed
-      console.warn(`Error checking file ${filePath}: ${error}`);
+      logger.warn(`Error checking file ${filePath}: ${error}`);
       return true;
     }
   }
@@ -180,7 +181,7 @@ export class IncrementalManager {
 
       this.dirty = true;
     } catch (error) {
-      console.warn(`Error updating file state for ${filePath}: ${error}`);
+      logger.warn(`Error updating file state for ${filePath}: ${error}`);
     }
   }
 

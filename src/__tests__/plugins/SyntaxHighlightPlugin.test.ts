@@ -1,5 +1,6 @@
-import { SyntaxHighlightPlugin } from '../../plugins/SyntaxHighlightPlugin';
-import { ParsedContent, ContentNode } from '../../../types/parser';
+import { SyntaxHighlightPlugin } from '../../plugins/SyntaxHighlightPlugin.js';
+import { ParsedContent, ContentNode } from '../../../types/parser.js';
+import { logger } from './utils/logger.js';
 
 describe('SyntaxHighlightPlugin', () => {
   let plugin: SyntaxHighlightPlugin;
@@ -41,7 +42,7 @@ describe('SyntaxHighlightPlugin', () => {
         },
         {
           type: 'codeBlock',
-          content: 'function hello() {\n  console.log("Hello, world!");\n}',
+          content: 'function hello() {\n  logger.debug("Hello, world!");\n}',
           attributes: {
             language: 'javascript',
           },
@@ -178,7 +179,7 @@ describe('SyntaxHighlightPlugin', () => {
       sections: [
         {
           type: 'codeBlock',
-          content: 'function hello() {\n  console.log("Hello, world!");\n}',
+          content: 'function hello() {\n  logger.debug("Hello, world!");\n}',
           attributes: {
             language: 'javascript',
           },
@@ -228,7 +229,7 @@ describe('SyntaxHighlightPlugin', () => {
           children: [
             {
               type: 'codeBlock',
-              content: 'function hello() {\n  console.log("Hello, world!");\n}',
+              content: 'function hello() {\n  logger.debug("Hello, world!");\n}',
               attributes: {
                 language: 'javascript',
               },

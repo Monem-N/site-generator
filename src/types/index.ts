@@ -1,12 +1,12 @@
 // Core types for the documentation-driven website generator
 
 // Re-export all types from specific type files
-export * from './cms';
-export * from './component';
-export * from './design';
+export * from './cms.js';
+export * from './component.js';
+export * from './design.js';
 // These modules are imported directly where needed
-// export * from './parser';
-// export * from './plugin';
+// export * from './parser.js';
+// export * from './plugin.js';
 
 // Plugin related types
 export interface PluginOptions {
@@ -75,7 +75,7 @@ export interface TestConfig {
   };
 }
 
-// Plugin system types are imported from './plugin'
+// Plugin system types are imported from './plugin.js'
 
 // Build and deployment types
 export interface BuildConfig {

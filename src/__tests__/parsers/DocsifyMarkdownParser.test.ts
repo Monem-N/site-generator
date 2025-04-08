@@ -1,5 +1,6 @@
-import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser';
-import { ParsedContent } from '../../../types/parser';
+import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser.js';
+import { ParsedContent } from '../../../types/parser.js';
+import { logger } from './utils/logger.js';
 
 describe('DocsifyMarkdownParser', () => {
   let parser: DocsifyMarkdownParser;
@@ -91,7 +92,7 @@ Section 2 content.`;
 
 \`\`\`javascript
 const hello = 'world';
-console.log(hello);
+logger.debug(hello);
 \`\`\`
 
 Regular text.`;
@@ -100,7 +101,7 @@ Regular text.`;
 
     expect(result.sections[0].content).toContain('```javascript');
     expect(result.sections[0].content).toContain("const hello = 'world';");
-    expect(result.sections[0].content).toContain('console.log(hello);');
+    expect(result.sections[0].content).toContain('logger.debug(hello);');
     expect(result.sections[0].content).toContain('```');
   });
 

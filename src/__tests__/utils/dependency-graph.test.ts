@@ -1,4 +1,4 @@
-import { DependencyGraph } from '../../utils/dependency-graph';
+import { DependencyGraph } from '../../utils/dependency-graph.js';
 
 describe('DependencyGraph', () => {
   let graph: DependencyGraph;

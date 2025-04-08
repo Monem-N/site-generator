@@ -1,4 +1,4 @@
-import { ParsedContent } from '../../types/parser';
+import { ParsedContent } from '../../types/parser.js';
 
 /**
  * Interface for document parsers

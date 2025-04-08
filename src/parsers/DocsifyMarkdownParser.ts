@@ -2,6 +2,7 @@ import { ParsedContent, ContentNode } from '../../types/parser.js';
 import { Asset, Reference } from '../../types/parser.js';
 import { Parser } from './Parser.js';
 import { marked } from 'marked';
+import { logger } from './utils/logger.js';
 // Import front-matter dynamically to avoid ESM issues
 let frontMatterModule;
 
@@ -101,7 +102,7 @@ export class DocsifyMarkdownParser implements Parser {
 
       return result;
     } catch (error) {
-      console.error('Error parsing markdown:', error);
+      logger.error('Error parsing markdown:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new Error(`Markdown parsing failed: ${errorMessage}`);
     }

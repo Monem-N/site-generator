@@ -1,4 +1,4 @@
-import { WebsiteGeneratorConfig } from '../../config/generator.config';
+import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -60,10 +60,8 @@ export function validateConfig(config: WebsiteGeneratorConfig): void {
       if (typeof config.parser.customFormats !== 'object') {
         errors.push('parser.customFormats must be an object');
       } else {
-        for (const [format, formatConfig] of Object.entries(config.parser.customFormats) as [
-          string,
-          any
-        ][]) {
+        for (const [format, formatConfig] of Object.entries(config.parser.customFormats)) {
+          // TypeScript now knows formatConfig is CustomFormatConfig
           if (!formatConfig.parser) {
             errors.push(`Missing parser for custom format: ${format}`);
           }

@@ -1,4 +1,4 @@
-import { PluginOptions } from './index';
+import { PluginOptions } from './index.js';
 
 /**
  * Interface for plugins

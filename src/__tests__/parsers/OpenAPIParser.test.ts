@@ -1,5 +1,5 @@
-import { OpenAPIParser } from '../../parsers/OpenAPIParser';
-import { ParsedContent } from '../../../types/parser';
+import { OpenAPIParser } from '../../parsers/OpenAPIParser.js';
+import { ParsedContent } from '../../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

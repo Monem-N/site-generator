@@ -1,8 +1,9 @@
-import { DevServer } from '../../utils/dev-server-class';
+import { DevServer } from '../../utils/dev-server-class.js';
 import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as chokidar from 'chokidar';
+import { logger } from './utils/logger.js';
 
 // Mock dependencies
 jest.mock('http');
@@ -69,7 +70,7 @@ describe('DevServer', () => {
         return 'body { color: red; }';
       }
       if (filePath.endsWith('.js')) {
-        return 'console.log("test");';
+        return 'logger.debug("test");';
       }
       return '';
     });
@@ -216,7 +217,7 @@ describe('DevServer', () => {
       {
         url: '/script.js',
         contentType: 'application/javascript',
-        content: 'console.log("test");',
+        content: 'logger.debug("test");',
       },
       {
         url: '/image.png',

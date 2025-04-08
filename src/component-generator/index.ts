@@ -1,6 +1,6 @@
-import { ParsedContent } from '../../types/parser';
-import { ComponentTemplate } from '../types/component';
-import { DesignSystem } from '../types/design';
+import { ParsedContent } from '../../types/parser.js';
+import { ComponentTemplate } from '../types/component.js';
+import { DesignSystem } from '../types/design.js';
 
 export interface ComponentGeneratorOptions {
   templates?: ComponentTemplate[];

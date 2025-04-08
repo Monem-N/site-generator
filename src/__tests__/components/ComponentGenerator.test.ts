@@ -1,5 +1,5 @@
-import { ComponentGenerator } from '../../component-generator';
-import { ParsedContent } from '../../../types/parser';
+import { ComponentGenerator } from '../../component-generator.js';
+import { ParsedContent } from '../../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

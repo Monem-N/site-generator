@@ -1,13 +1,13 @@
-import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine';
+import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
 import {
   HandlebarsTemplateEngine,
   HandlebarsTemplateEngineOptions,
-} from './HandlebarsTemplateEngine';
-import { EjsTemplateEngine, EjsTemplateEngineOptions } from './EjsTemplateEngine';
-import { ParsedContent } from '../../types/parser';
-import { DesignSystem } from '../../types/design';
+} from './HandlebarsTemplateEngine.js';
+import { EjsTemplateEngine, EjsTemplateEngineOptions } from './EjsTemplateEngine.js';
+import { ParsedContent } from '../../types/parser.js';
+import { DesignSystem } from '../../types/design.js';
 import * as path from 'path';
-import { TemplateError } from '../utils/errors';
+import { TemplateError } from '../utils/errors.js';
 
 /**
  * Type of template engine

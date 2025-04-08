@@ -1,7 +1,7 @@
-import { ParsedContent } from '../../types/parser';
-import { DesignSystem } from '../../types/design';
-import { PerformanceMonitor } from '../utils/performance';
-import { TemplateError } from '../utils/errors';
+import { ParsedContent } from '../../types/parser.js';
+import { DesignSystem } from '../../types/design.js';
+import { PerformanceMonitor } from '../utils/performance.js';
+import { TemplateError } from '../utils/errors.js';
 
 /**
  * Interface for template engine options

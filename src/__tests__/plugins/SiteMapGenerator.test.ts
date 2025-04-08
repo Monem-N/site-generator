@@ -1,5 +1,5 @@
-import { SiteMapGenerator } from '../../plugins/SiteMapGenerator';
-import { ParsedContent } from '../../../types/parser';
+import { SiteMapGenerator } from '../../plugins/SiteMapGenerator.js';
+import { ParsedContent } from '../../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

@@ -1,5 +1,5 @@
-import { Plugin } from '../../types/plugin';
-import { ParsedContent, ContentNode } from '../../types/parser';
+import { Plugin } from '../../types/plugin.js';
+import { ParsedContent, ContentNode } from '../../types/parser.js';
 
 /**
  * Plugin options for SyntaxHighlightPlugin

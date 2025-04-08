@@ -1,4 +1,4 @@
-import { ContentCache, CacheOptions } from '../../utils/cache';
+import { ContentCache, CacheOptions } from '../../utils/cache.js';
 
 describe('ContentCache', () => {
   test('should initialize with memory storage', () => {

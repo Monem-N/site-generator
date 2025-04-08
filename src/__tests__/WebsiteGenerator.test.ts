@@ -1,12 +1,12 @@
-import { WebsiteGenerator } from '../WebsiteGenerator';
+import { WebsiteGenerator } from '../WebsiteGenerator.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { WebsiteGeneratorConfig } from '../../config/generator.config';
-import { ParsedContent } from '../../types/parser';
-import { Plugin } from '../../types/plugin';
-import { ComponentTemplate } from '../../types/component';
-import { ContentCache } from '../utils/cache';
-import { SiteGeneratorError } from '../utils/errors';
+import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
+import { ParsedContent } from '../../types/parser.js';
+import { Plugin } from '../../types/plugin.js';
+import { ComponentTemplate } from '../../types/component.js';
+import { ContentCache } from '../utils/cache.js';
+import { SiteGeneratorError } from '../utils/errors.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -299,7 +299,7 @@ describe('WebsiteGenerator', () => {
       has: jest.fn().mockReturnValue(false),
       clear: jest.fn(),
       getStats: jest.fn().mockReturnValue({ size: 0 }),
-    } as any;
+    } as unknown;
 
     // Mock the internal methods
     generator.parseDocumentation = jest.fn().mockResolvedValue([]);
@@ -398,7 +398,7 @@ describe('WebsiteGenerator', () => {
       getParser: jest.fn().mockReturnValue(mockParser),
     }));
 
-    generator.parserFactory = mockParserFactory as any;
+    generator.parserFactory = mockParserFactory as unknown;
 
     // Call the method and expect it to throw
     await expect(generator.parseDocumentation()).rejects.toThrow('Parse error');
@@ -450,7 +450,7 @@ describe('WebsiteGenerator', () => {
     ];
 
     // Call the method
-    const styledComponents = await generator.applyDesignSystem(mockComponents as any);
+    const styledComponents = await generator.applyDesignSystem(mockComponents as unknown);
 
     // Verify the results
     expect(styledComponents).toHaveLength(2);
@@ -472,7 +472,7 @@ describe('WebsiteGenerator', () => {
     ];
 
     // Call the method
-    await generator.generateTests(mockComponents as any);
+    await generator.generateTests(mockComponents as unknown);
 
     // Verify that TestGenerator was not imported
     expect(require('../TestGenerator').TestGenerator).not.toHaveBeenCalled();
@@ -489,7 +489,7 @@ describe('WebsiteGenerator', () => {
     ];
 
     // Call the method
-    await generator.build(mockComponents as any);
+    await generator.build(mockComponents as unknown);
 
     // Verify that Builder was called with the correct config
     const Builder = require('../Builder').Builder;
@@ -510,7 +510,7 @@ describe('WebsiteGenerator', () => {
     const generator = new WebsiteGenerator(config);
 
     // Mock fs.readdir to throw an error
-    (fs.readdir as any as jest.Mock).mockRejectedValue(new Error('File system error'));
+    (fs.readdir as unknown as jest.Mock).mockRejectedValue(new Error('File system error'));
 
     // Call the method and expect it to throw a SiteGeneratorError
     await expect(generator.getDocumentationFiles('/test/source')).rejects.toThrow(

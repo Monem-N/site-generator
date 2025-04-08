@@ -1,3 +1,5 @@
+import { logger } from './utils/logger.js';
+
 /**
  * Base error class for all site generator errors
  * Provides standardized error handling with error codes and contextual information
@@ -121,38 +123,38 @@ export class ValidationError extends SiteGeneratorError {
  */
 export function setupGlobalErrorHandler(verbose = false): void {
   process.on('uncaughtException', error => {
-    console.error('\n🔥 Uncaught Exception:');
+    logger.error('\n🔥 Uncaught Exception:');
 
     if (error instanceof SiteGeneratorError) {
-      console.error(error.getFormattedMessage());
+      logger.error(error.getFormattedMessage());
     } else {
-      console.error(`[UNKNOWN_ERROR] ${error.message}`);
+      logger.error(`[UNKNOWN_ERROR] ${error.message}`);
     }
 
     if (verbose) {
-      console.error('\nStack Trace:');
-      console.error(error.stack);
+      logger.error('\nStack Trace:');
+      logger.error(error.stack);
     } else {
-      console.error('\nRun with --verbose flag for more details.');
+      logger.error('\nRun with --verbose flag for more details.');
     }
 
     process.exit(1);
   });
 
   process.on('unhandledRejection', (reason, _promise) => {
-    console.error('\n🔥 Unhandled Promise Rejection:');
+    logger.error('\n🔥 Unhandled Promise Rejection:');
 
     if (reason instanceof SiteGeneratorError) {
-      console.error(reason.getFormattedMessage());
+      logger.error(reason.getFormattedMessage());
     } else {
-      console.error(`[UNHANDLED_REJECTION] ${reason}`);
+      logger.error(`[UNHANDLED_REJECTION] ${reason}`);
     }
 
     if (verbose) {
-      console.error('\nStack Trace:');
-      console.error((reason as Error).stack);
+      logger.error('\nStack Trace:');
+      logger.error((reason as Error).stack);
     } else {
-      console.error('\nRun with --verbose flag for more details.');
+      logger.error('\nRun with --verbose flag for more details.');
     }
 
     process.exit(1);

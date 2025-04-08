@@ -1,5 +1,6 @@
-import { ParsedContent } from '../types';
-import { Parser } from './parsers/Parser';
+import { ParsedContent } from '../types/index.js';
+import { Parser } from './parsers/Parser.js';
+import { logger } from './utils/logger.js';
 // Using require for SwaggerParser due to TypeScript compatibility issues
 const SwaggerParser = require('swagger-parser');
 
@@ -54,7 +55,7 @@ export class OpenAPIParser implements Parser {
 
       return parsedContent;
     } catch (error) {
-      console.error('Error parsing OpenAPI content:', error);
+      logger.error('Error parsing OpenAPI content:', error);
       throw error;
     }
   }

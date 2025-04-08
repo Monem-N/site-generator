@@ -1,4 +1,4 @@
-import { ContentCache, CacheOptions } from '../../utils/cache';
+import { ContentCache, CacheOptions } from '../../utils/cache.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

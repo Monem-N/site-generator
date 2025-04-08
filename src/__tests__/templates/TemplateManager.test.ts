@@ -1,8 +1,8 @@
-import { TemplateManager } from '../../templates/TemplateManager';
-import { TemplateEngine } from '../../templates/TemplateEngine';
-import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine';
-import { EjsTemplateEngine } from '../../templates/EjsTemplateEngine';
-import { createMockParsedContent } from '../utils/test-helpers';
+import { TemplateManager } from '../../templates/TemplateManager.js';
+import { TemplateEngine } from '../../templates/TemplateEngine.js';
+import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine.js';
+import { EjsTemplateEngine } from '../../templates/EjsTemplateEngine.js';
+import { createMockParsedContent } from '../utils/test-helpers.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

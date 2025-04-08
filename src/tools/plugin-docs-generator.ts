@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Plugin } from '../types/plugin';
+import { Plugin } from '../types/plugin.js';
 
 interface PluginDocumentation {
   name: string;

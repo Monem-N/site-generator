@@ -1,4 +1,4 @@
-import { TestGenerator } from '../TestGenerator';
+import { TestGenerator } from '../TestGenerator.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

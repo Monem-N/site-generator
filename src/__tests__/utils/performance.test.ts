@@ -1,4 +1,4 @@
-import { PerformanceMonitor } from '../../utils/performance';
+import { PerformanceMonitor } from '../../utils/performance.js';
 
 describe('PerformanceMonitor', () => {
   let performance: PerformanceMonitor;

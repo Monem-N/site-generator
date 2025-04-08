@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { WebSocketServer } from 'ws';
 import * as chalk from 'chalk';
+import { logger } from './utils/logger.js';
 
 /**
  * Creates and starts a development server for the generated website
@@ -31,20 +32,20 @@ export function startDevServer(outputDir: string, port = 3000): () => void {
 
   // Start the server
   server.listen(port, () => {
-    console.log(chalk.green(`[SUCCESS] Development server started at http://localhost:${port}`));
-    console.log(chalk.blue(`[INFO] Serving files from ${outputDir}`));
+    logger.debug(chalk.green(`[SUCCESS] Development server started at http://localhost:${port}`));
+    logger.debug(chalk.blue(`[INFO] Serving files from ${outputDir}`));
   });
 
   // WebSocket for live reload
   wss.on('connection', ws => {
-    console.log(chalk.blue('[INFO] Client connected to live reload'));
+    logger.debug(chalk.blue('[INFO] Client connected to live reload'));
 
     ws.on('error', error => {
-      console.log(chalk.red(`[ERROR] WebSocket error: ${error.message}`));
+      logger.debug(chalk.red(`[ERROR] WebSocket error: ${error.message}`));
     });
 
     ws.on('close', () => {
-      console.log(chalk.blue('[INFO] Client disconnected from live reload'));
+      logger.debug(chalk.blue('[INFO] Client disconnected from live reload'));
     });
   });
 
@@ -53,7 +54,7 @@ export function startDevServer(outputDir: string, port = 3000): () => void {
   // Return a function to stop the server
   return () => {
     server.close();
-    console.log(chalk.blue('[INFO] Development server stopped'));
+    logger.debug(chalk.blue('[INFO] Development server stopped'));
   };
 }
 
@@ -69,12 +70,12 @@ export function injectLiveReloadScript(outputDir: string, port = 3000): void {
     socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'reload') {
-        console.log('Reloading page...');
+        logger.debug('Reloading page...');
         window.location.reload();
       }
     });
     socket.addEventListener('close', () => {
-      console.log('Live reload disconnected. Attempting to reconnect in 5 seconds...');
+      logger.debug('Live reload disconnected. Attempting to reconnect in 5 seconds...');
       setTimeout(() => {
         window.location.reload();
       }, 5000);

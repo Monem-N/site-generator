@@ -1,7 +1,8 @@
-import { MarkdownEnhancerPlugin } from '../../plugins/MarkdownEnhancerPlugin';
-import { PluginSystem } from '../../plugins/PluginSystem';
-import { ParsedContent } from '../../../types/parser';
-import { Plugin } from '../../../types/plugin';
+import { MarkdownEnhancerPlugin } from '../../plugins/MarkdownEnhancerPlugin.js';
+import { PluginSystem } from '../../plugins/PluginSystem.js';
+import { ParsedContent } from '../../../types/parser.js';
+import { Plugin } from '../../../types/plugin.js';
+import { logger } from './utils/logger.js';
 
 describe('MarkdownEnhancerPlugin', () => {
   // Sample parsed content
@@ -39,7 +40,7 @@ Content for section 1.
 \`\`\`js
 // Code block
 const test = 'Hello World';
-console.log(test);
+logger.debug(test);
 \`\`\`
 
 [Link to another page](another-page.md)
@@ -71,7 +72,7 @@ console.log(test);
     expect(result).toContain('```js');
     expect(result).toContain('// Code block');
     expect(result).toContain("const test = 'Hello World';");
-    expect(result).toContain('console.log(test);');
+    expect(result).toContain('logger.debug(test);');
     expect(result).toContain('```');
 
     // Should add language class for syntax highlighting

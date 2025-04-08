@@ -1,5 +1,5 @@
-import { PluginSystem } from '../../plugins/PluginSystem';
-import { Plugin } from '../../../types/plugin';
+import { PluginSystem } from '../../plugins/PluginSystem.js';
+import { Plugin } from '../../../types/plugin.js';
 
 describe('PluginSystem', () => {
   // Sample plugins for testing

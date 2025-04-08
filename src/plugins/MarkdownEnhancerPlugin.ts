@@ -1,5 +1,5 @@
-import { Plugin } from '../../types';
-import { ParsedContent } from '../../types/parser';
+import { Plugin } from '../../types/plugin.js';
+import { ParsedContent } from '../../types/parser.js';
 
 /**
  * Options for the MarkdownEnhancerPlugin

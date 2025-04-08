@@ -1,6 +1,6 @@
-import { ParserService } from '../../services/ParserService';
-import { createMockFileSystem } from '../utils/test-helpers';
-import { Plugin } from '../../../types/plugin';
+import { ParserService } from '../../services/ParserService.js';
+import { createMockFileSystem } from '../utils/test-helpers.js';
+import { Plugin } from '../../../types/plugin.js';
 
 describe('ParserService', () => {
   let parserService: ParserService;

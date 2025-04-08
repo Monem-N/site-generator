@@ -1,9 +1,9 @@
-import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine';
+import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ejs from 'ejs';
-import { FileSystemError } from '../utils/errors';
-import { tryCatch } from '../utils/errors';
+import { FileSystemError } from '../utils/errors.js';
+import { tryCatch } from '../utils/errors.js';
 
 /**
  * Interface for EJS template engine options

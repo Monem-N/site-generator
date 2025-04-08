@@ -1,5 +1,5 @@
-import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine';
-import { createMockParsedContent } from '../utils/test-helpers';
+import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine.js';
+import { createMockParsedContent } from '../utils/test-helpers.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Handlebars from 'handlebars';

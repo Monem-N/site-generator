@@ -1,5 +1,5 @@
-import { PluginDocsGenerator } from '../../tools/plugin-docs-generator';
-import { Plugin } from '../../../types/plugin';
+import { PluginDocsGenerator } from '../../tools/plugin-docs-generator.js';
+import { Plugin } from '../../../types/plugin.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

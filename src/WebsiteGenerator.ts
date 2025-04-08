@@ -8,6 +8,7 @@ import { DocumentationParserFactory } from '../parser-implementation.js';
 import { ComponentGenerator } from '../component-generator.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import { logger } from './utils/logger.js';
 
 export class WebsiteGenerator {
   private config: WebsiteGeneratorConfig;
@@ -59,7 +60,7 @@ export class WebsiteGenerator {
         // Use a logger instead of console.error
         if (this.config.logging?.enabled !== false) {
           // eslint-disable-next-line no-console
-          console.error(`Failed to load plugin ${pluginConfig.name}:`, error);
+          logger.error(`Failed to load plugin ${pluginConfig.name}:`, error);
         }
       }
     }
@@ -88,13 +89,13 @@ export class WebsiteGenerator {
       // Use a logger instead of console.log
       if (this.config.logging?.enabled !== false) {
         // eslint-disable-next-line no-console
-        console.log('Website generation completed successfully!');
+        logger.debug('Website generation completed successfully!');
       }
     } catch (error) {
       // Use a logger instead of console.error
       if (this.config.logging?.enabled !== false) {
         // eslint-disable-next-line no-console
-        console.error('Website generation failed:', error);
+        logger.error('Website generation failed:', error);
       }
       throw error;
     }

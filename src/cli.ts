@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator';
+import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator.js';
 import * as path from 'path';
 import * as fs from 'fs';
+import { logger } from './utils/logger.js';
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -44,7 +45,7 @@ for (let i = 0; i < args.length; i++) {
 
 // Show help
 function showHelp() {
-  console.log(`
+  logger.debug(`
 Site Generator CLI
 
 Usage:
@@ -68,7 +69,7 @@ Themes:
 
 // Check if source directory exists
 if (!fs.existsSync(options.sourceDir)) {
-  console.error(`Error: Source directory "${options.sourceDir}" does not exist.`);
+  logger.error(`Error: Source directory "${options.sourceDir}" does not exist.`);
   process.exit(1);
 }
 
@@ -99,14 +100,14 @@ const config = {
 const generator = new DocsifyWebsiteGenerator(config);
 
 // Generate website
-console.log(`Generating website from ${options.sourceDir} to ${options.outputDir}...`);
+logger.debug(`Generating website from ${options.sourceDir} to ${options.outputDir}...`);
 
 generator
   .generate()
   .then(() => {
-    console.log('Website generated successfully!');
+    logger.debug('Website generated successfully!');
   })
   .catch(error => {
-    console.error('Error generating website:', error);
+    logger.error('Error generating website:', error);
     process.exit(1);
   });

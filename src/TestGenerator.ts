@@ -1,5 +1,5 @@
-import type { WebsiteGeneratorConfig } from '../config/generator.config';
-import { ComponentConfig } from '../types/component';
+import type { WebsiteGeneratorConfig } from '../config/generator.config.js';
+import { ComponentConfig } from '../types/component.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
@@ -9,7 +9,7 @@ export class TestGenerator {
     if (this.config.coverage?.enabled) {
       // eslint-disable-next-line no-console
       // eslint-disable-next-line no-console
-      console.log(`Generating tests with ${this.config.coverage?.threshold}% coverage threshold`);
+      logger.debug(`Generating tests with ${this.config.coverage?.threshold}% coverage threshold`);
     }
 
     await Promise.all([
@@ -71,6 +71,7 @@ describe('${name}', () => {
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from '${this.config.framework}';
 import ${name} from '${importPath}';
+import { logger } from './utils/logger.js';
 
 describe('${name} Integration', () => {
   it('integrates with other components', () => {

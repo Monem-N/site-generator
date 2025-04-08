@@ -1,5 +1,5 @@
-import { ParserFactory } from '../../parsers/ParserFactory';
-import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser';
+import { ParserFactory } from '../../parsers/ParserFactory.js';
+import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser.js';
 
 describe('ParserFactory', () => {
   let parserFactory: ParserFactory;

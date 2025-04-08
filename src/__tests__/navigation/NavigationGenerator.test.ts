@@ -1,5 +1,5 @@
-import { NavigationGenerator } from '../../navigation/NavigationGenerator';
-import { ParsedContent } from '../../../types/parser';
+import { NavigationGenerator } from '../../navigation/NavigationGenerator.js';
+import { ParsedContent } from '../../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

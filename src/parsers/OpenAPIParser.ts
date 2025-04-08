@@ -1,5 +1,5 @@
-import { Parser } from './Parser';
-import { ParsedContent, ContentNode } from '../../types/parser';
+import { Parser } from './Parser.js';
+import { ParsedContent, ContentNode } from '../../types/parser.js';
 // Define OpenAPI types inline for now
 interface OpenAPISpec {
   openapi?: string;
@@ -35,15 +35,15 @@ interface OperationObject {
   summary?: string;
   description?: string;
   operationId?: string;
-  parameters?: any[];
+  parameters?: unknown[];
   requestBody?: {
     content: Record<string, MediaTypeObject>;
     description?: string;
     required?: boolean;
   };
-  responses?: Record<string, any>;
+  responses?: Record<string, unknown>;
   // Allow indexing with string
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface SchemaObject {
@@ -64,7 +64,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 // Import error types if needed
-// import { FileSystemError, ParserError } from '../utils/errors';
+// import { FileSystemError, ParserError } from '../utils/errors.js';
 
 /**
  * Options for the OpenAPIParser
@@ -98,111 +98,107 @@ export class OpenAPIParser implements Parser {
    * @returns Parsed content
    */
   parse(filePath: string): ParsedContent {
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${filePath}`);
+    }
+
+    // Read file content
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Parse OpenAPI specification based on file extension
+    const extension = path.extname(filePath).toLowerCase();
+    let spec: OpenAPISpec;
+
     try {
-      // Check if file exists
-      if (!fs.existsSync(filePath)) {
-        throw new Error(`File not found: ${filePath}`);
+      if (extension === '.json') {
+        spec = JSON.parse(content) as OpenAPISpec;
+      } else if (extension === '.yaml' || extension === '.yml') {
+        spec = yaml.load(content) as OpenAPISpec;
+      } else {
+        throw new Error(`Unsupported file extension: ${extension}`);
       }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to parse OpenAPI specification: ${errorMessage}`);
+    }
 
-      // Read file content
-      const content = fs.readFileSync(filePath, 'utf-8');
+    // Validate schema if enabled
+    if (this.options.validateSchema) {
+      this.validateSchema(spec);
+    }
 
-      // Parse OpenAPI specification based on file extension
-      const extension = path.extname(filePath).toLowerCase();
-      let spec: OpenAPISpec;
+    // Extract API information
+    const title = spec.info?.title || path.basename(filePath, extension);
+    const description = spec.info?.description || '';
+    const version = spec.info?.version || '';
 
-      try {
-        if (extension === '.json') {
-          spec = JSON.parse(content) as OpenAPISpec;
-        } else if (extension === '.yaml' || extension === '.yml') {
-          spec = yaml.load(content) as OpenAPISpec;
-        } else {
-          throw new Error(`Unsupported file extension: ${extension}`);
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to parse OpenAPI specification: ${errorMessage}`);
-      }
+    // Create sections for paths
+    const sections: ContentNode[] = [];
 
-      // Validate schema if enabled
-      if (this.options.validateSchema) {
-        this.validateSchema(spec);
-      }
-
-      // Extract API information
-      const title = spec.info?.title || path.basename(filePath, extension);
-      const description = spec.info?.description || '';
-      const version = spec.info?.version || '';
-
-      // Create sections for paths
-      const sections: ContentNode[] = [];
-
-      // Add info section
-      sections.push({
-        type: 'section',
-        title: 'API Information',
-        content: `
+    // Add info section
+    sections.push({
+      type: 'section',
+      title: 'API Information',
+      content: `
 # ${title}
 
 ${description}
 
 **Version:** ${version}
 `,
-        level: 1,
-      });
+      level: 1,
+    });
 
-      // Add sections for paths
-      if (spec.paths) {
-        for (const [path, pathItem] of Object.entries(spec.paths)) {
-          const pathContent = this.generatePathContent(path, pathItem);
-          sections.push({
-            type: 'section',
-            title: path,
-            content: pathContent,
-            level: 2,
-          });
-        }
+    // Add sections for paths
+    if (spec.paths) {
+      for (const [path, pathItem] of Object.entries(spec.paths)) {
+        const pathContent = this.generatePathContent(path, pathItem);
+        sections.push({
+          type: 'section',
+          title: path,
+          content: pathContent,
+          level: 2,
+        });
       }
-
-      // Add sections for schemas
-      if (spec.components?.schemas) {
-        for (const [name, schema] of Object.entries(spec.components.schemas)) {
-          const schemaContent = this.generateSchemaContent(name, schema);
-          sections.push({
-            type: 'section',
-            title: `${name} Schema`,
-            content: schemaContent,
-            level: 2,
-          });
-        }
-      }
-
-      // Create metadata
-      const metadata: Record<string, unknown> = {
-        originalPath: filePath,
-        title,
-        description,
-        version,
-        openapi: spec.openapi || spec.swagger,
-      };
-
-      // Include examples if enabled
-      if (this.options.includeExamples) {
-        metadata.examples = this.extractExamples(spec);
-      }
-
-      return {
-        title,
-        description,
-        content: description,
-        sections,
-        metadata,
-        assets: [],
-        references: [],
-      };
-    } catch (error) {
-      throw error;
     }
+
+    // Add sections for schemas
+    if (spec.components?.schemas) {
+      for (const [name, schema] of Object.entries(spec.components.schemas)) {
+        const schemaContent = this.generateSchemaContent(name, schema);
+        sections.push({
+          type: 'section',
+          title: `${name} Schema`,
+          content: schemaContent,
+          level: 2,
+        });
+      }
+    }
+
+    // Create metadata
+    const metadata: Record<string, unknown> = {
+      originalPath: filePath,
+      title,
+      description,
+      version,
+      openapi: spec.openapi || spec.swagger,
+    };
+
+    // Include examples if enabled
+    if (this.options.includeExamples) {
+      metadata.examples = this.extractExamples(spec);
+    }
+
+    return {
+      title,
+      description,
+      content: description,
+      sections,
+      metadata,
+      assets: [],
+      references: [],
+    };
   }
 
   /**

@@ -1,4 +1,4 @@
-import { IncrementalManager, IncrementalOptions } from '../../utils/incremental';
+import { IncrementalManager, IncrementalOptions } from '../../utils/incremental.js';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 

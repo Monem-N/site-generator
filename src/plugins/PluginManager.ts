@@ -1,5 +1,6 @@
-import { Plugin } from '../../types/plugin';
-import { ParsedContent } from '../../types/parser';
+import { Plugin } from '../../types/plugin.js';
+import { ParsedContent } from '../../types/parser.js';
+import { logger } from './utils/logger.js';
 
 export class PluginManager {
   private plugins: Plugin[] = [];
@@ -48,7 +49,7 @@ export class PluginManager {
           if (!continueOnError) {
             throw error;
           }
-          console.warn(`Error executing hook ${hookName} for plugin ${plugin.name}: ${error}`);
+          logger.warn(`Error executing hook ${hookName} for plugin ${plugin.name}: ${error}`);
         }
       }
     }
@@ -69,7 +70,7 @@ export class PluginManager {
     try {
       return plugin.hooks[hookName](data, plugin.options);
     } catch (error) {
-      console.error(`Error executing hook ${hookName} for plugin ${pluginName}: ${error}`);
+      logger.error(`Error executing hook ${hookName} for plugin ${pluginName}: ${error}`);
       throw error;
     }
   }

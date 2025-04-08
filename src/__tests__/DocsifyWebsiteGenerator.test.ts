@@ -1,8 +1,8 @@
-import { DocsifyWebsiteGenerator } from '../DocsifyWebsiteGenerator';
-import { WebsiteGeneratorConfig } from '../../config/generator.config';
+import { DocsifyWebsiteGenerator } from '../DocsifyWebsiteGenerator.js';
+import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ParsedContent } from '../../types/parser';
+import { ParsedContent } from '../../types/parser.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -178,7 +178,7 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Access the protected docsifyConfig property using type assertion
-    const docsifyConfig = (generator as any).docsifyConfig;
+    const docsifyConfig = (generator as unknown).docsifyConfig;
 
     expect(docsifyConfig).toBeDefined();
     expect(docsifyConfig.name).toBe(config.projectName);
@@ -206,7 +206,7 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config, docsifyOptions);
 
     // Access the protected docsifyConfig property using type assertion
-    const docsifyConfig = (generator as any).docsifyConfig;
+    const docsifyConfig = (generator as unknown).docsifyConfig;
 
     expect(docsifyConfig.name).toBe('Custom Name');
     expect(docsifyConfig.repo).toBe('user/repo');
@@ -221,21 +221,21 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     // Mock the generateDocsifyFiles method to call the real implementation
-    const originalGenerateDocsifyFiles = (generator as any).generateDocsifyFiles;
-    (generator as any).generateDocsifyFiles = jest.fn().mockImplementation(async () => {
+    const originalGenerateDocsifyFiles = (generator as unknown).generateDocsifyFiles;
+    (generator as unknown).generateDocsifyFiles = jest.fn().mockImplementation(async () => {
       return await originalGenerateDocsifyFiles.call(generator);
     });
 
     await generator.generate();
 
     // Verify that generateDocsifyFiles was called
-    expect((generator as any).generateDocsifyFiles).toHaveBeenCalled();
+    expect((generator as unknown).generateDocsifyFiles).toHaveBeenCalled();
 
     // Verify that fs.writeFile was called for index.html
     expect(fs.writeFile).toHaveBeenCalledWith(
@@ -259,10 +259,10 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await generator.generate();
 
@@ -292,10 +292,10 @@ describe('DocsifyWebsiteGenerator', () => {
     });
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await generator.generate();
 
@@ -316,7 +316,7 @@ describe('DocsifyWebsiteGenerator', () => {
     });
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([
       {
         title: 'Home Page',
         content: 'Welcome to the documentation',
@@ -330,9 +330,9 @@ describe('DocsifyWebsiteGenerator', () => {
         metadata: { originalPath: '/test/source/guide.md' },
       },
     ]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await generator.generate();
 
@@ -350,10 +350,10 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await generator.generate();
 
@@ -372,10 +372,10 @@ describe('DocsifyWebsiteGenerator', () => {
     const generator = new DocsifyWebsiteGenerator(config);
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await generator.generate();
 
@@ -398,10 +398,10 @@ describe('DocsifyWebsiteGenerator', () => {
     (fs.writeFile as jest.Mock).mockRejectedValue(new Error('Write error'));
 
     // Mock the parent class methods
-    (generator as any).parseDocumentation = jest.fn().mockResolvedValue([]);
-    (generator as any).generateComponents = jest.fn().mockResolvedValue([]);
-    (generator as any).generateTests = jest.fn().mockResolvedValue([]);
-    (generator as any).buildWebsite = jest.fn().mockResolvedValue(true);
+    (generator as unknown).parseDocumentation = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateComponents = jest.fn().mockResolvedValue([]);
+    (generator as unknown).generateTests = jest.fn().mockResolvedValue([]);
+    (generator as unknown).buildWebsite = jest.fn().mockResolvedValue(true);
 
     await expect(generator.generate()).rejects.toThrow('Write error');
   });

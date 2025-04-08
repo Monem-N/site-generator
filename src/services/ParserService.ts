@@ -1,8 +1,9 @@
-import { BaseService } from './BaseService';
-import { ContentCache, CacheOptions } from '../utils/cache';
-import { ParserError } from '../utils/errors';
+import { BaseService } from './BaseService.js';
+import { ContentCache, CacheOptions } from '../utils/cache.js';
+import { ParserError } from '../utils/errors.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { logger } from './utils/logger.js';
 
 /**
  * Parser service configuration
@@ -70,7 +71,7 @@ export class ParserService extends BaseService {
       for (const plugin of this.config.plugins) {
         try {
           // In a real implementation, this would dynamically load plugins
-          console.log(`Loading plugin: ${plugin}`);
+          logger.debug(`Loading plugin: ${plugin}`);
         } catch (error) {
           throw new ParserError(`Failed to load plugin: ${plugin}`, {
             plugin,
@@ -257,7 +258,7 @@ export class ParserService extends BaseService {
             results.push(result);
           } catch (error) {
             // Log error but continue with other files
-            console.error(`Error parsing file ${filePath}:`, error);
+            logger.error(`Error parsing file ${filePath}:`, error);
           }
         }
       }

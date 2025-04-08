@@ -1,11 +1,12 @@
-import { ParserFactory } from './parsers/ParserFactory';
-import { PluginManager } from './plugins/PluginManager';
-import { MermaidPlugin } from './plugins/MermaidPlugin';
-import { CrossReferencePlugin } from './plugins/CrossReferencePlugin';
-import { PrismPlugin } from './plugins/PrismPlugin';
-import { NavigationGenerator } from './navigation/NavigationGenerator';
-import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter';
+import { ParserFactory } from './parsers/ParserFactory.js';
+import { PluginManager } from './plugins/PluginManager.js';
+import { MermaidPlugin } from './plugins/MermaidPlugin.js';
+import { CrossReferencePlugin } from './plugins/CrossReferencePlugin.js';
+import { PrismPlugin } from './plugins/PrismPlugin.js';
+import { NavigationGenerator } from './navigation/NavigationGenerator.js';
+import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter.js';
 import * as path from 'path';
+import { logger } from './utils/logger.js';
 
 export class DocsifyIntegration {
   private parserFactory: ParserFactory;
@@ -38,7 +39,7 @@ export class DocsifyIntegration {
     this.pluginManager.register(new PrismPlugin());
   }
 
-  async parseFile(filePath: string): Promise<any> {
+  async parseFile(filePath: string): Promise<unknown> {
     try {
       const fileExtension = path.extname(filePath).slice(1);
       const content = await require('fs').promises.readFile(filePath, 'utf-8');
@@ -55,16 +56,16 @@ export class DocsifyIntegration {
 
       return parsedContent;
     } catch (error) {
-      console.error(`Error parsing file ${filePath}:`, error);
+      logger.error(`Error parsing file ${filePath}:`, error);
       throw error;
     }
   }
 
-  async generateNavigation(): Promise<any> {
+  async generateNavigation(): Promise<unknown> {
     return await this.navigationGenerator.generate();
   }
 
-  getThemeStyles(): any {
+  getThemeStyles(): unknown {
     return this.themeAdapter.getThemeStyles();
   }
 

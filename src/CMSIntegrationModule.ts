@@ -1,5 +1,6 @@
 import { createClient, ContentfulClientApi } from 'contentful';
-import { ParsedContent } from '../types/parser';
+import { ParsedContent } from '../types/parser.js';
+import { logger } from './utils/logger.js';
 
 export class CMSIntegrationModule {
   private client: ContentfulClientApi<any>;
@@ -17,7 +18,7 @@ export class CMSIntegrationModule {
       // Assuming source is an entry ID
       return await this.getEntry(source);
     } catch (error) {
-      console.error('Error parsing Contentful entry:', error);
+      logger.error('Error parsing Contentful entry:', error);
       throw error;
     }
   }
@@ -50,7 +51,7 @@ export class CMSIntegrationModule {
 
       return parsedContent;
     } catch (error) {
-      console.error('Error fetching Contentful entry:', error);
+      logger.error('Error fetching Contentful entry:', error);
       throw error;
     }
   }

@@ -1,5 +1,6 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { logger } from './utils/logger.js';
 
 interface FileEntry {
   name: string;
@@ -66,7 +67,7 @@ export class NavigationGenerator {
 
       return result;
     } catch (error) {
-      console.error(`Error scanning directory ${dir}:`, error);
+      logger.error(`Error scanning directory ${dir}:`, error);
       return { files: [], directories: [] };
     }
   }
@@ -148,7 +149,7 @@ export class NavigationGenerator {
       const titleMatch = content.match(/^#\s+(.*)/m);
       return titleMatch ? titleMatch[1].trim() : null;
     } catch (error) {
-      console.error(`Error extracting title from ${filePath}:`, error);
+      logger.error(`Error extracting title from ${filePath}:`, error);
       return null;
     }
   }

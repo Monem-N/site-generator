@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator';
-import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config';
-import { validateConfig } from './utils/config-validator';
-import { loadPreset } from './utils/config-presets';
+import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator.js';
+import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config.js';
+import { validateConfig } from './utils/config-validator.js';
+import { loadPreset } from './utils/config-presets.js';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as chalk from 'chalk';
@@ -117,7 +117,7 @@ for (let i = 0; i < args.length; i++) {
 
 // Show help
 function showHelp() {
-  console.log(`
+  logger.debug(`
 ${chalk.bold('Site Generator CLI')}
 
 ${chalk.bold('Usage:')}
