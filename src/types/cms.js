@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 // CMS integration types
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
