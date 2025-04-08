@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 export interface NavigationItem {
   title: string;
@@ -110,9 +110,10 @@ export class NavigationGenerator {
 
         if (dirReadme) {
           title =
-            (await this.extractTitle(require('path').join(this.sourceDir, dir.path, dirReadme.name))) || title;
-          const pathModule = require('path');
-          path = pathModule.join(dir.path, dirReadme.name);
+            (await this.extractTitle(
+              path.join(this.sourceDir, dir.path, dirReadme.name)
+            )) || title;
+          path = path.join(dir.path, dirReadme.name);
         }
 
         navigation.push({

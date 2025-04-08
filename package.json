@@ -8,19 +8,54 @@
     "site-generator-enhanced": "dist/cli-enhanced.js"
   },
   "scripts": {
+    "// Build scripts": "",
     "build": "tsc",
+    "build:clean": "rm -rf dist && tsc",
+    "build:fixed": "tsc --project tsconfig.fixed.json",
+    "build:with-types": "./scripts/build-with-types.sh",
+    "build:relaxed": "./scripts/build-relaxed.sh",
+    "build:super-relaxed": "./scripts/build-super-relaxed.sh",
+
+    "// Development scripts": "",
     "start": "node dist/cli.js",
     "start:enhanced": "node dist/cli-enhanced.js",
     "dev": "tsc --watch",
     "dev:serve": "tsc && node dist/cli-enhanced.js --serve",
     "dev:watch": "tsc && node dist/cli-enhanced.js --watch --serve",
+
+    "// Test scripts": "",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:coverage:check": "./scripts/test-coverage.sh",
+    "test:fixed": "jest --config=jest.fixed.js",
+    "test:safe": "./scripts/run-tests.sh",
+
+    "// Code quality scripts": "",
+    "check:types": "./scripts/check-types.sh",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+
+    "// Fix scripts": "",
+    "fix-and-build": "./scripts/fix-and-build.sh",
+    "fix:all": "npm run fix:imports && npm run fix:tests && npm run fix:assertions && npm run fix:variables && npm run fix:paths && npm run fix:decorators && npm run fix:import-styles && npm run fix:navigation && npm run fix:plugin-loader && npm run fix:types && npm run lint:fix",
+    "fix:imports": "./scripts/fix-imports.sh",
+    "fix:tests": "./scripts/fix-tests.sh",
+    "fix:assertions": "./scripts/fix-type-assertions.sh",
+    "fix:variables": "./scripts/fix-variable-names.sh",
+    "fix:paths": "./scripts/fix-import-paths.sh",
+    "fix:decorators": "./scripts/fix-decorators.sh",
+    "fix:import-styles": "./scripts/fix-import-styles.sh",
+    "fix:navigation": "./scripts/fix-navigation-generator.sh",
+    "fix:plugin-loader": "./scripts/fix-plugin-loader.sh",
+    "fix:types": "npx ts-migrate add-missing-members .",
+
+    "// Cleanup scripts": "",
+    "cleanup": "./scripts/cleanup.sh",
+    "cleanup:tsconfig": "./scripts/cleanup-tsconfig.sh",
+
+    "// Lifecycle scripts": "",
     "prepare": "husky install",
     "prepublishOnly": "npm run build"
   },
@@ -39,10 +74,12 @@
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@types/handlebars": "^4.0.40",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
     "express": "^4.18.2",
     "front-matter": "^4.0.2",
+    "handlebars": "^4.7.8",
     "marked": "^4.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -56,6 +93,7 @@
     "@commitlint/config-conventional": "^19.8.0",
     "@types/autoprefixer": "^9.7.2",
     "@types/cssnano": "^5.0.0",
+    "@types/ejs": "^3.1.5",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/js-yaml": "^4.0.9",
@@ -80,6 +118,10 @@
     "prettier": "^2.8.7",
     "swagger-parser": "^10.0.3",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.0.3"
+    "ts-migrate": "^0.1.35",
+    "ts-node": "^10.9.2",
+    "ttypescript": "^1.5.15",
+    "typescript": "^5.0.3",
+    "typescript-transform-paths": "^3.5.5"
   }
 }

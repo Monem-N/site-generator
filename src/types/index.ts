@@ -8,6 +8,12 @@ export * from './design';
 // export * from './parser';
 // export * from './plugin';
 
+// Plugin related types
+export interface PluginOptions {
+  enabled?: boolean;
+  [key: string]: any;
+}
+
 // Generator related types
 export interface GeneratorConfig {
   outputFormat?: 'react' | 'next' | 'gatsby';
@@ -24,7 +30,7 @@ export interface ComponentTemplate {
   name: string;
   path: string;
   content: string;
-  variables?: Record<string, any>;
+  variables?: Record<string, unknown>;
   dependencies?: string[];
 }
 
@@ -50,9 +56,9 @@ export interface ThemeConfig {
 
 export interface ComponentConfig {
   import: string;
-  props?: Record<string, any>;
-  styles?: Record<string, any>;
-  variants?: Record<string, any>;
+  props?: Record<string, unknown>;
+  styles?: Record<string, unknown>;
+  variants?: Record<string, unknown>;
 }
 
 // Testing related types
@@ -110,7 +116,7 @@ export interface CMSField {
   type: string;
   required?: boolean;
   defaultValue?: any;
-  validations?: Record<string, any>;
+  validations?: Record<string, unknown>;
 }
 
 export interface CMSRelationship {
