@@ -1,3 +1,2 @@
-'use strict';
 // Build configuration types
-Object.defineProperty(exports, '__esModule', { value: true });
+// This file is intentionally empty as the actual types are defined in build.ts

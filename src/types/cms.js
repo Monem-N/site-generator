@@ -1,3 +1,2 @@
-'use strict';
 // CMS integration types
-Object.defineProperty(exports, '__esModule', { value: true });
+// This file is intentionally empty as the actual types are defined in cms.ts

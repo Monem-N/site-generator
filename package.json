@@ -1,5 +1,6 @@
 {
   "name": "docsify-site-generator",
+  "type": "module",
   "version": "1.0.0",
   "description": "A documentation-driven website generator with Docsify integration",
   "main": "dist/index.js",
@@ -15,14 +16,12 @@
     "build:with-types": "./scripts/build-with-types.sh",
     "build:relaxed": "./scripts/build-relaxed.sh",
     "build:super-relaxed": "./scripts/build-super-relaxed.sh",
-
     "// Development scripts": "",
     "start": "node dist/cli.js",
     "start:enhanced": "node dist/cli-enhanced.js",
     "dev": "tsc --watch",
     "dev:serve": "tsc && node dist/cli-enhanced.js --serve",
     "dev:watch": "tsc && node dist/cli-enhanced.js --watch --serve",
-
     "// Test scripts": "",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -30,13 +29,11 @@
     "test:coverage:check": "./scripts/test-coverage.sh",
     "test:fixed": "jest --config=jest.fixed.js",
     "test:safe": "./scripts/run-tests.sh",
-
     "// Code quality scripts": "",
     "check:types": "./scripts/check-types.sh",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
-
     "// Fix scripts": "",
     "fix-and-build": "./scripts/fix-and-build.sh",
     "fix:all": "npm run fix:imports && npm run fix:tests && npm run fix:assertions && npm run fix:variables && npm run fix:paths && npm run fix:decorators && npm run fix:import-styles && npm run fix:navigation && npm run fix:plugin-loader && npm run fix:types && npm run lint:fix",
@@ -50,11 +47,9 @@
     "fix:navigation": "./scripts/fix-navigation-generator.sh",
     "fix:plugin-loader": "./scripts/fix-plugin-loader.sh",
     "fix:types": "npx ts-migrate add-missing-members .",
-
     "// Cleanup scripts": "",
     "cleanup": "./scripts/cleanup.sh",
     "cleanup:tsconfig": "./scripts/cleanup-tsconfig.sh",
-
     "// Lifecycle scripts": "",
     "prepare": "husky install",
     "prepublishOnly": "npm run build"
