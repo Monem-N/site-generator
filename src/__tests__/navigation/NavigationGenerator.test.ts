@@ -2,7 +2,7 @@ import { NavigationGenerator } from '../../navigation/NavigationGenerator.js';
 import * as path from 'path';
 
 // Mock dependencies
-jest.mock('fs');
+jest.mock('fs/promises');
 jest.mock('path');
 
 describe('NavigationGenerator', () => {
