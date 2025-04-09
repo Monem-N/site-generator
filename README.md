@@ -175,6 +175,7 @@ We've recently fixed several TypeScript compilation errors in the codebase. Thes
 - Added proper type assertions for unknown types
 - Added null checks for potentially undefined properties
 - Fixed duplicate property specifications
+- Fixed commitlint configuration for ES modules compatibility
 
 For more details, see the [TypeScript Fixes Documentation](docs/typescript-fixes.md).
 
