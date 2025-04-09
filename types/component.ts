@@ -10,7 +10,7 @@ export interface ComponentTemplate {
   name: string;
   path: string;
   content: string;
-  type?: string;
+  type: string;
   metadata?: Record<string, unknown>;
   generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }

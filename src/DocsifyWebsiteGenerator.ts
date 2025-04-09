@@ -7,9 +7,38 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { logger } from './utils/logger.js';
 import { ComponentConfig, ComponentTemplate } from '../types/component.js';
-import { ContentModel } from '../types/cms.js';
 import { BuildConfig } from '../types/build.js';
 import type { BuildConfig as IndexBuildConfig } from '../types/index.js';
+
+// Enhance ParsedContent to include navigation and theme properties
+interface EnhancedParsedContent extends Omit<ParsedContent, 'metadata'> {
+  navigation: { items: Array<{ title: string; path: string }> };
+  theme: { styles: Record<string, string> };
+  metadata?: {
+    originalPath?: string;
+    [key: string]: unknown;
+  };
+}
+
+// Enhance ComponentConfig to include id, path, and metadata
+interface EnhancedComponentConfig extends ComponentConfig {
+  id: string;
+  path: string;
+  metadata: {
+    navigation?: { items: Array<{ title: string; path: string }> };
+    theme?: { styles: Record<string, string> };
+    originalPath?: string;
+    [key: string]: unknown;
+  };
+}
+
+// Type definition for the component generator output
+interface GeneratedComponent {
+  id: string;
+  name: string;
+  content: string;
+  path: string;
+}
 
 export class DocsifyWebsiteGenerator {
   private config: WebsiteGeneratorConfig;
@@ -56,12 +85,12 @@ export class DocsifyWebsiteGenerator {
     }
   }
 
-  private async parseDocumentation(): Promise<ParsedContent[]> {
+  private async parseDocumentation(): Promise<EnhancedParsedContent[]> {
     logger.debug('Parsing documentation...');
 
     const sourceDir = path.resolve(this.config.sourceDir);
     const files = await this.getDocumentationFiles(sourceDir);
-    const parsedContent: ParsedContent[] = [];
+    const parsedContent: EnhancedParsedContent[] = [];
 
     // Generate navigation
     const navigation = await this.docsifyIntegration.generateNavigation();
@@ -70,14 +99,14 @@ export class DocsifyWebsiteGenerator {
       logger.debug(`Parsing file: ${file}`);
 
       try {
-        // Parse file using Docsify integration
-        const parsed = (await this.docsifyIntegration.parseFile(file)) as ParsedContent;
+        // Cast to EnhancedParsedContent to add navigation and theme
+        const parsed = (await this.docsifyIntegration.parseFile(file)) as EnhancedParsedContent;
 
-        // Add navigation data
-        (parsed as unknown).navigation = navigation;
-
-        // Add theme data
-        (parsed as unknown).theme = this.docsifyIntegration.getThemeStyles();
+        // Add navigation and theme data
+        parsed.navigation = navigation as { items: Array<{ title: string; path: string }> };
+        parsed.theme = this.docsifyIntegration.getThemeStyles() as {
+          styles: Record<string, string>;
+        };
 
         parsedContent.push(parsed);
       } catch (error) {
@@ -88,47 +117,60 @@ export class DocsifyWebsiteGenerator {
     return parsedContent;
   }
 
-  private async generateComponents(parsedContent: ParsedContent[]): Promise<ComponentConfig[]> {
-    logger.debug('Generating components...');
+  private async generateComponents(
+    parsedContent: EnhancedParsedContent[]
+  ): Promise<EnhancedComponentConfig[]> {
+    return Promise.all(
+      parsedContent.map(async content => {
+        const generatedComponent = (await this.componentGenerator.generateComponent(
+          content
+        )) as unknown as GeneratedComponent;
 
-    const components: ComponentConfig[] = [];
-
-    for (const content of parsedContent) {
-      try {
-        // Generate component using the component generator
-        // Cast content to any to bypass type checking
-        const component = await this.componentGenerator.generatePage(
-          content as unknown as ContentModel
-        );
-
-        components.push({
-          name: this.getComponentName(content.title),
-          path: this.getOutputPath(content),
-          content: component,
-        });
-      } catch (error) {
-        logger.error(`Error generating component for ${content.title}:`, error);
-      }
-    }
-
-    return components;
+        const component: EnhancedComponentConfig = {
+          id: generatedComponent.id,
+          name: generatedComponent.name,
+          content: generatedComponent.content,
+          path: generatedComponent.path,
+          metadata: {
+            navigation: content.navigation,
+            theme: content.theme,
+            originalPath: content.metadata?.originalPath,
+          },
+        };
+        return component;
+      })
+    );
   }
 
-  private async applyDesignSystem(components: unknown[]): Promise<ComponentConfig[]> {
+  private async applyDesignSystem(
+    components: EnhancedComponentConfig[]
+  ): Promise<EnhancedComponentConfig[]> {
     logger.debug('Applying design system...');
 
-    // Generate theme CSS
     const themeCSS = this.docsifyIntegration.generateThemeCSS();
-
-    // Save theme CSS to output directory
     const themePath = path.join(this.config.outputDir, 'theme.css');
     await fs.mkdir(path.dirname(themePath), { recursive: true });
     await fs.writeFile(themePath, themeCSS);
 
-    return components as ComponentConfig[];
+    return Promise.all(
+      components.map(async component => ({
+        ...component,
+        metadata: {
+          ...component.metadata,
+          theme:
+            component.metadata.theme ||
+            (this.docsifyIntegration.getThemeStyles() as { styles: Record<string, string> }),
+          navigation:
+            component.metadata.navigation ||
+            ((await this.docsifyIntegration.generateNavigation()) as {
+              items: Array<{ title: string; path: string }>;
+            }),
+        },
+      }))
+    );
   }
 
-  private async generateTests(components: unknown[]): Promise<void> {
+  private async generateTests(components: EnhancedComponentConfig[]): Promise<void> {
     if (!this.config.testing.components.unit && !this.config.testing.components.integration) {
       return;
     }
@@ -138,10 +180,10 @@ export class DocsifyWebsiteGenerator {
     const testGenerator = await import('./TestGenerator.js').then(
       m => new m.TestGenerator(this.config.testing)
     );
-    await testGenerator.generateTests(components as ComponentConfig[]);
+    await testGenerator.generateTests(components);
   }
 
-  private async build(components: ComponentConfig[]): Promise<void> {
+  private async build(components: EnhancedComponentConfig[]): Promise<void> {
     logger.debug('Building website...');
 
     const buildConfig: BuildConfig & IndexBuildConfig = {
@@ -152,7 +194,7 @@ export class DocsifyWebsiteGenerator {
     };
 
     const builder = new Builder(buildConfig);
-    await builder.build(components as ComponentTemplate[]);
+    await builder.build(components as unknown as ComponentTemplate[]);
   }
 
   private async getDocumentationFiles(sourceDir: string): Promise<string[]> {
@@ -194,11 +236,10 @@ export class DocsifyWebsiteGenerator {
     return title.replace(/[^a-zA-Z0-9]/g, '').replace(/^[0-9]/, 'Page');
   }
 
-  private getOutputPath(content: ParsedContent): string {
+  private getOutputPath(content: EnhancedParsedContent): string {
     // Generate output path based on the original file path
     if (content.metadata && content.metadata.originalPath) {
-      // Cast originalPath to string to bypass type checking
-      const originalPath = content.metadata.originalPath as string;
+      const originalPath = content.metadata.originalPath;
       const relativePath = path.relative(this.config.sourceDir, originalPath);
       const dirPath = path.dirname(relativePath);
       const baseName = path.basename(relativePath, path.extname(relativePath));

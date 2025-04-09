@@ -60,6 +60,8 @@ export function createMockComponentTemplate(
 ): ComponentTemplate {
   return {
     name: 'test-template',
+    path: '/test',
+    content: '<div>Test Component</div>',
     type: 'test',
     generate: jest.fn().mockResolvedValue('<div>Test Component</div>'),
     ...overrides,
