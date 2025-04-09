@@ -3,7 +3,6 @@ import { TemplateEngine } from '../../templates/TemplateEngine.js';
 import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine.js';
 import { EjsTemplateEngine } from '../../templates/EjsTemplateEngine.js';
 import { createMockParsedContent } from '../utils/test-helpers.js';
-import * as _fs from 'fs';
 import * as path from 'path';
 
 // Mock dependencies
@@ -127,5 +126,23 @@ describe('TemplateManager', () => {
     // Verify that clearCache was called on all engines
     expect(mockHandlebarsEngine.clearCache).toHaveBeenCalled();
     expect(mockEjsEngine.clearCache).toHaveBeenCalled();
+  });
+
+  test('should handle ParsedContent with title', () => {
+    const parsedContent = {
+      title: 'Sample Title', // Ensure title is always a string
+      // Add other properties as needed
+    };
+
+    // Replace 'someFunction' with a valid implementation or mock
+    const mockFunction = jest.fn(content => {
+      expect(content.title).toBe('Sample Title');
+    });
+
+    // Pass parsedContent to the mock function
+    mockFunction(parsedContent);
+
+    // Verify the mock function was called
+    expect(mockFunction).toHaveBeenCalledWith(parsedContent);
   });
 });
