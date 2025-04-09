@@ -36,8 +36,9 @@ export function createMockContentNode(overrides: Partial<ContentNode> = {}): Con
  * Create a mock design system
  */
 export function createMockDesignSystem(overrides: Partial<DesignSystem> = {}): DesignSystem {
-  return {
-    type: 'custom',
+  // Create a base mock object
+  const mock = {
+    type: 'custom' as const,
     name: 'Test Design System',
     importPath: '@/test-design-system',
     classNames: {
@@ -45,16 +46,22 @@ export function createMockDesignSystem(overrides: Partial<DesignSystem> = {}): D
       heading1: 'test-heading-1',
       heading2: 'test-heading-2',
     },
-    // @ts-ignore - Adding getConfigForType method
-    getConfigForType: (_elementType: string) => ({
-      classMapping: {
-        container: 'test-container',
-        heading: 'test-heading',
-      },
-      components: ['TestComponent'],
-    }),
+    // Add the optional method with proper implementation
+    getConfigForType: (elementType: string) => {
+      // Use the parameter to avoid unused variable warning
+      const componentType = elementType || 'default';
+      return {
+        classMapping: {
+          container: 'test-container',
+          heading: 'test-heading',
+        },
+        components: [`Test${componentType}Component`],
+      };
+    },
     ...overrides,
   };
+
+  return mock as DesignSystem;
 }
 
 /**
@@ -63,19 +70,28 @@ export function createMockDesignSystem(overrides: Partial<DesignSystem> = {}): D
 export function createMockComponentTemplate(
   overrides: Partial<ComponentTemplate> = {}
 ): ComponentTemplate {
-  return {
-    type: 'component', // Add required type property
+  // Create a base mock object
+  const mock = {
+    type: 'component',
     name: 'test-template',
     path: '/test',
     content: '<div>Test Component</div>',
     metadata: {},
-    // @ts-ignore - Adding id property
-    id: 'test-id',
-    generate: jest.fn().mockImplementation((_element: ContentElement, _designSystem?: DesignSystem) => {
-      return Promise.resolve('<div>Test Component</div>');
-    }),
+    id: 'test-id', // This is optional in the interface
+    generate: jest
+      .fn()
+      .mockImplementation((element: ContentElement, designSystem: DesignSystem) => {
+        // Use the parameters to avoid unused variable warnings
+        const elementType = element.type || 'default';
+        const theme = designSystem.theme || {};
+        return Promise.resolve(
+          `<div class="${theme.className || 'default'}">Test ${elementType} Component</div>`
+        );
+      }),
     ...overrides,
   };
+
+  return mock as ComponentTemplate;
 }
 
 /**
