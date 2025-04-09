@@ -1,6 +1,7 @@
 import { ParsedContent, ContentNode } from '../../types/parser.js';
 import { ComponentTemplate } from '../../types/component.js';
 import { DesignSystem } from '../../types/design.js';
+import { ContentElement } from '../../types/cms.js';
 
 /**
  * Create a mock parsed content object
@@ -44,9 +45,13 @@ export function createMockDesignSystem(overrides: Partial<DesignSystem> = {}): D
       heading1: 'test-heading-1',
       heading2: 'test-heading-2',
     },
-    getConfigForType: () => ({
-      classMapping: {},
-      components: [],
+    // @ts-ignore - Adding getConfigForType method
+    getConfigForType: (_elementType: string) => ({
+      classMapping: {
+        container: 'test-container',
+        heading: 'test-heading',
+      },
+      components: ['TestComponent'],
     }),
     ...overrides,
   };
@@ -59,13 +64,16 @@ export function createMockComponentTemplate(
   overrides: Partial<ComponentTemplate> = {}
 ): ComponentTemplate {
   return {
+    type: 'component', // Add required type property
     name: 'test-template',
     path: '/test',
-    template: '/test/template.hbs',
     content: '<div>Test Component</div>',
-    id: 'test-id',
     metadata: {},
-    generate: jest.fn().mockResolvedValue('<div>Test Component</div>'),
+    // @ts-ignore - Adding id property
+    id: 'test-id',
+    generate: jest.fn().mockImplementation((_element: ContentElement, _designSystem?: DesignSystem) => {
+      return Promise.resolve('<div>Test Component</div>');
+    }),
     ...overrides,
   };
 }

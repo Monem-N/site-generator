@@ -7,7 +7,8 @@ import { NavigationGenerator } from './navigation/NavigationGenerator.js';
 import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter.js';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { logger } from 'utils/logger.js';
+import { logger } from './utils/logger.js';
+import { ParsedContent } from '../types/parser.js';
 
 export class DocsifyIntegration {
   private parserFactory: ParserFactory;
@@ -40,20 +41,20 @@ export class DocsifyIntegration {
     this.pluginManager.register(new PrismPlugin());
   }
 
-  async parseFile(filePath: string): Promise<unknown> {
+  async parseFile(filePath: string): Promise<ParsedContent> {
     try {
       const fileExtension = path.extname(filePath).slice(1);
       const content = await fs.readFile(filePath, 'utf-8');
 
       // Apply plugins before parsing
-      const processedContent = await this.pluginManager.applyBeforeParse(content, filePath);
+      const processedContent = await this.pluginManager.applyBeforeParse(content);
 
       // Parse content
       const parser = this.parserFactory.getParser(fileExtension || 'markdown');
       let parsedContent = await parser.parse(processedContent, { filePath });
 
       // Apply plugins after parsing
-      parsedContent = await this.pluginManager.applyAfterParse(parsedContent, filePath);
+      parsedContent = await this.pluginManager.applyAfterParse(parsedContent);
 
       return parsedContent;
     } catch (error) {

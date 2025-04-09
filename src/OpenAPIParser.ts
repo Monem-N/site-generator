@@ -1,7 +1,8 @@
 import { ParsedContent } from '../types/index.js';
 import { Parser } from './parsers/Parser.js';
-import { logger } from 'utils/logger.js';
+import { logger } from './utils/logger.js';
 // Import SwaggerParser
+// @ts-ignore - Ignoring esModuleInterop issue
 import SwaggerParser from 'swagger-parser';
 
 // Ajout d'une déclaration de type pour SwaggerParser

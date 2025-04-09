@@ -1,4 +1,5 @@
 import { Plugin } from '../../types/plugin.js';
+import { ParsedContent } from '../../types/parser.js';
 import { logger } from '../utils/logger.js';
 
 export class PluginManager {
@@ -102,13 +103,16 @@ export class PluginManager {
   }
 
   /**
-   * Legacy methods for backward compatibility
+   * Apply beforeParse hooks to content
    */
-  async applyBeforeParse(content: string): Promise<string> {
+  async applyBeforeParse(content: string, filePath?: string): Promise<string> {
     return this.executeHook('beforeParse', content, true);
   }
 
-  async applyAfterParse(parsedContent: Record<string, unknown>): Promise<Record<string, unknown>> {
+  /**
+   * Apply afterParse hooks to parsed content
+   */
+  async applyAfterParse(parsedContent: ParsedContent, filePath?: string): Promise<ParsedContent> {
     return this.executeHook('afterParse', parsedContent, true);
   }
 
