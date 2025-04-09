@@ -11,6 +11,7 @@ export interface ComponentTemplate {
   path: string;
   content: string;
   type: string;
+  id?: string; // Make id optional to maintain backward compatibility
   metadata?: Record<string, unknown>;
   generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }
