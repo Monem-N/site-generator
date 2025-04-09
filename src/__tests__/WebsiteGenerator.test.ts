@@ -7,6 +7,8 @@ import { Plugin } from '../../types/plugin.js';
 import { ComponentTemplate } from '../../types/component.js';
 import { ContentCache } from '../utils/cache.js';
 import { SiteGeneratorError } from '../utils/errors.js';
+import { TestGenerator } from '../TestGenerator.js';
+import { Builder } from '../Builder.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -475,7 +477,7 @@ describe('WebsiteGenerator', () => {
     await generator.generateTests(mockComponents as unknown);
 
     // Verify that TestGenerator was not imported
-    expect(require('../TestGenerator').TestGenerator).not.toHaveBeenCalled();
+    expect(TestGenerator).not.toHaveBeenCalled();
   });
 
   test('should build the website with the correct configuration', async () => {
@@ -492,7 +494,6 @@ describe('WebsiteGenerator', () => {
     await generator.build(mockComponents as unknown);
 
     // Verify that Builder was called with the correct config
-    const Builder = require('../Builder').Builder;
     expect(Builder).toHaveBeenCalledWith({
       target: 'production',
       outDir: config.outputDir,

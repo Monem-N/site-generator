@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Fix require statements
-const fixRequireStatements = (filePath) => {
+const fixRequireStatements = filePath => {
   console.log(`Fixing require statements in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
@@ -46,7 +46,8 @@ const fixRequireStatements = (filePath) => {
   }
 
   // Replace destructuring require statements
-  const destructuringRequireRegex = /const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"]([^'"]+)['"]\);?/g;
+  const destructuringRequireRegex =
+    /const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"]([^'"]+)['"]\);?/g;
   const destructuringMatches = [...content.matchAll(destructuringRequireRegex)];
 
   for (const match of destructuringMatches) {
@@ -103,7 +104,7 @@ const fixRequireStatements = (filePath) => {
 };
 
 // Process a single file
-const processFile = (filePath) => {
+const processFile = filePath => {
   const ext = path.extname(filePath);
   if (ext !== '.ts' && ext !== '.js') {
     return false;
@@ -135,7 +136,7 @@ const processFile = (filePath) => {
 };
 
 // Process all TypeScript and JavaScript files in a directory
-const processDirectory = (dirPath) => {
+const processDirectory = dirPath => {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
   let modifiedCount = 0;
 

@@ -6,6 +6,7 @@ import { PrismPlugin } from './plugins/PrismPlugin.js';
 import { NavigationGenerator } from './navigation/NavigationGenerator.js';
 import { DocsifyThemeAdapter } from './themes/DocsifyThemeAdapter.js';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 import { logger } from 'utils/logger.js';
 
 export class DocsifyIntegration {
@@ -42,7 +43,7 @@ export class DocsifyIntegration {
   async parseFile(filePath: string): Promise<unknown> {
     try {
       const fileExtension = path.extname(filePath).slice(1);
-      const content = await require('fs').promises.readFile(filePath, 'utf-8');
+      const content = await fs.readFile(filePath, 'utf-8');
 
       // Apply plugins before parsing
       const processedContent = await this.pluginManager.applyBeforeParse(content, filePath);

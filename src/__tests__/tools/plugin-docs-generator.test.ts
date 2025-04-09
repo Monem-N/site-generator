@@ -20,7 +20,9 @@ describe('PluginDocsGenerator', () => {
     (fs.existsSync as jest.Mock).mockReturnValue(false);
 
     // Mock fs.mkdirSync to do nothing
-    (fs.mkdirSync as jest.Mock).mockImplementation(() => {});
+    (fs.mkdirSync as jest.Mock).mockImplementation(() => {
+      return undefined;
+    });
 
     // Mock fs.promises.writeFile to do nothing
     (fs.promises as any) = {

@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Fix explicit any types
-const fixExplicitAnyTypes = (filePath) => {
+const fixExplicitAnyTypes = filePath => {
   console.log(`Fixing explicit any types in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
@@ -49,7 +49,7 @@ const fixExplicitAnyTypes = (filePath) => {
 };
 
 // Fix unused variables
-const fixUnusedVariables = (filePath) => {
+const fixUnusedVariables = filePath => {
   console.log(`Fixing unused variables in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
@@ -102,7 +102,7 @@ const fixUnusedVariables = (filePath) => {
 };
 
 // Process a single file
-const processFile = (filePath) => {
+const processFile = filePath => {
   const ext = path.extname(filePath);
   if (ext !== '.ts' && ext !== '.tsx') {
     return false;
@@ -116,7 +116,7 @@ const processFile = (filePath) => {
 };
 
 // Process all TypeScript files in a directory
-const processDirectory = (dirPath) => {
+const processDirectory = dirPath => {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
   let modifiedCount = 0;
 

@@ -1,8 +1,8 @@
 import { ParsedContent } from '../types/index.js';
 import { Parser } from './parsers/Parser.js';
 import { logger } from 'utils/logger.js';
-// Using require for SwaggerParser due to TypeScript compatibility issues
-const SwaggerParser = require('swagger-parser');
+// Import SwaggerParser
+import SwaggerParser from 'swagger-parser';
 
 export class OpenAPIParser implements Parser {
   async parse(source: string, options?: Record<string, unknown>): Promise<ParsedContent> {

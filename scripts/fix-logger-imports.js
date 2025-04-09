@@ -27,15 +27,18 @@ for (const file of tsFiles) {
     const content = fs.readFileSync(file, 'utf8');
     let modified = false;
     let newContent = content;
-    
+
     // Fix incorrect logger imports
-    if (newContent.includes("import { logger } from './utils/logger.js';") && !file.includes('/utils/')) {
+    if (
+      newContent.includes("import { logger } from './utils/logger.js';") &&
+      !file.includes('/utils/')
+    ) {
       // Calculate the relative path to utils/logger.ts
       const filePath = path.dirname(file);
       const loggerPath = path.join(rootDir, 'src/utils/logger.ts');
       const relativePath = path.relative(filePath, path.dirname(loggerPath));
       const normalizedPath = relativePath.replace(/\\/g, '/');
-      
+
       // Replace the import path
       newContent = newContent.replace(
         "import { logger } from './utils/logger.js';",
@@ -43,7 +46,7 @@ for (const file of tsFiles) {
       );
       modified = true;
     }
-    
+
     // Add missing logger imports
     if (newContent.includes('logger.') && !newContent.includes('import { logger }')) {
       // Calculate the relative path to utils/logger.ts
@@ -51,13 +54,13 @@ for (const file of tsFiles) {
       const loggerPath = path.join(rootDir, 'src/utils/logger.ts');
       const relativePath = path.relative(filePath, path.dirname(loggerPath));
       const normalizedPath = relativePath.replace(/\\/g, '/');
-      
+
       // Add the import at the top of the file
       const importStatement = `import { logger } from '${normalizedPath}/logger.js';\n`;
       newContent = importStatement + newContent;
       modified = true;
     }
-    
+
     if (modified) {
       fs.writeFileSync(file, newContent, 'utf8');
       console.log(`Updated logger imports in ${file}`);

@@ -3,9 +3,9 @@
  */
 
 // Basic types
-const str: string = 'Hello, world!';
-const num: number = 42;
-const bool: boolean = true;
+const str = 'Hello, world!';
+const num = 42;
+const bool = true;
 
 // Array
 const arr: number[] = [1, 2, 3];
@@ -18,7 +18,7 @@ interface Person {
 
 const person: Person = {
   name: 'John',
-  age: 30
+  age: 30,
 };
 
 // Function

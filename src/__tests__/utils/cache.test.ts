@@ -145,9 +145,9 @@ describe('ContentCache', () => {
   });
 
   test('should return null for non-existent item', () => {
-    const cache = new ContentCache<TestDocument>(memoryCacheOptions);
+    const testCache = new ContentCache<TestDocument>(memoryCacheOptions);
 
-    const result = cache.get('non-existent-key');
+    const result = testCache.get('non-existent-key');
 
     expect(result).toBeNull();
   });
@@ -209,9 +209,9 @@ describe('ContentCache', () => {
   });
 
   test('should clear filesystem cache', () => {
-    const cache = new ContentCache<TestDocument>(filesystemCacheOptions);
+    const testCache = new ContentCache<TestDocument>(filesystemCacheOptions);
 
-    cache.clear();
+    testCache.clear();
 
     expect(fs.readdirSync).toHaveBeenCalledWith('/test/cache');
     expect(fs.unlinkSync).toHaveBeenCalledTimes(2); // Two cache files
@@ -269,7 +269,8 @@ describe('ContentCache', () => {
     const stats = cache.getStats();
 
     expect(stats).toBeDefined();
-    console.log('stats', stats);
+    // Stats are logged for debugging during test development
+    // console.log('stats', stats);
     expect((await stats).enabled).toBe(true);
     expect((await stats).storageType).toBe('memory');
     expect((await stats).size).toBe(2);

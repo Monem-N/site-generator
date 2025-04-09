@@ -17,10 +17,8 @@ interface TestConfig {
   [key: string]: unknown;
 }
 
-interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-}
+// Use the return type directly from validateConfig
+// No need for a separate type definition
 
 describe('Config Validator', () => {
   test('should validate a valid config', () => {

@@ -71,7 +71,7 @@ export class DocsifyWebsiteGenerator {
 
       try {
         // Parse file using Docsify integration
-        const parsed = await this.docsifyIntegration.parseFile(file) as ParsedContent;
+        const parsed = (await this.docsifyIntegration.parseFile(file)) as ParsedContent;
 
         // Add navigation data
         (parsed as any).navigation = navigation;
@@ -97,7 +97,9 @@ export class DocsifyWebsiteGenerator {
       try {
         // Generate component using the component generator
         // Cast content to any to bypass type checking
-        const component = await this.componentGenerator.generatePage(content as unknown as ContentModel);
+        const component = await this.componentGenerator.generatePage(
+          content as unknown as ContentModel
+        );
 
         components.push({
           name: this.getComponentName(content.title),

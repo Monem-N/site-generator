@@ -274,7 +274,9 @@ export class ContentCache<T> {
         await fs.writeFile(filePath, JSON.stringify(item, null, 2), 'utf-8'); // Use null, 2 for pretty printing JSON
       } catch (_error: unknown) {
         // If write fails, we might want to disable cache or just log
-        logger.error(`[ContentCache] Failed to write to cache file: ${filePath}`, { error: _error });
+        logger.error(`[ContentCache] Failed to write to cache file: ${filePath}`, {
+          error: _error,
+        });
         // Optionally throw a FileSystemError, but this might halt application. Logging might be sufficient.
         // throw new FileSystemError(`Failed to write to cache file: ${key}`, { key, error: _error });
       }

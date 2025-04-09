@@ -26,10 +26,10 @@ let problematicFiles = [];
 for (const file of tsFiles) {
   try {
     console.log(`Checking ${file}...`);
-    
+
     // Try to compile the file with a timeout
     const command = `npx tsc ${file} --noEmit --skipLibCheck`;
-    
+
     try {
       execSync(command, { timeout: 5000 });
       console.log(`✅ ${file} compiled successfully.`);

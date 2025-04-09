@@ -11,9 +11,6 @@ jest.mock('path');
 jest.mock('chokidar');
 
 // Define interfaces for testing to avoid using 'any'
-interface MockServerCallbacks {
-  callback?: () => void;
-}
 
 interface MockHttpServer extends http.Server {
   listen: jest.Mock;
@@ -52,11 +49,11 @@ describe('DevServer', () => {
 
     // Mock http.createServer
     mockServer = {
-      listen: jest.fn().mockImplementation(function(port, callback) {
+      listen: jest.fn().mockImplementation(function (port, callback) {
         if (callback) callback();
         return this;
       }),
-      close: jest.fn().mockImplementation(function(callback) {
+      close: jest.fn().mockImplementation(function (callback) {
         if (callback) callback();
         return this;
       }),
@@ -280,16 +277,25 @@ describe('DevServer', () => {
     requestHandler(jsRequest, jsResponse);
 
     // Verify that the correct content types were set
-    expect(htmlResponse.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
-      'Content-Type': 'text/html',
-    }));
+    expect(htmlResponse.writeHead).toHaveBeenCalledWith(
+      200,
+      expect.objectContaining({
+        'Content-Type': 'text/html',
+      })
+    );
 
-    expect(cssResponse.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
-      'Content-Type': 'text/css',
-    }));
+    expect(cssResponse.writeHead).toHaveBeenCalledWith(
+      200,
+      expect.objectContaining({
+        'Content-Type': 'text/css',
+      })
+    );
 
-    expect(jsResponse.writeHead).toHaveBeenCalledWith(200, expect.objectContaining({
-      'Content-Type': 'application/javascript',
-    }));
+    expect(jsResponse.writeHead).toHaveBeenCalledWith(
+      200,
+      expect.objectContaining({
+        'Content-Type': 'application/javascript',
+      })
+    );
   });
 });

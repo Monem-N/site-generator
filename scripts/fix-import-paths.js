@@ -31,26 +31,28 @@ for (const file of tsFiles) {
     const content = fs.readFileSync(file, 'utf8');
     let modified = false;
     let newContent = content;
-    
+
     // Find all import statements with relative paths
     const matches = [...content.matchAll(importRegex)];
-    
+
     for (const match of matches) {
       const [fullMatch, importPath] = match;
-      
+
       // Skip if the import path already has a file extension
       if (importPath.endsWith('.js') || importPath.endsWith('.json')) {
         continue;
       }
-      
+
       // Add .js extension to the import path
       const newImportPath = `${importPath}.js`;
-      const newImport = fullMatch.replace(`"${importPath}"`, `"${newImportPath}"`).replace(`'${importPath}'`, `'${newImportPath}'`);
-      
+      const newImport = fullMatch
+        .replace(`"${importPath}"`, `"${newImportPath}"`)
+        .replace(`'${importPath}'`, `'${newImportPath}'`);
+
       newContent = newContent.replace(fullMatch, newImport);
       modified = true;
     }
-    
+
     if (modified) {
       fs.writeFileSync(file, newContent, 'utf8');
       console.log(`Updated import paths in ${file}`);

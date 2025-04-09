@@ -18,14 +18,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Fix fallthrough in switch statements
-const fixFallthrough = (filePath) => {
+const fixFallthrough = filePath => {
   console.log(`Fixing fallthrough in switch statements in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;
 
   // Find switch statements with fallthrough
-  const switchRegex = /case\s+[^:]+:\s*\n(?:\s*\/\/[^\n]*\n)*(?!\s*break|\s*return|\s*throw|\s*continue|\s*\/\/ fallthrough|\s*\/\* fallthrough \*\/|\s*case|\s*default|\s*})/g;
+  const switchRegex =
+    /case\s+[^:]+:\s*\n(?:\s*\/\/[^\n]*\n)*(?!\s*break|\s*return|\s*throw|\s*continue|\s*\/\/ fallthrough|\s*\/\* fallthrough \*\/|\s*case|\s*default|\s*})/g;
   const matches = [...content.matchAll(switchRegex)];
 
   for (const match of matches) {
@@ -46,19 +47,21 @@ const fixFallthrough = (filePath) => {
 };
 
 // Fix console statements
-const fixConsoleStatements = (filePath) => {
+const fixConsoleStatements = filePath => {
   console.log(`Fixing console statements in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;
 
   // Replace console.log with logger.debug
-  if (content.includes('console.log') || content.includes('console.info') ||
-      content.includes('console.warn') || content.includes('console.error')) {
-
+  if (
+    content.includes('console.log') ||
+    content.includes('console.info') ||
+    content.includes('console.warn') ||
+    content.includes('console.error')
+  ) {
     // Check if logger is already imported
-    let loggerImported = content.includes('import { logger }') ||
-                         content.includes('import logger');
+    let loggerImported = content.includes('import { logger }') || content.includes('import logger');
 
     // Add logger import if needed
     if (!loggerImported) {
@@ -67,9 +70,10 @@ const fixConsoleStatements = (filePath) => {
       if (lastImportIndex !== -1) {
         const endOfImport = content.indexOf(';', lastImportIndex);
         if (endOfImport !== -1) {
-          content = content.substring(0, endOfImport + 1) +
-                    "\nimport { logger } from './utils/logger.js';" +
-                    content.substring(endOfImport + 1);
+          content =
+            content.substring(0, endOfImport + 1) +
+            "\nimport { logger } from './utils/logger.js';" +
+            content.substring(endOfImport + 1);
           modified = true;
         }
       }
@@ -94,7 +98,7 @@ const fixConsoleStatements = (filePath) => {
 };
 
 // Fix variable redeclarations
-const fixRedeclarations = (filePath) => {
+const fixRedeclarations = filePath => {
   console.log(`Fixing variable redeclarations in ${filePath}...`);
 
   // This is a complex issue that's hard to fix automatically
@@ -104,9 +108,7 @@ const fixRedeclarations = (filePath) => {
     const issues = JSON.parse(result);
 
     if (issues.length > 0) {
-      const redeclareIssues = issues[0].messages.filter(
-        msg => msg.ruleId === 'no-redeclare'
-      );
+      const redeclareIssues = issues[0].messages.filter(msg => msg.ruleId === 'no-redeclare');
 
       if (redeclareIssues.length > 0) {
         console.log(`  Found ${redeclareIssues.length} redeclaration issues in ${filePath}`);
@@ -133,7 +135,7 @@ const fixRedeclarations = (filePath) => {
 };
 
 // Fix sparse arrays
-const fixSparseArrays = (filePath) => {
+const fixSparseArrays = filePath => {
   console.log(`Fixing sparse arrays in ${filePath}...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
@@ -167,7 +169,7 @@ const fixSparseArrays = (filePath) => {
 };
 
 // Process a single file
-const processFile = (filePath) => {
+const processFile = filePath => {
   const ext = path.extname(filePath);
   if (ext !== '.ts' && ext !== '.js') {
     return false;
@@ -181,17 +183,11 @@ const processFile = (filePath) => {
     const issues = JSON.parse(result);
 
     if (issues.length > 0) {
-      const hasFallthroughIssues = issues[0].messages.some(
-        msg => msg.ruleId === 'no-fallthrough'
-      );
+      const hasFallthroughIssues = issues[0].messages.some(msg => msg.ruleId === 'no-fallthrough');
 
-      const hasConsoleIssues = issues[0].messages.some(
-        msg => msg.ruleId === 'no-console'
-      );
+      const hasConsoleIssues = issues[0].messages.some(msg => msg.ruleId === 'no-console');
 
-      const hasRedeclareIssues = issues[0].messages.some(
-        msg => msg.ruleId === 'no-redeclare'
-      );
+      const hasRedeclareIssues = issues[0].messages.some(msg => msg.ruleId === 'no-redeclare');
 
       const hasSparseArrayIssues = issues[0].messages.some(
         msg => msg.ruleId === 'no-sparse-arrays'
@@ -239,7 +235,7 @@ const processFile = (filePath) => {
 };
 
 // Process all TypeScript and JavaScript files in a directory
-const processDirectory = (dirPath) => {
+const processDirectory = dirPath => {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
   let modifiedCount = 0;
 

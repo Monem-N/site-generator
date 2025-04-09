@@ -27,7 +27,7 @@ for (const file of tsFiles) {
     const content = fs.readFileSync(file, 'utf8');
     let modified = false;
     let newContent = content;
-    
+
     // Fix incorrect logger imports
     if (newContent.includes("import { logger } from './utils/logger.js';")) {
       // Replace the import path
@@ -37,15 +37,19 @@ for (const file of tsFiles) {
       );
       modified = true;
     }
-    
+
     // Add missing logger imports in cache.ts
-    if (file.includes('cache.ts') && newContent.includes('logger.') && !newContent.includes('import { logger }')) {
+    if (
+      file.includes('cache.ts') &&
+      newContent.includes('logger.') &&
+      !newContent.includes('import { logger }')
+    ) {
       // Add the import at the top of the file
       const importStatement = `import { logger } from './logger.js';\n`;
       newContent = importStatement + newContent;
       modified = true;
     }
-    
+
     if (modified) {
       fs.writeFileSync(file, newContent, 'utf8');
       console.log(`Updated imports in ${file}`);
