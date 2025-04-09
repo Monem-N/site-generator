@@ -2,7 +2,7 @@ import { DocsifyWebsiteGenerator } from '../DocsifyWebsiteGenerator.js';
 import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ParsedContent } from '../../types/parser.js';
+import { ____ParsedContent } from '../../types/parser.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -133,7 +133,7 @@ describe('DocsifyWebsiteGenerator', () => {
     );
 
     // Mock fs.readdir to return mock directory contents
-    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, _options) => {
+    (fs.readdir as jest.Mock).mockImplementation((_dirPath: string, ___options) => {
       if (_dirPath === '/test/source') {
         return Promise.resolve([
           { name: 'README.md', isDirectory: () => false },
@@ -156,12 +156,12 @@ describe('DocsifyWebsiteGenerator', () => {
     });
 
     // Mock fs.writeFile
-    (fs.writeFile as jest.Mock).mockImplementation((filePath: string, _content: string) => {
+    (fs.writeFile as jest.Mock).mockImplementation((___filePath: string, ___content: string) => {
       return Promise.resolve();
     });
 
     // Mock fs.copyFile
-    (fs.copyFile as jest.Mock).mockImplementation((src: string, _dest: string) => {
+    (fs.copyFile as jest.Mock).mockImplementation((___src: string, ___dest: string) => {
       return Promise.resolve();
     });
   });

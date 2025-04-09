@@ -12,9 +12,17 @@ interface TestConfig {
     navbar?: boolean;
     sidebar?: boolean;
     search?: boolean;
-    [key: string]: unknown;
+    [key: string]: boolean | string | number | undefined;
   };
-  [key: string]: unknown;
+  customProperty?: string;
+  anotherProperty?: number;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | string[]
+    | Record<string, boolean | string | number | undefined>
+    | undefined;
 }
 
 // Use the return type directly from validateConfig
@@ -158,7 +166,7 @@ describe('Config Validator', () => {
     const config: TestConfig = {
       source: './docs',
       output: './build',
-      options: 'options' as unknown as Record<string, unknown>, // Type assertion to simulate runtime type error
+      options: 'options' as unknown as Record<string, boolean | string | number | undefined>, // Type assertion to simulate runtime type error
     };
 
     const result = validateConfig(config);

@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { WebsiteGeneratorConfig } from '../../config/generator.config.js';
 import { ParsedContent } from '../../types/parser.js';
-import { Plugin } from '../../types/plugin.js';
-import { ComponentTemplate } from '../../types/component.js';
+import { ____Plugin } from '../../types/plugin.js';
+import { ____ComponentTemplate } from '../../types/component.js';
 import { ContentCache } from '../utils/cache.js';
 import { SiteGeneratorError } from '../utils/errors.js';
 import { TestGenerator } from '../TestGenerator.js';
@@ -68,7 +68,7 @@ const createTestConfig = (): WebsiteGeneratorConfig => ({
     plugins: [],
   },
 
-  generator: {
+  __generator: {
     templates: {
       page: '/test/templates/page.tsx',
       section: '/test/templates/section.tsx',
@@ -178,7 +178,7 @@ describe('WebsiteGenerator', () => {
     );
 
     // Mock fs.readdir to return mock directory contents
-    (fs.readdir as jest.Mock).mockImplementation((dirPath: string, _options) => {
+    (fs.readdir as jest.Mock).mockImplementation((_dirPath: string, ___options) => {
       if (_dirPath === '/test/source') {
         return Promise.resolve([
           { name: 'doc1.md', isDirectory: () => false },
@@ -215,9 +215,9 @@ describe('WebsiteGenerator', () => {
 
   test('should initialize with valid configuration', () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
-    expect(generator).toBeDefined();
+    expect(__generator).toBeDefined();
     expect(generator.getConfig()).toEqual(config);
   });
 
@@ -242,7 +242,7 @@ describe('WebsiteGenerator', () => {
       return path !== config.outputDir;
     });
 
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     expect(fs.mkdirSync).toHaveBeenCalledWith(config.outputDir, { recursive: true });
   });
@@ -251,7 +251,7 @@ describe('WebsiteGenerator', () => {
     const config = createTestConfig();
     config.plugins = [{ name: 'test-plugin' }, { name: 'another-plugin', options: { foo: 'bar' } }];
 
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
     const registeredPlugins = generator.getPlugins();
 
     expect(registeredPlugins).toHaveLength(2);
@@ -262,7 +262,7 @@ describe('WebsiteGenerator', () => {
 
   test('should generate website', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock the internal methods
     generator.parseDocumentation = jest.fn().mockResolvedValue([]);
@@ -280,7 +280,7 @@ describe('WebsiteGenerator', () => {
 
   test('should handle errors during generation', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock the internal methods to throw an error
     generator.parseDocumentation = jest.fn().mockRejectedValue(new Error('Parse error'));
@@ -292,7 +292,7 @@ describe('WebsiteGenerator', () => {
     const config = createTestConfig();
     config.performance.caching.enabled = true;
 
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock the cache methods
     generator.cache = {
@@ -317,7 +317,7 @@ describe('WebsiteGenerator', () => {
 
   test('should parse documentation files correctly', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Call the actual parseDocumentation method
     const parsedContent = await generator.parseDocumentation();
@@ -332,7 +332,7 @@ describe('WebsiteGenerator', () => {
   test('should filter files based on extensions', async () => {
     const config = createTestConfig();
     config.parser.extensions = ['md']; // Only parse markdown files
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Call the actual method
     const files = await generator.getDocumentationFiles('/test/source');
@@ -349,7 +349,7 @@ describe('WebsiteGenerator', () => {
   test('should respect ignore patterns', async () => {
     const config = createTestConfig();
     config.parser.ignorePatterns = ['ignored']; // Ignore the 'ignored' directory
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Call the actual method
     const files = await generator.getDocumentationFiles('/test/source');
@@ -375,7 +375,7 @@ describe('WebsiteGenerator', () => {
       },
     ];
 
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock plugin initialization
     await generator.initializePlugins();
@@ -389,7 +389,7 @@ describe('WebsiteGenerator', () => {
 
   test('should handle errors during parsing', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock parser to throw an error
     const mockParser = {
@@ -408,7 +408,7 @@ describe('WebsiteGenerator', () => {
 
   test('should generate components from parsed content', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Create mock parsed content
     const mockParsedContent: ParsedContent[] = [
@@ -443,7 +443,7 @@ describe('WebsiteGenerator', () => {
 
   test('should apply design system to components', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Create mock components
     const mockComponents = [
@@ -465,7 +465,7 @@ describe('WebsiteGenerator', () => {
     config.testing.components.unit = false;
     config.testing.components.integration = false;
 
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Create mock components
     const mockComponents = [
@@ -482,7 +482,7 @@ describe('WebsiteGenerator', () => {
 
   test('should build the website with the correct configuration', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Create mock components
     const mockComponents = [
@@ -508,7 +508,7 @@ describe('WebsiteGenerator', () => {
 
   test('should handle errors with SiteGeneratorError', async () => {
     const config = createTestConfig();
-    const generator = new WebsiteGenerator(config);
+    const __generator = new WebsiteGenerator(config);
 
     // Mock fs.readdir to throw an error
     (fs.readdir as unknown as jest.Mock).mockRejectedValue(new Error('File system error'));

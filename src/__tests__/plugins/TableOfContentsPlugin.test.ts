@@ -1,5 +1,5 @@
 import { TableOfContentsPlugin } from '../../plugins/TableOfContentsPlugin.js';
-import { ParsedContent, ContentNode } from '../../../types/parser.js';
+import { ParsedContent, ____ContentNode } from '../../../types/parser.js';
 
 describe('TableOfContentsPlugin', () => {
   let plugin: TableOfContentsPlugin;

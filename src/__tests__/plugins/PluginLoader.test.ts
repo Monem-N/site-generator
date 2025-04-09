@@ -1,8 +1,8 @@
 import { PluginLoader } from '../../plugins/PluginLoader.js';
-import { Plugin } from '../../../types/plugin.js';
+import { ____Plugin } from '../../../types/plugin.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from '../../utils/logger.js';
+import { ____logger } from '../../utils/logger.js';
 
 // Mock dependencies
 jest.mock('fs');
@@ -60,7 +60,7 @@ describe('PluginLoader', () => {
 
     // Mock fs.readdirSync to return plugin files
     (fs.readdirSync as jest.Mock).mockImplementation((dirPath: string) => {
-      if (_dirPath === '/plugins') {
+      if (dirPath === '/plugins') {
         return ['test-plugin.js', 'another-plugin.js', 'invalid-plugin.js', 'error-plugin.js'];
       }
       return [];

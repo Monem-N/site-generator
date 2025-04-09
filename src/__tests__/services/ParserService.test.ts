@@ -2,9 +2,25 @@ import { ParserService } from '../../services/ParserService.js';
 import { createMockFileSystem } from '../utils/test-helpers.js';
 import { Plugin } from '../../../types/plugin.js';
 
+// Define interface for mock file system to replace 'any'
+interface MockFileSystem {
+  addMockFile: (path: string, content: string) => void;
+  readFile: jest.Mock;
+  [key: string]: unknown; // Allow for additional properties
+}
+
+// Define interface for ParserService internals to avoid using 'any' or 'unknown'
+interface ParserServiceInternals {
+  config: {
+    extensions: string[];
+    ignorePatterns: string[];
+    [key: string]: unknown;
+  };
+}
+
 describe('ParserService', () => {
   let parserService: ParserService;
-  let mockFileSystem: any;
+  let mockFileSystem: MockFileSystem;
 
   beforeEach(() => {
     mockFileSystem = createMockFileSystem();
@@ -34,8 +50,14 @@ describe('ParserService', () => {
 
   test('should initialize with custom configuration', () => {
     expect(parserService).toBeDefined();
-    expect((parserService as any).config.extensions).toEqual(['md', 'markdown']);
-    expect((parserService as any).config.ignorePatterns).toEqual(['node_modules', '.git']);
+    expect((parserService as unknown as ParserServiceInternals).config.extensions).toEqual([
+      'md',
+      'markdown',
+    ]);
+    expect((parserService as unknown as ParserServiceInternals).config.ignorePatterns).toEqual([
+      'node_modules',
+      '.git',
+    ]);
   });
 
   test('should parse markdown file', async () => {

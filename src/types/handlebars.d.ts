@@ -33,21 +33,21 @@ declare namespace Handlebars {
 
   interface HelperDelegate {
     (
-      context?: any,
-      arg1?: any,
-      arg2?: any,
-      arg3?: any,
-      arg4?: any,
-      arg5?: any,
+      context?: unknown,
+      arg1?: unknown,
+      arg2?: unknown,
+      arg3?: unknown,
+      arg4?: unknown,
+      arg5?: unknown,
       options?: HelperOptions
-    ): any;
+    ): unknown;
   }
 
   interface HelperOptions {
     fn: TemplateDelegate;
     inverse: TemplateDelegate;
-    hash: any;
-    data?: any;
+    hash?: unknown;
+    data?: unknown;
   }
 
   interface SafeString {
@@ -56,20 +56,20 @@ declare namespace Handlebars {
   }
 
   interface Template {
-    (context: any, options?: RuntimeOptions): string;
+    (context: unknown, options?: RuntimeOptions): string;
   }
 
   interface TemplateDelegate {
-    (context: any, options?: RuntimeOptions): string;
+    (context: unknown, options?: RuntimeOptions): string;
   }
 
   interface Utils {
     escapeExpression(str: string): string;
-    createFrame(object: any): any;
-    isEmpty(value: any): boolean;
-    extend(obj: any, ...source: any[]): any;
-    toString(obj: any): string;
-    isArray(obj: any): boolean;
-    isFunction(obj: any): boolean;
+    createFrame(object: unknown): Record<string, unknown>;
+    isEmpty(value: unknown): boolean;
+    extend(obj: unknown, ...source: unknown[]): Record<string, unknown>;
+    toString(obj: unknown): string;
+    isArray(obj: unknown): boolean;
+    isFunction(obj: unknown): boolean;
   }
 }

@@ -1,5 +1,5 @@
 import { OpenAPIParser } from '../../parsers/OpenAPIParser.js';
-import { ParsedContent } from '../../../types/parser.js';
+import { ____ParsedContent } from '../../../types/parser.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -187,7 +187,7 @@ components:
     jest.resetAllMocks();
 
     // Mock fs.existsSync to return true for files
-    (fs.existsSync as jest.Mock).mockImplementation((filePath: string) => {
+    (fs.existsSync as jest.Mock).mockImplementation((___filePath: string) => {
       return true;
     });
 

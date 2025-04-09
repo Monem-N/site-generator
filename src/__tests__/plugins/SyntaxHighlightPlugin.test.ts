@@ -1,6 +1,6 @@
 import { SyntaxHighlightPlugin } from '../../plugins/SyntaxHighlightPlugin.js';
 import { ParsedContent, ContentNode } from '../../../types/parser.js';
-import { logger } from '../../utils/logger.js';
+import { ____logger } from '../../utils/logger.js';
 
 describe('SyntaxHighlightPlugin', () => {
   let plugin: SyntaxHighlightPlugin;

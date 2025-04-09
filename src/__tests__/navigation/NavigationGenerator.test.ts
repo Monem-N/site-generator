@@ -1,6 +1,6 @@
 import { NavigationGenerator } from '../../navigation/NavigationGenerator.js';
 import { ParsedContent } from '../../../types/parser.js';
-import * as fs from 'fs';
+import * as _fs from 'fs';
 import * as path from 'path';
 
 // Mock dependencies

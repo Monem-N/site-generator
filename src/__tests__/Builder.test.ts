@@ -55,12 +55,12 @@ describe('Builder', () => {
     });
 
     // Mock fs.mkdirSync
-    (fs.mkdirSync as jest.Mock).mockImplementation((dirPath: string, _options) => {
+    (fs.mkdirSync as jest.Mock).mockImplementation((___dirPath: string, ___options) => {
       return undefined;
     });
 
     // Mock fs.writeFileSync
-    (fs.writeFileSync as jest.Mock).mockImplementation((filePath: string, _content: string) => {
+    (fs.writeFileSync as jest.Mock).mockImplementation((___filePath: string, ___content: string) => {
       return undefined;
     });
 
@@ -88,8 +88,8 @@ describe('Builder', () => {
   });
 
   test('should initialize with valid options', () => {
-    const builder = new Builder(sampleBuildOptions);
-    expect(builder).toBeDefined();
+    const __builder = new Builder(sampleBuildOptions);
+    expect(__builder).toBeDefined();
   });
 
   test('should create output directory if it does not exist', () => {
@@ -98,13 +98,13 @@ describe('Builder', () => {
       return dirPath !== '/test/output';
     });
 
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     expect(fs.mkdirSync).toHaveBeenCalledWith('/test/output', { recursive: true });
   });
 
   test('should build components', async () => {
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     await builder.build(sampleComponents);
 
@@ -127,7 +127,7 @@ describe('Builder', () => {
   });
 
   test('should apply minification when enabled', async () => {
-    const builder = new Builder({
+    const __builder = new Builder({
       ...sampleBuildOptions,
       optimization: {
         ...sampleBuildOptions.optimization,
@@ -154,7 +154,7 @@ describe('Builder', () => {
   });
 
   test('should not apply minification when disabled', async () => {
-    const builder = new Builder({
+    const __builder = new Builder({
       ...sampleBuildOptions,
       optimization: {
         ...sampleBuildOptions.optimization,
@@ -181,7 +181,7 @@ describe('Builder', () => {
   });
 
   test('should handle empty component list', async () => {
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     await builder.build([]);
 
@@ -190,7 +190,7 @@ describe('Builder', () => {
   });
 
   test('should handle errors during build', async () => {
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     // Mock fs.writeFileSync to throw an error
     (fs.writeFileSync as jest.Mock).mockImplementation(() => {
@@ -201,7 +201,7 @@ describe('Builder', () => {
   });
 
   test('should optimize assets when enabled', async () => {
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     // Mock the optimizeAssets method
     builder.optimizeAssets = jest.fn().mockResolvedValue(undefined);
@@ -213,7 +213,7 @@ describe('Builder', () => {
   });
 
   test('should not optimize assets when disabled', async () => {
-    const builder = new Builder({
+    const __builder = new Builder({
       ...sampleBuildOptions,
       assets: undefined,
     });
@@ -228,7 +228,7 @@ describe('Builder', () => {
   });
 
   test('should generate index file', async () => {
-    const builder = new Builder(sampleBuildOptions);
+    const __builder = new Builder(sampleBuildOptions);
 
     await builder.build(sampleComponents);
 

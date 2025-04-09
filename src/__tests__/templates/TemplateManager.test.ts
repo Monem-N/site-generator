@@ -3,7 +3,7 @@ import { TemplateEngine } from '../../templates/TemplateEngine.js';
 import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngine.js';
 import { EjsTemplateEngine } from '../../templates/EjsTemplateEngine.js';
 import { createMockParsedContent } from '../utils/test-helpers.js';
-import * as fs from 'fs';
+import * as _fs from 'fs';
 import * as path from 'path';
 
 // Mock dependencies

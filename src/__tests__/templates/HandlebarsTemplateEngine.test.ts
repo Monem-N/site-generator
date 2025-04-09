@@ -33,8 +33,15 @@ describe('HandlebarsTemplateEngine', () => {
     // Replace the real Handlebars with the mock
     (Handlebars as unknown) = mockHandlebars;
 
+    // Define interface for fs.promises mock to replace 'any'
+    interface FSPromisesMock {
+      readFile: jest.Mock;
+      readdir: jest.Mock;
+      [key: string]: unknown; // Allow for additional properties
+    }
+
     // Mock fs.promises.readFile to return template content
-    (fs.promises as any) = {
+    (fs.promises as unknown as FSPromisesMock) = {
       readFile: jest.fn().mockResolvedValue('Template content: {{title}}'),
       readdir: jest.fn().mockResolvedValue(['partial.hbs', 'helper.js']),
     };

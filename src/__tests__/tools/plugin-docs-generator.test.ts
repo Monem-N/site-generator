@@ -24,8 +24,20 @@ describe('PluginDocsGenerator', () => {
       return undefined;
     });
 
+    // Define interface for fs.promises mock to replace 'any'
+    interface FSPromisesMock {
+      writeFile: jest.Mock;
+      [key: string]: unknown; // Allow for additional properties
+    }
+
+    // Define interface for PluginDocsGenerator internals to avoid using 'any'
+    interface _PluginDocsGeneratorInternals {
+      plugins: Plugin[];
+      [key: string]: unknown; // Allow for additional properties
+    }
+
     // Mock fs.promises.writeFile to do nothing
-    (fs.promises as any) = {
+    (fs.promises as unknown as FSPromisesMock) = {
       writeFile: jest.fn().mockResolvedValue(undefined),
     };
 
@@ -78,9 +90,9 @@ describe('PluginDocsGenerator', () => {
     generator.addPlugin(mockPlugin2);
 
     // Verify that the plugins were added
-    expect((generator as any).plugins).toHaveLength(2);
-    expect((generator as any).plugins[0]).toBe(mockPlugin1);
-    expect((generator as any).plugins[1]).toBe(mockPlugin2);
+    expect((generator as unknown as PluginDocsGeneratorInternals).plugins).toHaveLength(2);
+    expect((generator as unknown as PluginDocsGeneratorInternals).plugins[0]).toBe(mockPlugin1);
+    expect((generator as unknown as PluginDocsGeneratorInternals).plugins[1]).toBe(mockPlugin2);
   });
 
   test('should generate documentation', async () => {
