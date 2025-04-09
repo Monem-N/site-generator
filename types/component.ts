@@ -11,89 +11,89 @@ export interface ComponentTemplate extends ComponentConfig {
   name: string;
   path: string;
   content: string;
-  id?: string; // Make id optional to maintain backward compatibility// Make id optional to maintain backward compatibility
+  id?: string; // Make id optional to maintain backward compatibility
   metadata?: Record<string, unknown>;
-  generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;esignSystem: DesignSystem): Promise<string>;
+  generate(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }
 
-/**/**
- * Configuration for a componentConfiguration for a component
+/**
+ * Configuration for a component
  */
-export interface ComponentConfig {ort interface ComponentConfig {
+export interface ComponentConfig {
   name: string;
   path: string;
-  content: string;ng;
-  variables?: Record<string, unknown>;rd<string, unknown>;
+  content: string;
+  variables?: Record<string, unknown>;
   dependencies?: string[];
 }
 
-/**/**
- * Design system configuration for a specific component typeDesign system configuration for a specific component type
+/**
+ * Design system configuration for a specific component type
  */
-export interface ComponentDesignConfig {ort interface ComponentDesignConfig {
+export interface ComponentDesignConfig {
   classMapping: Record<string, string>;
   components: string[];
 }
 
-/**/**
- * API endpoint definition for documentationAPI endpoint definition for documentation
+/**
+ * API endpoint definition for documentation
  */
-export interface APIEndpoint {ort interface APIEndpoint {
+export interface APIEndpoint {
   method: string;
-  endpoint: string;g;
-  parameters?: Array<{y<{
+  endpoint: string;
+  parameters?: Array<{
     name: string;
     type: string;
-    description: string;string;
+    description: string;
     required?: boolean;
   }>;
-  responses?: Record<ponses?: Record<
+  responses?: Record<
     string,
     {
-      description: string; description: string;
+      description: string;
       example?: unknown;
     }
   >;
 }
 
-/**/**
- * Table component data structureTable component data structure
+/**
+ * Table component data structure
  */
-export interface TableData {ort interface TableData {
+export interface TableData {
   headers: string[];
   rows: string[][];
 }
 
-/**/**
- * Code block component data structureCode block component data structure
+/**
+ * Code block component data structure
  */
-export interface CodeBlock {ort interface CodeBlock {
+export interface CodeBlock {
   language: string;
-  content: string[];;
+  content: string[];
   filename?: string;
 }
 
-/**/**
- * Section component data structureSection component data structure
+/**
+ * Section component data structure
  */
-export interface Section {ort interface Section {
+export interface Section {
   title: string;
   level: number;
-  content: ContentElement[];ntElement[];
+  content: ContentElement[];
 }
 
-/**/**
- * Navigation component data structureNavigation component data structure
+/**
+ * Navigation component data structure
  */
-export interface Navigation {ort interface Navigation {
+export interface Navigation {
   items: Array<{
-    label: string;g;
+    label: string;
     path: string;
-    active?: boolean;ean;
-    children?: Array<{{
+    active?: boolean;
+    children?: Array<{
       label: string;
       path: string;
-      active?: boolean;ean;
+      active?: boolean;
     }>;
   }>;
 }

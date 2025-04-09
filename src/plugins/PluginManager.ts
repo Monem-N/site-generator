@@ -1,5 +1,4 @@
 import { Plugin } from '../../types/plugin.js';
-import { ParsedContent } from '../../types/parser.js';
 import { logger } from '../utils/logger.js';
 
 export class PluginManager {
@@ -49,7 +48,10 @@ export class PluginManager {
           if (!continueOnError) {
             throw error;
           }
-          logger.warn(`Error executing hook ${hookName} for plugin ${plugin.name}: ${error}`);
+          logger.warn(
+            `Error executing hook ${hookName} for plugin ${plugin.name}: ${error}`,
+            error
+          );
         }
       }
     }
@@ -70,7 +72,7 @@ export class PluginManager {
     try {
       return plugin.hooks[hookName](data, plugin.options);
     } catch (error) {
-      logger.error(`Error executing hook ${hookName} for plugin ${pluginName}: ${error}`);
+      logger.error(`Error executing hook ${hookName} for plugin ${pluginName}: ${error}`, error);
       throw error;
     }
   }
@@ -102,12 +104,12 @@ export class PluginManager {
   /**
    * Legacy methods for backward compatibility
    */
-  async applyBeforeParse(content: string, filePath: string): Promise<string> {
-    return this.executeHook('beforeParse', content, filePath);
+  async applyBeforeParse(content: string): Promise<string> {
+    return this.executeHook('beforeParse', content, true);
   }
 
-  async applyAfterParse(parsedContent: any, filePath: string): Promise<any> {
-    return this.executeHook('afterParse', parsedContent, filePath);
+  async applyAfterParse(parsedContent: Record<string, unknown>): Promise<Record<string, unknown>> {
+    return this.executeHook('afterParse', parsedContent, true);
   }
 
   getPlugin(name: string): Plugin | undefined {

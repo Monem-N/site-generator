@@ -4,12 +4,46 @@ import { HandlebarsTemplateEngine } from '../../templates/HandlebarsTemplateEngi
 import { EjsTemplateEngine } from '../../templates/EjsTemplateEngine.js';
 import { createMockParsedContent } from '../utils/test-helpers.js';
 import * as path from 'path';
+// Import ParsedContent from the root types directory
+import { ParsedContent, Asset, Reference, ContentNode } from '../../../types/parser.js';
 
 // Mock dependencies
 jest.mock('fs');
 jest.mock('path');
 jest.mock('../../templates/HandlebarsTemplateEngine');
 jest.mock('../../templates/EjsTemplateEngine');
+
+/**
+ * Helper function to transform mock content into a valid format.
+ */
+// Using unknown instead of any for better type safety
+function transformMockContent(mockContent: unknown): ParsedContent {
+  const content = mockContent as Record<string, unknown>;
+
+  // Create properly typed sections
+  const sectionsAsNodes = ((content.sections as unknown[]) || []).map(section => {
+    const sectionObj = section as Record<string, unknown>;
+    return {
+      type: String(sectionObj.type || 'default-type'),
+      content: String(sectionObj.content || ''),
+      title: sectionObj.title as string | undefined,
+      level: sectionObj.level as number | undefined,
+      children: sectionObj.children as ContentNode[] | undefined,
+      attributes: sectionObj.attributes as Record<string, unknown> | undefined,
+    } as ContentNode;
+  });
+
+  // Create a properly typed ParsedContent object
+  return {
+    title: String(content.title || 'Default Title'),
+    description: String(content.description || 'Default Description'),
+    content: String(content.content || ''),
+    metadata: (content.metadata as Record<string, unknown>) || {},
+    sections: sectionsAsNodes,
+    assets: (content.assets as Asset[]) || [],
+    references: (content.references as Reference[]) || [],
+  };
+}
 
 describe('TemplateManager', () => {
   let templateManager: TemplateManager;
@@ -97,14 +131,15 @@ describe('TemplateManager', () => {
     const mockContent = createMockParsedContent({
       title: 'Test Document',
       description: 'Test description',
+      metadata: undefined,
     });
 
-    // Mock the renderContent method
-    mockHandlebarsEngine.renderContent.mockResolvedValue('<div>Rendered Content</div>');
+    // Transform the mock content
+    const contentToRender = transformMockContent(mockContent);
 
     // Render content with the handlebars engine
     const result = await templateManager.renderContent(
-      mockContent,
+      contentToRender,
       'template.hbs',
       undefined,
       'handlebars'
@@ -113,7 +148,7 @@ describe('TemplateManager', () => {
     // Verify the result
     expect(result).toBe('<div>Rendered Content</div>');
     expect(mockHandlebarsEngine.renderContent).toHaveBeenCalledWith(
-      mockContent,
+      contentToRender,
       'template.hbs',
       undefined
     );

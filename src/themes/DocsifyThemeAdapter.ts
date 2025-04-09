@@ -1,3 +1,5 @@
+import { logger } from '../utils/logger.js';
+
 export interface ThemeStyles {
   stylesheet: string;
   variables: Record<string, string>;
@@ -11,18 +13,24 @@ export class DocsifyThemeAdapter {
     this.theme = theme.toLowerCase();
   }
 
+  private executeThemeHook(theme: string): ThemeStyles {
+    try {
+      const themeMethod = `get${theme.charAt(0).toUpperCase() + theme.slice(1)}Theme`;
+      return this[themeMethod]?.() || this.getVueTheme();
+    } catch (error) {
+      logger.error(`Error loading theme ${theme}`, error);
+      return this.getVueTheme();
+    }
+  }
+
   getThemeStyles(): ThemeStyles {
     switch (this.theme) {
       case 'vue':
-        return this.getVueTheme();
       case 'dark':
-        return this.getDarkTheme();
       case 'buble':
-        return this.getBubleTheme();
       case 'pure':
-        return this.getPureTheme();
       case 'dolphin':
-        return this.getDolphinTheme();
+        return this.executeThemeHook(this.theme);
       default:
         return this.getVueTheme();
     }
@@ -36,8 +44,8 @@ export class DocsifyThemeAdapter {
         '--theme-color-dark': '#33a06f',
         '--text-color-base': '#2c3e50',
         '--text-color-secondary': '#646473',
-        '--text-color-tertiary': '#81818e'
-      }
+        '--text-color-tertiary': '#81818e',
+      },
     };
   }
 
@@ -50,8 +58,8 @@ export class DocsifyThemeAdapter {
         '--text-color-base': '#b4b4b4',
         '--text-color-secondary': '#efefef',
         '--text-color-tertiary': '#eee',
-        '--background-color': '#252529'
-      }
+        '--background-color': '#252529',
+      },
     };
   }
 
@@ -63,8 +71,8 @@ export class DocsifyThemeAdapter {
         '--theme-color-dark': '#0059a6',
         '--text-color-base': '#333',
         '--text-color-secondary': '#555',
-        '--text-color-tertiary': '#777'
-      }
+        '--text-color-tertiary': '#777',
+      },
     };
   }
 
@@ -76,8 +84,8 @@ export class DocsifyThemeAdapter {
         '--theme-color-dark': '#0059a6',
         '--text-color-base': '#333',
         '--text-color-secondary': '#555',
-        '--text-color-tertiary': '#777'
-      }
+        '--text-color-tertiary': '#777',
+      },
     };
   }
 
@@ -93,7 +101,7 @@ export class DocsifyThemeAdapter {
         '--sidebar-background': '#f8f8f8',
         '--sidebar-nav-link-color': '#444',
         '--sidebar-nav-link-color--active': '#1E90FF',
-        '--sidebar-name-color': '#1E90FF'
+        '--sidebar-name-color': '#1E90FF',
       },
       additionalCSS: `
         .sidebar {
@@ -104,7 +112,7 @@ export class DocsifyThemeAdapter {
           background-color: #f8f8f8;
           color: #e96900;
         }
-      `
+      `,
     };
   }
 
