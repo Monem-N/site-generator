@@ -1,9 +1,9 @@
-import { TemplateEngine, __TemplateEngineOptions } from './TemplateEngine.js';
+import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
 import {
   HandlebarsTemplateEngine,
-  Handlebars__TemplateEngineOptions,
+  HandlebarsTemplateEngineOptions,
 } from './HandlebarsTemplateEngine.js';
-import { EjsTemplateEngine, Ejs__TemplateEngineOptions } from './EjsTemplateEngine.js';
+import { EjsTemplateEngine, EjsTemplateEngineOptions } from './EjsTemplateEngine.js';
 import { ParsedContent } from '../../types/parser.js';
 import { DesignSystem } from '../../types/design.js';
 import * as path from 'path';
