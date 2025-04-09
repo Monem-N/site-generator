@@ -1,4 +1,4 @@
-import { Plugin } from '../../types/plugin.js';
+import { Plugin, PluginHooks } from '../../types/plugin.js';
 import { ParsedContent } from '../../types/parser.js';
 
 /**
@@ -17,7 +17,7 @@ export class MarkdownEnhancerPlugin implements Plugin {
   name = 'markdown-enhancer';
   version = '1.0.0';
   options: MarkdownEnhancerOptions;
-  hooks: unknown;
+  hooks: PluginHooks;
 
   constructor(options: MarkdownEnhancerOptions = {}) {
     this.options = {
@@ -28,8 +28,8 @@ export class MarkdownEnhancerPlugin implements Plugin {
     };
 
     this.hooks = {
-      beforeParse: this.beforeParse.bind(this),
-      afterParse: this.afterParse.bind(this),
+      beforeParse: this.beforeParse?.bind(this),
+      afterParse: this.afterParse?.bind(this),
     };
   }
 

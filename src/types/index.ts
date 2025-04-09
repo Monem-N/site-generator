@@ -27,6 +27,7 @@ export interface GeneratorConfig {
 }
 
 export interface ComponentTemplate {
+  type: string;
   name: string;
   path: string;
   content: string;

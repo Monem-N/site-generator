@@ -45,26 +45,20 @@ describe('TestGenerator', () => {
     jest.resetAllMocks();
 
     // Mock fs.existsSync to return true for output directory
-    (fs.existsSync as jest.Mock).mockImplementation((dirPath: string) => {
-      return dirPath === '/test/output/__tests__';
-    });
-
-    // Mock fs.mkdirSync
-    (fs.mkdirSync as jest.Mock).mockImplementation((____dirPath: string, ____options) => {
-      return undefined;
-    });
-
-    // Mock fs.writeFileSync
-    (fs.writeFileSync as jest.Mock).mockImplementation(
-      (____filePath: string, ____content: string) => {
-        return undefined;
-      }
+    (fs.existsSync as jest.Mock).mockImplementation(
+      (dirPath: string) => dirPath === '/test/output/__tests__'
     );
 
+    // Mock fs.mkdirSync
+    (fs.mkdirSync as jest.Mock).mockImplementation(() => undefined);
+
+    // Mock fs.writeFileSync
+    (fs.writeFileSync as jest.Mock).mockImplementation(() => undefined);
+
     // Mock path.join to concatenate paths
-    (path.join as jest.Mock).mockImplementation((...paths: string[]) => {
-      return paths.join('/').replace(/\/+/g, '/');
-    });
+    (path.join as jest.Mock).mockImplementation((...paths: string[]) =>
+      paths.join('/').replace(/\/+/g, '/')
+    );
 
     // Mock path.dirname to return the directory
     (path.dirname as jest.Mock).mockImplementation((filePath: string) => {
@@ -85,23 +79,24 @@ describe('TestGenerator', () => {
   });
 
   test('should initialize with valid options', () => {
-    const ___testGenerator = new TestGenerator(sampleTestOptions);
-    expect(___testGenerator).toBeDefined();
+    const testGenerator = new TestGenerator(sampleTestOptions);
+    expect(testGenerator).toBeDefined();
   });
 
   test('should create output directory if it does not exist', () => {
     // Mock fs.existsSync to return false for output directory
-    (fs.existsSync as jest.Mock).mockImplementation((dirPath: string) => {
-      return dirPath !== '/test/output/__tests__';
-    });
+    (fs.existsSync as jest.Mock).mockImplementation(
+      (dirPath: string) => dirPath !== '/test/output/__tests__'
+    );
 
-    const ___testGenerator = new TestGenerator(sampleTestOptions);
+    const generator = new TestGenerator(sampleTestOptions);
+    expect(generator).toBeDefined();
 
     expect(fs.mkdirSync).toHaveBeenCalledWith('/test/output/__tests__', { recursive: true });
   });
 
   test('should generate unit tests for components', async () => {
-    const ___testGenerator = new TestGenerator(sampleTestOptions);
+    const testGenerator = new TestGenerator(sampleTestOptions);
 
     await testGenerator.generateTests(sampleComponents);
 

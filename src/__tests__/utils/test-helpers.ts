@@ -61,9 +61,10 @@ export function createMockComponentTemplate(
   return {
     name: 'test-template',
     path: '/test',
+    template: '/test/template.hbs',
     content: '<div>Test Component</div>',
-    type: 'test',
-    id: 'test-id', // Add the required 'id' property
+    id: 'test-id',
+    metadata: {},
     generate: jest.fn().mockResolvedValue('<div>Test Component</div>'),
     ...overrides,
   };

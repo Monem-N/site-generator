@@ -78,7 +78,7 @@ export class DocsifyMarkdownParser implements Parser {
 
       // Extract sections, assets, and references
       const sections = this.extractSections(body);
-      const assets = this.extractAssets(body, filePath);
+      const assets = this.extractAssets(body);
       const references = this.extractReferences(body, filePath);
 
       // Create parsed content structure
@@ -208,7 +208,7 @@ export class DocsifyMarkdownParser implements Parser {
     return sections;
   }
 
-  private extractAssets(content: string, filePath?: string): Asset[] {
+  private extractAssets(content: string): Asset[] {
     const assets: Asset[] = [];
     const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
     let match;
@@ -222,7 +222,6 @@ export class DocsifyMarkdownParser implements Parser {
         path: imagePath,
         metadata: {
           altText,
-          referencedFrom: filePath,
         },
       });
     }
@@ -258,5 +257,10 @@ export class DocsifyMarkdownParser implements Parser {
     }
 
     return references;
+  }
+
+  public async readFile(): Promise<string> {
+    // This is a public method that can be mocked in tests
+    throw new Error('Not implemented');
   }
 }

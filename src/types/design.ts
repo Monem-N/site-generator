@@ -37,25 +37,21 @@ export interface DesignSystem {
   /**
    * Component configurations
    */
-  components?: Record<string, { import: string; props?: Record<string, unknown> }>;
+  components?: Record<
+    string,
+    {
+      import: string;
+      props?: Record<string, unknown>;
+    }
+  >;
 
   /**
    * Style configurations
    */
-  styles?: { global?: string; components?: Record<string, string> };
-
-  /**
-   * Get configuration for a specific component type
-   */
-  getConfigForType?(elementType: string): {
-    classMapping: Record<string, string>;
-    components: string[];
+  styles?: {
+    global?: string;
+    components?: Record<string, string>;
   };
-
-  /**
-   * Update theme configuration
-   */
-  updateTheme?(theme: Record<string, unknown>): void;
 }
 
 /**

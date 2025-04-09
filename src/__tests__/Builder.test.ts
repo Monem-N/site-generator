@@ -11,6 +11,7 @@ describe('Builder', () => {
   const sampleComponents = [
     {
       name: 'Component1',
+      path: '/test/output/Component1.js',
       content: 'export const Component1 = () => <div>Component 1 Content</div>;',
       metadata: {
         originalPath: '/test/source/component1.md',
@@ -18,6 +19,7 @@ describe('Builder', () => {
     },
     {
       name: 'Component2',
+      path: '/test/output/Component2.js',
       content: 'export const Component2 = () => <div>Component 2 Content</div>;',
       metadata: {
         originalPath: '/test/source/component2.md',
@@ -27,7 +29,7 @@ describe('Builder', () => {
 
   // Sample build options
   const sampleBuildOptions = {
-    target: 'production',
+    target: 'production' as const,
     outDir: '/test/output',
     optimization: {
       minify: true,
@@ -49,22 +51,17 @@ describe('Builder', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
+    // Mock optimizeAssets for each test
+    jest.spyOn(Builder.prototype, 'optimizeAssets').mockResolvedValue();
+
     // Mock fs.existsSync to return true for output directory
-    (fs.existsSync as jest.Mock).mockImplementation((dirPath: string) => {
-      return dirPath === '/test/output';
-    });
+    (fs.existsSync as jest.Mock).mockImplementation(() => true);
 
     // Mock fs.mkdirSync
-    (fs.mkdirSync as jest.Mock).mockImplementation((____dirPath: string, ____options) => {
-      return undefined;
-    });
+    (fs.mkdirSync as jest.Mock).mockImplementation(() => undefined);
 
     // Mock fs.writeFileSync
-    (fs.writeFileSync as jest.Mock).mockImplementation(
-      (____filePath: string, ____content: string) => {
-        return undefined;
-      }
-    );
+    (fs.writeFileSync as jest.Mock).mockImplementation(() => undefined);
 
     // Mock path.join to concatenate paths
     (path.join as jest.Mock).mockImplementation((...paths: string[]) => {
@@ -90,23 +87,22 @@ describe('Builder', () => {
   });
 
   test('should initialize with valid options', () => {
-    const ___builder = new Builder(sampleBuildOptions);
-    expect(___builder).toBeDefined();
+    expect(() => new Builder(sampleBuildOptions)).not.toThrow();
   });
 
   test('should create output directory if it does not exist', () => {
     // Mock fs.existsSync to return false for output directory
-    (fs.existsSync as jest.Mock).mockImplementation((dirPath: string) => {
-      return dirPath !== '/test/output';
-    });
+    (fs.existsSync as jest.Mock).mockImplementation(
+      (dirPath: string) => dirPath !== '/test/output'
+    );
 
-    const ___builder = new Builder(sampleBuildOptions);
+    new Builder(sampleBuildOptions);
 
     expect(fs.mkdirSync).toHaveBeenCalledWith('/test/output', { recursive: true });
   });
 
   test('should build components', async () => {
-    const ___builder = new Builder(sampleBuildOptions);
+    const builder = new Builder(sampleBuildOptions);
 
     await builder.build(sampleComponents);
 
@@ -129,7 +125,7 @@ describe('Builder', () => {
   });
 
   test('should apply minification when enabled', async () => {
-    const ___builder = new Builder({
+    const builder = new Builder({
       ...sampleBuildOptions,
       optimization: {
         ...sampleBuildOptions.optimization,
@@ -138,14 +134,13 @@ describe('Builder', () => {
     });
 
     // Mock the minify method
-    builder.minify = jest.fn().mockImplementation((content: string) => {
-      return `/* minified */ ${content}`;
-    });
+    const minifyMock = jest.fn((content: string) => `/* minified */ ${content}`);
+    builder['minify'] = minifyMock;
 
     await builder.build(sampleComponents);
 
     // Should call minify for each component
-    expect(builder.minify).toHaveBeenCalledTimes(sampleComponents.length);
+    expect(minifyMock).toHaveBeenCalledTimes(sampleComponents.length);
 
     // Check that minified content is written
     expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -156,7 +151,7 @@ describe('Builder', () => {
   });
 
   test('should not apply minification when disabled', async () => {
-    const ___builder = new Builder({
+    const builder = new Builder({
       ...sampleBuildOptions,
       optimization: {
         ...sampleBuildOptions.optimization,
@@ -165,14 +160,13 @@ describe('Builder', () => {
     });
 
     // Mock the minify method
-    builder.minify = jest.fn().mockImplementation((content: string) => {
-      return `/* minified */ ${content}`;
-    });
+    const minifyMock = jest.fn((content: string) => `/* minified */ ${content}`);
+    builder['minify'] = minifyMock;
 
     await builder.build(sampleComponents);
 
     // Should not call minify
-    expect(builder.minify).not.toHaveBeenCalled();
+    expect(minifyMock).not.toHaveBeenCalled();
 
     // Check that original content is written
     expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -183,7 +177,7 @@ describe('Builder', () => {
   });
 
   test('should handle empty component list', async () => {
-    const ___builder = new Builder(sampleBuildOptions);
+    const builder = new Builder(sampleBuildOptions);
 
     await builder.build([]);
 
@@ -192,7 +186,7 @@ describe('Builder', () => {
   });
 
   test('should handle errors during build', async () => {
-    const ___builder = new Builder(sampleBuildOptions);
+    const builder = new Builder(sampleBuildOptions);
 
     // Mock fs.writeFileSync to throw an error
     (fs.writeFileSync as jest.Mock).mockImplementation(() => {
@@ -203,10 +197,7 @@ describe('Builder', () => {
   });
 
   test('should optimize assets when enabled', async () => {
-    const ___builder = new Builder(sampleBuildOptions);
-
-    // Mock the optimizeAssets method
-    builder.optimizeAssets = jest.fn().mockResolvedValue(undefined);
+    const builder = new Builder(sampleBuildOptions);
 
     await builder.build(sampleComponents);
 
@@ -215,13 +206,10 @@ describe('Builder', () => {
   });
 
   test('should not optimize assets when disabled', async () => {
-    const ___builder = new Builder({
+    const builder = new Builder({
       ...sampleBuildOptions,
       assets: undefined,
     });
-
-    // Mock the optimizeAssets method
-    builder.optimizeAssets = jest.fn().mockResolvedValue(undefined);
 
     await builder.build(sampleComponents);
 
@@ -230,7 +218,7 @@ describe('Builder', () => {
   });
 
   test('should generate index file', async () => {
-    const ___builder = new Builder(sampleBuildOptions);
+    const builder = new Builder(sampleBuildOptions);
 
     await builder.build(sampleComponents);
 

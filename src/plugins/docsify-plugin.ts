@@ -133,6 +133,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'navbar',
       content: '<nav class="app-nav"></nav>',
       metadata: { docsify: true },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       generate: async (_element, _designSystem) => '<nav class="app-nav"></nav>',
     };
   }
@@ -144,6 +145,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'sidebar',
       content: '<aside class="sidebar"></aside>',
       metadata: { docsify: true },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       generate: async (_element, _designSystem) => '<aside class="sidebar"></aside>',
     };
   }
@@ -155,6 +157,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'coverpage',
       content: '<section class="cover show"></section>',
       metadata: { docsify: true },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       generate: async (_element, _designSystem) => '<section class="cover show"></section>',
     };
   }

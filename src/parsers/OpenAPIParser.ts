@@ -60,6 +60,17 @@ interface MediaTypeObject {
   example?: unknown;
   examples?: Record<string, unknown>;
 }
+
+interface ParameterObject {
+  name?: string;
+  in?: string;
+  required?: boolean;
+  schema?: {
+    type?: string;
+  };
+  description?: string;
+}
+
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
@@ -272,7 +283,7 @@ ${description}
       content += '| Name | In | Required | Type | Description |\n';
       content += '| ---- | -- | -------- | ---- | ----------- |\n';
 
-      for (const param of operation.parameters as unknown[]) {
+      for (const param of operation.parameters as ParameterObject[]) {
         const name = param.name || '';
         const inType = param.in || '';
         const required = param.required ? 'Yes' : 'No';

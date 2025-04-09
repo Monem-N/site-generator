@@ -3,18 +3,17 @@ import { ParsedContent } from '../types/parser.js';
 import { logger } from 'utils/logger.js';
 
 export class CMSIntegrationModule {
-  private client: ContentfulClientApi<any>;
+  private client: ContentfulClientApi<undefined>;
 
   constructor(spaceId: string, accessToken: string) {
     this.client = createClient({
       space: spaceId,
       accessToken: accessToken,
     });
-    console.log('Type of this.client:', typeof this.client);
   }
 
   // Implement the Parser interface's parse method
-  async parse(source: string, _options?: Record<string, unknown>): Promise<ParsedContent> {
+  async parse(source: string): Promise<ParsedContent> {
     try {
       // Assuming source is an entry ID
       return await this.getEntry(source);

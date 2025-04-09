@@ -40,12 +40,16 @@ export interface ParsedContent {
   /**
    * Navigation
    */
-  navigation?: unknown;
+  navigation?: {
+    items: Array<{ title: string; path: string }>;
+  };
 
   /**
    * Theme
    */
-  theme?: unknown;
+  theme?: {
+    styles: Record<string, string>;
+  };
 }
 
 /**

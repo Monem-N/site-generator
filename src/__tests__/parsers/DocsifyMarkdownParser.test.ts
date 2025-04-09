@@ -1,6 +1,4 @@
 import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser.js';
-import { ______ParsedContent } from '../../../types/parser.js';
-import { ______logger } from '../../utils/logger.js';
 
 describe('DocsifyMarkdownParser', () => {
   let parser: DocsifyMarkdownParser;
@@ -14,9 +12,9 @@ describe('DocsifyMarkdownParser', () => {
     const result = await parser.parse(markdown);
 
     expect(result.title).toBe('Hello World');
-    expect(result.sections.length).toBe(1);
-    expect(result.sections[0].title).toBe('Hello World');
-    expect(result.sections[0].content).toContain('This is a test.');
+    expect(result.sections?.length).toBe(1);
+    expect(result.sections?.[0].title).toBe('Hello World');
+    expect(result.sections?.[0].content).toContain('This is a test.');
   });
 
   test('should extract frontmatter', async () => {
@@ -33,28 +31,28 @@ This is a test.`;
 
     expect(result.title).toBe('Custom Title');
     expect(result.description).toBe('Custom description');
-    expect(result.metadata.title).toBe('Custom Title');
-    expect(result.metadata.description).toBe('Custom description');
+    expect(result.metadata?.title).toBe('Custom Title');
+    expect(result.metadata?.description).toBe('Custom description');
   });
 
   test('should extract assets', async () => {
     const markdown = '# Hello World\n\n![Image](image.png)\n\nThis is a test.';
     const result = await parser.parse(markdown);
 
-    expect(result.assets.length).toBe(1);
-    expect(result.assets[0].type).toBe('image');
-    expect(result.assets[0].path).toBe('image.png');
-    expect(result.assets[0].metadata.altText).toBe('Image');
+    expect(result.assets?.length).toBe(1);
+    expect(result.assets?.[0].type).toBe('image');
+    expect(result.assets?.[0].path).toBe('image.png');
+    expect(result.assets?.[0].metadata?.altText).toBe('Image');
   });
 
   test('should extract references', async () => {
     const markdown = '# Hello World\n\n[Link](https://example.com)\n\nThis is a test.';
     const result = await parser.parse(markdown);
 
-    expect(result.references.length).toBe(1);
-    expect(result.references[0].type).toBe('external');
-    expect(result.references[0].target).toBe('https://example.com');
-    expect(result.references[0].attributes.text).toBe('Link');
+    expect(result.references?.length).toBe(1);
+    expect(result.references?.[0].type).toBe('external');
+    expect(result.references?.[0].target).toBe('https://example.com');
+    expect(result.references?.[0].attributes?.text).toBe('Link');
   });
 
   test('should handle multiple sections with different heading levels', async () => {
@@ -76,15 +74,15 @@ Section 2 content.`;
 
     const result = await parser.parse(markdown);
 
-    expect(result.sections.length).toBe(4);
-    expect(result.sections[0].level).toBe(1);
-    expect(result.sections[0].title).toBe('Main Title');
-    expect(result.sections[1].level).toBe(2);
-    expect(result.sections[1].title).toBe('Section 1');
-    expect(result.sections[2].level).toBe(3);
-    expect(result.sections[2].title).toBe('Subsection 1.1');
-    expect(result.sections[3].level).toBe(2);
-    expect(result.sections[3].title).toBe('Section 2');
+    expect(result.sections?.length).toBe(4);
+    expect(result.sections?.[0].level).toBe(1);
+    expect(result.sections?.[0].title).toBe('Main Title');
+    expect(result.sections?.[1].level).toBe(2);
+    expect(result.sections?.[1].title).toBe('Section 1');
+    expect(result.sections?.[2].level).toBe(3);
+    expect(result.sections?.[2].title).toBe('Subsection 1.1');
+    expect(result.sections?.[3].level).toBe(2);
+    expect(result.sections?.[3].title).toBe('Section 2');
   });
 
   test('should handle code blocks correctly', async () => {
@@ -99,10 +97,10 @@ Regular text.`;
 
     const result = await parser.parse(markdown);
 
-    expect(result.sections[0].content).toContain('```javascript');
-    expect(result.sections[0].content).toContain("const hello = 'world';");
-    expect(result.sections[0].content).toContain('logger.debug(hello);');
-    expect(result.sections[0].content).toContain('```');
+    expect(result.sections?.[0].content).toContain('```javascript');
+    expect(result.sections?.[0].content).toContain("const hello = 'world';");
+    expect(result.sections?.[0].content).toContain('logger.debug(hello);');
+    expect(result.sections?.[0].content).toContain('```');
   });
 
   test('should handle Docsify-specific syntax', async () => {
@@ -120,12 +118,12 @@ Regular text.`;
 
     const result = await parser.parse(markdown);
 
-    expect(result.sections[0].content).toContain('<!-- {docsify-ignore} -->');
-    expect(result.sections[0].content).toContain('?> This is a tip');
-    expect(result.sections[0].content).toContain('!> This is a warning');
-    expect(result.sections[0].content).toContain('[toc]');
+    expect(result.sections?.[0].content).toContain('<!-- {docsify-ignore} -->');
+    expect(result.sections?.[0].content).toContain('?> This is a tip');
+    expect(result.sections?.[0].content).toContain('!> This is a warning');
+    expect(result.sections?.[0].content).toContain('[toc]');
     // Docsify transforms relative links to hash-based routing
-    expect(result.sections[0].content).toContain('[Link Text](#/guide#anchor)');
+    expect(result.sections?.[0].content).toContain('[Link Text](#/guide#anchor)');
   });
 
   test('should handle empty or invalid markdown', async () => {
@@ -134,7 +132,7 @@ Regular text.`;
 
     expect(result.title).toBe('');
     expect(result.content).toBe('');
-    expect(result.sections.length).toBe(0);
+    expect(result.sections?.length).toBe(0);
   });
 
   test('should handle markdown with only frontmatter', async () => {
@@ -148,7 +146,7 @@ description: No content
     expect(result.title).toBe('Just Frontmatter');
     expect(result.description).toBe('No content');
     expect(result.content).toBe('');
-    expect(result.sections.length).toBe(0);
+    expect(result.sections?.length).toBe(0);
   });
 
   test('should handle markdown with tables', async () => {
@@ -161,10 +159,10 @@ description: No content
 
     const result = await parser.parse(markdownWithTable);
 
-    expect(result.sections[0].content).toContain('| Header 1 | Header 2 |');
-    expect(result.sections[0].content).toContain('| -------- | -------- |');
-    expect(result.sections[0].content).toContain('| Cell 1   | Cell 2   |');
-    expect(result.sections[0].content).toContain('| Cell 3   | Cell 4   |');
+    expect(result.sections?.[0].content).toContain('| Header 1 | Header 2 |');
+    expect(result.sections?.[0].content).toContain('| -------- | -------- |');
+    expect(result.sections?.[0].content).toContain('| Cell 1   | Cell 2   |');
+    expect(result.sections?.[0].content).toContain('| Cell 3   | Cell 4   |');
   });
 
   test('should handle markdown with lists', async () => {
@@ -182,38 +180,57 @@ description: No content
 
     const result = await parser.parse(markdownWithLists);
 
-    expect(result.sections[0].content).toContain('- Item 1');
-    expect(result.sections[0].content).toContain('  - Nested Item 1');
-    expect(result.sections[0].content).toContain('1. Ordered Item 1');
+    expect(result.sections?.[0].content).toContain('- Item 1');
+    expect(result.sections?.[0].content).toContain('  - Nested Item 1');
+    expect(result.sections?.[0].content).toContain('1. Ordered Item 1');
   });
 
   test('should handle file paths correctly', async () => {
-    // Mock the parser's file handling methods
-    const originalReadFile = parser.readFile;
-    parser.readFile = jest.fn().mockImplementation((____filePath: string) => {
-      return '# File Content\n\nThis is content from a file.';
-    });
+    const mockContent = '# File Content\n\nThis is content from a file.';
+    const filePath = '/path/to/document.md';
 
-    const result = await parser.parseFile('/path/to/document.md');
+    jest.spyOn(parser, 'readFile').mockImplementation(async () => mockContent);
+
+    const result = await parser.parse(mockContent, { filePath });
 
     expect(result.title).toBe('File Content');
     expect(result.content).toContain('This is content from a file.');
-    expect(result.metadata.originalPath).toBe('/path/to/document.md');
+    expect(result.metadata?.originalPath).toBe(filePath);
 
-    // Restore original method
-    parser.readFile = originalReadFile;
+    jest.restoreAllMocks();
   });
 
   test('should handle errors gracefully', async () => {
-    // Mock the parser's file handling methods to throw an error
-    const originalReadFile = parser.readFile;
-    parser.readFile = jest.fn().mockImplementation((____filePath: string) => {
+    jest.spyOn(parser, 'readFile').mockImplementation(async () => {
       throw new Error('File not found');
     });
 
-    await expect(parser.parseFile('/non-existent/file.md')).rejects.toThrow('File not found');
+    await expect(parser.parse('', { filePath: '/non-existent/file.md' })).rejects.toThrow(
+      'Markdown parsing failed: File not found'
+    );
 
-    // Restore original method
-    parser.readFile = originalReadFile;
+    jest.restoreAllMocks();
+  });
+
+  it('should mock readFile method', async () => {
+    const readFileSpy = jest.spyOn(parser, 'readFile').mockImplementation(async () => {
+      return 'Mock file content';
+    });
+
+    const result = await parser.readFile();
+    expect(result).toBe('Mock file content');
+    expect(readFileSpy).toHaveBeenCalled();
+
+    readFileSpy.mockRestore();
+  });
+
+  it('should parse markdown with mocked readFile', async () => {
+    jest.spyOn(parser, 'readFile').mockImplementation(async () => {
+      return '# Mock Title\n\nMock content.';
+    });
+
+    const parsedContent = await parser.parse('', { filePath: '/non-existent/file.md' });
+    expect(parsedContent.title).toBe('Mock Title');
+    expect(parsedContent.sections[0].content).toContain('Mock content.');
   });
 });

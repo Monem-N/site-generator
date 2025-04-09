@@ -25,6 +25,54 @@ export interface NavigationItem {
 export class NavigationGenerator {
   private sourceDir: string;
   private ignorePaths: string[];
+  generateSidebar(navigationItems: NavigationItem[]): string {
+    // Convert navigation items to markdown sidebar format
+    return this.navigationToMarkdown(navigationItems, 0);
+  }
+
+  generateNavbar(navigationItems: NavigationItem[]): string {
+    // Convert navigation items to markdown navbar format (only top level)
+    return navigationItems
+      .map(item => `* [${item.title}](${this.pathToUrl(item.path)})`)
+      .join('\n');
+  }
+
+  private pathToUrl(filePath?: string): string {
+    if (!filePath) return '/';
+
+    // Convert file path to URL
+    // Remove file extension and ensure it starts with /
+    let url = filePath.replace(/\.md$/, '');
+    if (!url.startsWith('/')) url = '/' + url;
+
+    // Handle index files
+    if (url.endsWith('/index')) {
+      url = url.replace(/\/index$/, '/');
+    } else if (url === '/index') {
+      url = '/';
+    }
+
+    return url;
+  }
+
+  private navigationToMarkdown(items: NavigationItem[], level: number): string {
+    if (!items || items.length === 0) return '';
+
+    const indent = '  '.repeat(level);
+    let result = '';
+
+    for (const item of items) {
+      // Add the current item
+      result += `${indent}* [${item.title}](${this.pathToUrl(item.path)})\n`;
+
+      // Add children if any
+      if (item.children && item.children.length > 0) {
+        result += this.navigationToMarkdown(item.children, level + 1);
+      }
+    }
+
+    return result;
+  }
 
   constructor(sourceDir: string, ignorePaths: string[] = []) {
     this.sourceDir = sourceDir;

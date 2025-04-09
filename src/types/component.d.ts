@@ -4,10 +4,10 @@ import { ContentElement } from './cms.js';
  * Interface for component templates
  */
 export interface ComponentTemplate {
+  type: string;
   name?: string;
   path?: string;
   content?: string;
-  type?: string;
   metadata?: Record<string, unknown>;
   generate?(element: ContentElement, designSystem: DesignSystem): Promise<string>;
 }

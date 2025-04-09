@@ -1,4 +1,4 @@
-import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
+import { TemplateEngine } from './TemplateEngine.js';
 import {
   HandlebarsTemplateEngine,
   HandlebarsTemplateEngineOptions,

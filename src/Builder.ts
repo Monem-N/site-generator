@@ -78,6 +78,10 @@ export class Builder {
     }
   }
 
+  public async optimizeAssets(): Promise<void> {
+    // Implementation will be added later
+  }
+
   private async prepareOutputDirectory(): Promise<void> {
     await fs.rm(this.config.outDir, { recursive: true, force: true });
     await fs.mkdir(this.config.outDir, { recursive: true });
@@ -89,7 +93,7 @@ export class Builder {
     await fs.mkdir(srcDir, { recursive: true });
 
     // Generate main entry point
-    const mainEntry = this.generateMainEntry(components);
+    const mainEntry = this.generateMainEntry();
     await fs.writeFile(path.join(srcDir, 'index.tsx'), mainEntry, 'utf-8');
     entryPoints.set('main', path.join(srcDir, 'index.tsx'));
 
@@ -105,7 +109,7 @@ export class Builder {
     return entryPoints;
   }
 
-  private generateMainEntry(__components: ComponentTemplate[]): string {
+  private generateMainEntry(): string {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.js';

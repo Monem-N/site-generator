@@ -102,12 +102,12 @@ export class PluginManager {
   /**
    * Legacy methods for backward compatibility
    */
-  async applyBeforeParse(content: string, _filePath?: string): Promise<string> {
-    return this.executeHook('beforeParse', content);
+  async applyBeforeParse(content: string, filePath: string): Promise<string> {
+    return this.executeHook('beforeParse', content, filePath);
   }
 
-  async applyAfterParse(parsedContent: ParsedContent, _filePath?: string): Promise<ParsedContent> {
-    return this.executeHook('afterParse', parsedContent);
+  async applyAfterParse(parsedContent: any, filePath: string): Promise<any> {
+    return this.executeHook('afterParse', parsedContent, filePath);
   }
 
   getPlugin(name: string): Plugin | undefined {

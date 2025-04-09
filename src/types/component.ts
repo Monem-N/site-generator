@@ -7,11 +7,20 @@ import { ContentElement } from './cms.js';
  * Interface for component templates
  */
 export interface ComponentTemplate {
-  name?: string;
-  path?: string;
-  content?: string;
-  type?: string;
-  metadata?: Record<string, unknown>;
+  type: string;
+  template: string;
+  name: string;
+  path: string;
+  content: string;
+  metadata?: {
+    navigation?: {
+      items: Array<{ title: string; path: string }>;
+    };
+    theme?: {
+      styles: Record<string, string>;
+    };
+    originalPath?: string;
+  };
   generate?(element: ContentElement, designSystem?: DesignSystem): Promise<string>;
 }
 
@@ -19,11 +28,18 @@ export interface ComponentTemplate {
  * Configuration for a component
  */
 export interface ComponentConfig {
+  id: string;
   name: string;
-  path: string;
   content: string;
-  variables?: Record<string, unknown>;
-  dependencies?: string[];
+  metadata?: {
+    navigation?: {
+      items: Array<{ title: string; path: string }>;
+    };
+    theme?: {
+      styles: Record<string, string>;
+    };
+    originalPath?: string;
+  };
 }
 
 /**
