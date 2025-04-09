@@ -123,38 +123,47 @@ export class ValidationError extends SiteGeneratorError {
  */
 export function setupGlobalErrorHandler(verbose = false): void {
   process.on('uncaughtException', error => {
-    logger.error('\n🔥 Uncaught Exception:');
+    logger.error('\n🔥 Uncaught Exception:', error);
 
     if (error instanceof SiteGeneratorError) {
-      logger.error(error.getFormattedMessage());
+      logger.error(error.getFormattedMessage(), error);
     } else {
-      logger.error(`[UNKNOWN_ERROR] ${error.message}`);
+      logger.error(`[UNKNOWN_ERROR] ${error.message}`, error);
     }
 
     if (verbose) {
-      logger.error('\nStack Trace:');
-      logger.error(error.stack);
+      logger.error('\nStack Trace:', new Error('Stack trace info'));
+      logger.error(error.stack || 'No stack trace available', error);
     } else {
-      logger.error('\nRun with --verbose flag for more details.');
+      logger.error('\nRun with --verbose flag for more details.', new Error('Verbose info'));
     }
 
     process.exit(1);
   });
 
-  process.on('unhandledRejection', (reason, __) => {
-    logger.error('\n🔥 Unhandled Promise Rejection:');
+  process.on('unhandledRejection', reason => {
+    logger.error(
+      '\n🔥 Unhandled Promise Rejection:',
+      reason instanceof Error ? reason : new Error(String(reason))
+    );
 
     if (reason instanceof SiteGeneratorError) {
-      logger.error(reason.getFormattedMessage());
+      logger.error(reason.getFormattedMessage(), reason);
     } else {
-      logger.error(`[UNHANDLED_REJECTION] ${reason}`);
+      logger.error(
+        `[UNHANDLED_REJECTION] ${reason}`,
+        reason instanceof Error ? reason : new Error(String(reason))
+      );
     }
 
     if (verbose) {
-      logger.error('\nStack Trace:');
-      logger.error((reason as Error).stack);
+      logger.error('\nStack Trace:', new Error('Stack trace info'));
+      logger.error(
+        (reason as Error).stack || 'No stack trace available',
+        reason instanceof Error ? reason : new Error(String(reason))
+      );
     } else {
-      logger.error('\nRun with --verbose flag for more details.');
+      logger.error('\nRun with --verbose flag for more details.', new Error('Verbose info'));
     }
 
     process.exit(1);
