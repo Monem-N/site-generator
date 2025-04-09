@@ -1,11 +1,11 @@
 // This file provides missing type definitions for workbox-core
 
 interface ExtendableEvent extends Event {
-  waitUntil(promise: Promise<any>): void;
+  waitUntil(promise: Promise<unknown>): void;
 }
 
 interface ExtendableMessageEvent extends ExtendableEvent {
-  readonly data: any;
+  readonly data?: unknown;
   readonly lastEventId: string;
   readonly origin: string;
   readonly ports: ReadonlyArray<MessagePort>;

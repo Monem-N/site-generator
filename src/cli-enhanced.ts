@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { logger as systemLogger } from './utils/logger.js';
 
 import { DocsifyWebsiteGenerator } from './DocsifyWebsiteGenerator.js';
 import { WebsiteGeneratorConfig, defaultConfig } from '../config/generator.config.js';
@@ -237,7 +236,7 @@ options.outputDir = sanitizedOutput;
 if (options.validate) {
   try {
     logger.info('Validating configuration...');
-    validateConfig(config as WebsiteGeneratorConfig);
+    validateConfig(config as unknown as Record<string, unknown>); // Adjusted type casting
     logger.success('Configuration is valid');
   } catch (error) {
     logger.error('Configuration validation failed:');

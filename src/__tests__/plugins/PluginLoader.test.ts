@@ -1,8 +1,8 @@
 import { PluginLoader } from '../../plugins/PluginLoader.js';
-import { ____Plugin } from '../../../types/plugin.js';
+import { ______Plugin } from '../../../types/plugin.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ____logger } from '../../utils/logger.js';
+import { ______logger } from '../../utils/logger.js';
 
 // Mock dependencies
 jest.mock('fs');

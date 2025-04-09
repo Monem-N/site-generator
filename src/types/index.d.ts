@@ -88,7 +88,7 @@ export interface CMSModel {
 export interface CMSField {
   type: string;
   required?: boolean;
-  defaultValue?: any;
+  defaultValue?: unknown;
   validations?: Record<string, unknown>;
 }
 export interface CMSRelationship {

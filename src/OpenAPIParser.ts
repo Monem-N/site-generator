@@ -4,28 +4,39 @@ import { logger } from 'utils/logger.js';
 // Import SwaggerParser
 import SwaggerParser from 'swagger-parser';
 
+// Ajout d'une déclaration de type pour SwaggerParser
+interface SwaggerParserType {
+  parse(
+    source: string,
+    options?: Record<string, unknown>
+  ): Promise<{
+    openapi: string;
+    info: {
+      title: string;
+      description?: string;
+    };
+    paths: Record<
+      string,
+      {
+        [method: string]: {
+          summary?: string;
+          description?: string;
+          parameters?: unknown[];
+        };
+      }
+    >;
+  }>;
+}
+
+// Cast SwaggerParser pour correspondre au type défini
+const SwaggerParserTyped = SwaggerParser as unknown as SwaggerParserType;
+
 export class OpenAPIParser implements Parser {
   async parse(source: string, options?: Record<string, unknown>): Promise<ParsedContent> {
     try {
-      // Parse the OpenAPI content using SwaggerParser
-      // Pass options to SwaggerParser if provided
+      // Utilisation de SwaggerParserTyped pour éviter l'erreur
       const swaggerOptions = (options as Record<string, unknown>) || {};
-      const api = (await SwaggerParser.parse(source, swaggerOptions)) as {
-        openapi: string;
-        info: {
-          title: string;
-          description?: string;
-        };
-        paths: {
-          [path: string]: {
-            [method: string]: {
-              summary?: string;
-              description?: string;
-              parameters?: unknown[];
-            };
-          };
-        };
-      };
+      const api = await SwaggerParserTyped.parse(source, swaggerOptions);
 
       // Extract relevant information from OpenAPI object
       const title = api.info.title;

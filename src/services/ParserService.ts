@@ -165,7 +165,11 @@ export class ParserService extends BaseService {
     const content = fs.readFileSync(filePath, 'utf-8');
 
     // Parse the content
-    const parser = this.parsers.get(extension)!;
+    const parser = this.parsers.get(extension);
+
+    if (!parser) {
+      throw new ParserError(`No parser found for extension: ${extension}`, { filePath });
+    }
 
     try {
       const parsedContent = parser(content, filePath);

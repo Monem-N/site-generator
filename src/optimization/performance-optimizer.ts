@@ -1,5 +1,3 @@
-import { BuildConfig } from '../../types/index.js';
-
 export interface PerformanceConfig {
   lazyLoading: {
     enabled: boolean;
@@ -95,7 +93,7 @@ export default function LazyComponent(props) {
 `;
   }
 
-  public generateBuildConfig(): Record<string, any> {
+  public generateBuildConfig(): Record<string, unknown> {
     return {
       optimization: {
         minimize: this.config.codeOptimization.minify,
@@ -126,7 +124,7 @@ export default function LazyComponent(props) {
     };
   }
 
-  private generateCacheConfig(): Record<string, any> {
+  private generateCacheConfig(): Record<string, unknown> {
     return {
       type: this.config.caching.strategy,
       maxAge: this.config.caching.maxAge * 1000, // Convert to milliseconds
@@ -137,7 +135,7 @@ export default function LazyComponent(props) {
     };
   }
 
-  private generateAssetRules(): Array<Record<string, any>> {
+  private generateAssetRules(): Array<Record<string, unknown>> {
     const rules = [];
 
     if (this.config.assets.imageOptimization.enabled) {
@@ -204,9 +202,11 @@ export default function LazyComponent(props) {
     const quality = this.config.assets.imageOptimization.quality;
 
     for (const format of formats) {
-      await sharp(imagePath)
-        .toFormat(format as any, { quality })
-        .toFile(`${imagePath}.${format}`);
+      if (typeof format === 'string' && format in sharp.format) {
+        await sharp(imagePath)
+          .toFormat(format as keyof typeof sharp.format, { quality })
+          .toFile(`${imagePath}.${format}`);
+      }
     }
   }
 

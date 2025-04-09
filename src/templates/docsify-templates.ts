@@ -3,9 +3,9 @@ import { DesignSystem } from '../../types/design.js';
 import { ContentElement } from '../../types/cms.js';
 
 export class DocsifyTemplateManager {
-  private designSystem: DesignSystem;
+  private _designSystem: DesignSystem;
 
-  constructor(designSystem: DesignSystem) {
+  constructor(_designSystem: DesignSystem) {
     this.designSystem = designSystem;
   }
 
@@ -28,13 +28,13 @@ class MarkdownTemplate implements ComponentTemplate {
   path = 'templates/markdown.html';
   content = '';
   type = 'markdown';
-  private designSystem: DesignSystem;
+  private _designSystem: DesignSystem;
 
-  constructor(designSystem: DesignSystem) {
+  constructor(_designSystem: DesignSystem) {
     this.designSystem = designSystem;
   }
 
-  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+  async generate(element: ContentElement, _designSystem: DesignSystem): Promise<string> {
     const content = element as unknown as { title?: string; body: string };
     const { title, body } = content;
     return `
@@ -61,13 +61,13 @@ class APITemplate implements ComponentTemplate {
   path = 'templates/api.html';
   content = '';
   type = 'api';
-  private designSystem: DesignSystem;
+  private _designSystem: DesignSystem;
 
-  constructor(designSystem: DesignSystem) {
+  constructor(_designSystem: DesignSystem) {
     this.designSystem = designSystem;
   }
 
-  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+  async generate(element: ContentElement, _designSystem: DesignSystem): Promise<string> {
     const content = element as unknown as {
       method: string;
       endpoint: string;
@@ -156,13 +156,13 @@ class CodeTemplate implements ComponentTemplate {
   path = 'templates/code.html';
   content = '';
   type = 'code';
-  private designSystem: DesignSystem;
+  private _designSystem: DesignSystem;
 
-  constructor(designSystem: DesignSystem) {
+  constructor(_designSystem: DesignSystem) {
     this.designSystem = designSystem;
   }
 
-  async generate(element: ContentElement, designSystem: DesignSystem): Promise<string> {
+  async generate(element: ContentElement, _designSystem: DesignSystem): Promise<string> {
     const content = element as unknown as { language: string; code: string; filename?: string };
     const { language, code, filename } = content;
     return `

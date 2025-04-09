@@ -147,7 +147,7 @@ export class WebsiteGenerator {
         name: `component-${components.length}`,
         path: `/${content.type || 'component'}`,
         content: currentComponent,
-        generate: async (element, designSystem) => currentComponent,
+        generate: async () => currentComponent,
       };
 
       for (const plugin of this.plugins) {

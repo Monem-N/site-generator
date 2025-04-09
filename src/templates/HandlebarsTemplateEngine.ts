@@ -190,7 +190,7 @@ export class HandlebarsTemplateEngine extends TemplateEngine {
             // Register multiple helpers from a single file
             for (const [name, fn] of Object.entries(helper)) {
               if (typeof fn === 'function') {
-                this.handlebars.registerHelper(name, (...args: any[]) => fn(...args));
+                this.handlebars.registerHelper(name, (...args: unknown[]) => fn(...args));
               }
             }
           }

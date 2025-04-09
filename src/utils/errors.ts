@@ -6,9 +6,9 @@ import { logger } from './logger.js';
  */
 export class SiteGeneratorError extends Error {
   code: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 
-  constructor(message: string, code: string, context?: Record<string, any>) {
+  constructor(message: string, code: string, context?: Record<string, unknown>) {
     super(message);
     this.name = this.constructor.name;
     this.code = code;
@@ -41,7 +41,7 @@ export class SiteGeneratorError extends Error {
  * Error thrown when there's an issue with configuration
  */
 export class ConfigurationError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'CONFIG_ERROR', context);
   }
 }
@@ -50,7 +50,7 @@ export class ConfigurationError extends SiteGeneratorError {
  * Error thrown when there's an issue with parsing documentation
  */
 export class ParserError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'PARSER_ERROR', context);
   }
 }
@@ -59,7 +59,7 @@ export class ParserError extends SiteGeneratorError {
  * Error thrown when there's an issue with generating components
  */
 export class GeneratorError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'GENERATOR_ERROR', context);
   }
 }
@@ -68,7 +68,7 @@ export class GeneratorError extends SiteGeneratorError {
  * Error thrown when there's an issue with building the website
  */
 export class BuildError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'BUILD_ERROR', context);
   }
 }
@@ -77,7 +77,7 @@ export class BuildError extends SiteGeneratorError {
  * Error thrown when there's an issue with plugins
  */
 export class PluginError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'PLUGIN_ERROR', context);
   }
 }
@@ -86,7 +86,7 @@ export class PluginError extends SiteGeneratorError {
  * Error thrown when there's an issue with file system operations
  */
 export class FileSystemError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'FS_ERROR', context);
   }
 }
@@ -95,7 +95,7 @@ export class FileSystemError extends SiteGeneratorError {
  * Error thrown when a feature is not implemented
  */
 export class NotImplementedError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'NOT_IMPLEMENTED', context);
   }
 }
@@ -104,7 +104,7 @@ export class NotImplementedError extends SiteGeneratorError {
  * Error thrown when there's an issue with templates
  */
 export class TemplateError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'TEMPLATE_ERROR', context);
   }
 }
@@ -113,7 +113,7 @@ export class TemplateError extends SiteGeneratorError {
  * Error thrown when there's an issue with validation
  */
 export class ValidationError extends SiteGeneratorError {
-  constructor(message: string, context?: Record<string, any>) {
+  constructor(message: string, context?: Record<string, unknown>) {
     super(message, 'VALIDATION_ERROR', context);
   }
 }
@@ -141,7 +141,7 @@ export function setupGlobalErrorHandler(verbose = false): void {
     process.exit(1);
   });
 
-  process.on('unhandledRejection', (reason, _promise) => {
+  process.on('unhandledRejection', (reason, __) => {
     logger.error('\n🔥 Unhandled Promise Rejection:');
 
     if (reason instanceof SiteGeneratorError) {
@@ -166,7 +166,7 @@ export function setupGlobalErrorHandler(verbose = false): void {
  * @param fn Async function to wrap with error handling
  * @returns Wrapped function with error handling
  */
-export function withErrorHandling<T extends any[], R>(
+export function withErrorHandling<T extends unknown[], R>(
   fn: (...args: T) => Promise<R>
 ): (...args: T) => Promise<R> {
   return async (...args: T): Promise<R> => {

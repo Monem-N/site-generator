@@ -48,7 +48,7 @@ export class PrismPlugin implements Plugin {
       }
 
       // Add Prism script
-      (parsedContent.metadata.scripts as any[]).push({
+      (parsedContent.metadata.scripts as unknown[]).push({
         type: 'text/javascript',
         content: `
           document.addEventListener('DOMContentLoaded', () => {
@@ -67,7 +67,7 @@ export class PrismPlugin implements Plugin {
       }
 
       // Add Prism styles
-      (parsedContent.metadata.styles as any[]).push({
+      (parsedContent.metadata.styles as unknown[]).push({
         type: 'text/css',
         href: 'https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.css',
       });

@@ -50,14 +50,16 @@ describe('TestGenerator', () => {
     });
 
     // Mock fs.mkdirSync
-    (fs.mkdirSync as jest.Mock).mockImplementation((___dirPath: string, ___options) => {
+    (fs.mkdirSync as jest.Mock).mockImplementation((____dirPath: string, ____options) => {
       return undefined;
     });
 
     // Mock fs.writeFileSync
-    (fs.writeFileSync as jest.Mock).mockImplementation((___filePath: string, ___content: string) => {
-      return undefined;
-    });
+    (fs.writeFileSync as jest.Mock).mockImplementation(
+      (____filePath: string, ____content: string) => {
+        return undefined;
+      }
+    );
 
     // Mock path.join to concatenate paths
     (path.join as jest.Mock).mockImplementation((...paths: string[]) => {
@@ -83,8 +85,8 @@ describe('TestGenerator', () => {
   });
 
   test('should initialize with valid options', () => {
-    const __testGenerator = new TestGenerator(sampleTestOptions);
-    expect(__testGenerator).toBeDefined();
+    const ___testGenerator = new TestGenerator(sampleTestOptions);
+    expect(___testGenerator).toBeDefined();
   });
 
   test('should create output directory if it does not exist', () => {
@@ -93,13 +95,13 @@ describe('TestGenerator', () => {
       return dirPath !== '/test/output/__tests__';
     });
 
-    const __testGenerator = new TestGenerator(sampleTestOptions);
+    const ___testGenerator = new TestGenerator(sampleTestOptions);
 
     expect(fs.mkdirSync).toHaveBeenCalledWith('/test/output/__tests__', { recursive: true });
   });
 
   test('should generate unit tests for components', async () => {
-    const __testGenerator = new TestGenerator(sampleTestOptions);
+    const ___testGenerator = new TestGenerator(sampleTestOptions);
 
     await testGenerator.generateTests(sampleComponents);
 

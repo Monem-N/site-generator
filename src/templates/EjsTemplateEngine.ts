@@ -86,7 +86,7 @@ export class EjsTemplateEngine extends TemplateEngine {
     // Read the template file
     const templateContent = await tryCatch(
       () => fs.promises.readFile(templatePath, 'utf-8'),
-      (error: any) => {
+      (error: unknown) => {
         throw new FileSystemError(`Failed to read template file: ${templatePath}`, {
           path: templatePath,
           operation: 'read',

@@ -40,12 +40,12 @@ export interface ParsedContent {
   /**
    * Navigation
    */
-  navigation?: any;
+  navigation?: unknown;
 
   /**
    * Theme
    */
-  theme?: any;
+  theme?: unknown;
 }
 
 /**

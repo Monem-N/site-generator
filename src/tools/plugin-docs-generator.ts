@@ -84,11 +84,13 @@ export class PluginDocsGenerator {
       for (const [name, option] of Object.entries(plugin.options)) {
         doc.options.push({
           name,
-          type: (option as any).type || 'any',
-          description: (option as any).description || 'No description available.',
-          required: (option as any).required || false,
+          type: (option as unknown).type || 'any',
+          description: (option as unknown).description || 'No description available.',
+          required: (option as unknown).required || false,
           default:
-            (option as any).default !== undefined ? String((option as any).default) : undefined,
+            (option as unknown).default !== undefined
+              ? String((option as unknown).default)
+              : undefined,
         });
       }
     }

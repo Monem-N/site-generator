@@ -105,7 +105,7 @@ export class Builder {
     return entryPoints;
   }
 
-  private generateMainEntry(_components: ComponentTemplate[]): string {
+  private generateMainEntry(__components: ComponentTemplate[]): string {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.js';

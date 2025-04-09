@@ -1,6 +1,6 @@
 import { DocsifyMarkdownParser } from '../../parsers/DocsifyMarkdownParser.js';
-import { ____ParsedContent } from '../../../types/parser.js';
-import { ____logger } from '../../utils/logger.js';
+import { ______ParsedContent } from '../../../types/parser.js';
+import { ______logger } from '../../utils/logger.js';
 
 describe('DocsifyMarkdownParser', () => {
   let parser: DocsifyMarkdownParser;
@@ -190,7 +190,7 @@ description: No content
   test('should handle file paths correctly', async () => {
     // Mock the parser's file handling methods
     const originalReadFile = parser.readFile;
-    parser.readFile = jest.fn().mockImplementation((___filePath: string) => {
+    parser.readFile = jest.fn().mockImplementation((____filePath: string) => {
       return '# File Content\n\nThis is content from a file.';
     });
 
@@ -207,7 +207,7 @@ description: No content
   test('should handle errors gracefully', async () => {
     // Mock the parser's file handling methods to throw an error
     const originalReadFile = parser.readFile;
-    parser.readFile = jest.fn().mockImplementation((___filePath: string) => {
+    parser.readFile = jest.fn().mockImplementation((____filePath: string) => {
       throw new Error('File not found');
     });
 

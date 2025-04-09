@@ -25,7 +25,7 @@ export interface DesignSystem {
   /**
    * Theme configuration
    */
-  theme?: Record<string, any>;
+  theme?: Record<string, unknown>;
   /**
    * Component configurations
    */
@@ -33,7 +33,7 @@ export interface DesignSystem {
     string,
     {
       import: string;
-      props?: Record<string, any>;
+      props?: Record<string, unknown>;
     }
   >;
   /**
@@ -53,7 +53,7 @@ export interface DesignSystem {
   /**
    * Update theme configuration
    */
-  updateTheme?(theme: Record<string, any>): void;
+  updateTheme?(theme: Record<string, unknown>): void;
 }
 /**
  * Theme configuration for design system

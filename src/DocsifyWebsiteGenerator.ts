@@ -74,10 +74,10 @@ export class DocsifyWebsiteGenerator {
         const parsed = (await this.docsifyIntegration.parseFile(file)) as ParsedContent;
 
         // Add navigation data
-        (parsed as any).navigation = navigation;
+        (parsed as unknown).navigation = navigation;
 
         // Add theme data
-        (parsed as any).theme = this.docsifyIntegration.getThemeStyles();
+        (parsed as unknown).theme = this.docsifyIntegration.getThemeStyles();
 
         parsedContent.push(parsed);
       } catch (error) {
@@ -114,7 +114,7 @@ export class DocsifyWebsiteGenerator {
     return components;
   }
 
-  private async applyDesignSystem(components: unknown[]): Promise<any[]> {
+  private async applyDesignSystem(components: unknown[]): Promise<ComponentConfig[]> {
     logger.debug('Applying design system...');
 
     // Generate theme CSS
@@ -125,7 +125,7 @@ export class DocsifyWebsiteGenerator {
     await fs.mkdir(path.dirname(themePath), { recursive: true });
     await fs.writeFile(themePath, themeCSS);
 
-    return components;
+    return components as ComponentConfig[];
   }
 
   private async generateTests(components: unknown[]): Promise<void> {

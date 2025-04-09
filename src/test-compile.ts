@@ -3,12 +3,12 @@
  */
 
 // Basic types
-const str = 'Hello, world!';
-const num = 42;
-const bool = true;
+const _str = 'Hello, world!';
+const _num = 42;
+const _bool = true;
 
 // Array
-const arr: number[] = [1, 2, 3];
+const _arr: number[] = [1, 2, 3];
 
 // Object
 interface Person {
@@ -16,7 +16,7 @@ interface Person {
   age: number;
 }
 
-const person: Person = {
+const _person: Person = {
   name: 'John',
   age: 30,
 };
@@ -29,4 +29,5 @@ function greet(name: string): string {
 // Export something
 export { greet, Person };
 
-console.log(str, num, bool, arr, person, greet('TypeScript'));
+// For testing purposes only
+// console.log(_str, _num, _bool, _arr, _person, greet('TypeScript'));

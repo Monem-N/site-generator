@@ -7,7 +7,7 @@ export interface CustomFormatConfig {
 
 // Ensure the customFormats property uses this type
 export interface ParserConfig {
-  plugins?: unknown[]; // Replace `any[]` with `unknown[]` for stricter typing
+  plugins?: unknown[]; // Replace `unknown[]` with `unknown[]` for stricter typing
   customFormats?: {
     [formatName: string]: CustomFormatConfig; // Use the specific type here
   };

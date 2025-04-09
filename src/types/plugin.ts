@@ -22,7 +22,7 @@ export interface Plugin {
   /**
    * Plugin hooks
    */
-  hooks?: Record<string, any>;
+  hooks?: Record<string, unknown>;
 
   /**
    * Initialize the plugin

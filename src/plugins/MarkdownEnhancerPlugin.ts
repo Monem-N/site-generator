@@ -17,7 +17,7 @@ export class MarkdownEnhancerPlugin implements Plugin {
   name = 'markdown-enhancer';
   version = '1.0.0';
   options: MarkdownEnhancerOptions;
-  hooks: any;
+  hooks: unknown;
 
   constructor(options: MarkdownEnhancerOptions = {}) {
     this.options = {

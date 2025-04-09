@@ -23,6 +23,9 @@
     "dev": "tsc --watch",
     "dev:serve": "tsc && node dist/cli-enhanced.js --serve",
     "dev:watch": "tsc && node dist/cli-enhanced.js --watch --serve",
+    "// Documentation scripts": "",
+    "docs": "typedoc src/WebsiteGenerator.ts --exclude '**/*.test.ts' --exclude '**/__tests__/**' --out docs/api --highlightLanguages typescript",
+    "update-docs": "npm run docs && node scripts/update-readme-links.js",
     "// Test scripts": "",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -117,6 +120,7 @@
     "ts-migrate": "^0.0.0",
     "ts-node": "^10.9.2",
     "ttypescript": "^1.5.15",
+    "typedoc": "^0.28.2",
     "typescript": "^5.0.3",
     "typescript-transform-paths": "^3.5.5",
     "ws": "^8.18.1"

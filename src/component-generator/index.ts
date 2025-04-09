@@ -36,7 +36,7 @@ export class ComponentGenerator {
 
     // Generate the component
     return template.generate
-      ? await template.generate({ type: content.type } as any, this.designSystem)
+      ? await template.generate({ type: content.type } as { type: string }, this.designSystem)
       : `<div>${content.title}</div>`;
   }
 

@@ -106,7 +106,7 @@ export class PerformanceMonitor {
    */
   static createMethodDecorator() {
     return function performanceDecorator(
-      _target: any,
+      _target: unknown,
       propertyKey: string,
       descriptor: PropertyDescriptor
     ) {

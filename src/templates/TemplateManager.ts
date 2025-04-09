@@ -1,9 +1,9 @@
-import { TemplateEngine, TemplateEngineOptions } from './TemplateEngine.js';
+import { TemplateEngine, __TemplateEngineOptions } from './TemplateEngine.js';
 import {
   HandlebarsTemplateEngine,
-  HandlebarsTemplateEngineOptions,
+  Handlebars__TemplateEngineOptions,
 } from './HandlebarsTemplateEngine.js';
-import { EjsTemplateEngine, EjsTemplateEngineOptions } from './EjsTemplateEngine.js';
+import { EjsTemplateEngine, Ejs__TemplateEngineOptions } from './EjsTemplateEngine.js';
 import { ParsedContent } from '../../types/parser.js';
 import { DesignSystem } from '../../types/design.js';
 import * as path from 'path';
@@ -60,8 +60,9 @@ export class TemplateManager {
    */
   private initializeEngines(options: TemplateManagerOptions): void {
     // Initialize the Handlebars template engine
-    this.engines.set('handlebars', new HandlebarsTemplateEngine(options.handlebarsOptions));
-    this.engines.set('hbs', this.engines.get('handlebars')!);
+    const handlebarsEngine = new HandlebarsTemplateEngine(options.handlebarsOptions);
+    this.engines.set('handlebars', handlebarsEngine);
+    this.engines.set('hbs', handlebarsEngine);
 
     // Initialize the EJS template engine
     this.engines.set('ejs', new EjsTemplateEngine(options.ejsOptions));

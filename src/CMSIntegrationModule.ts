@@ -10,6 +10,7 @@ export class CMSIntegrationModule {
       space: spaceId,
       accessToken: accessToken,
     });
+    console.log('Type of this.client:', typeof this.client);
   }
 
   // Implement the Parser interface's parse method

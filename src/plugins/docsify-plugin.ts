@@ -133,7 +133,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'navbar',
       content: '<nav class="app-nav"></nav>',
       metadata: { docsify: true },
-      generate: async (element, designSystem) => '<nav class="app-nav"></nav>',
+      generate: async (_element, _designSystem) => '<nav class="app-nav"></nav>',
     };
   }
 
@@ -144,7 +144,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'sidebar',
       content: '<aside class="sidebar"></aside>',
       metadata: { docsify: true },
-      generate: async (element, designSystem) => '<aside class="sidebar"></aside>',
+      generate: async (_element, _designSystem) => '<aside class="sidebar"></aside>',
     };
   }
 
@@ -155,7 +155,7 @@ export class DocsifyPlugin implements Plugin {
       type: 'coverpage',
       content: '<section class="cover show"></section>',
       metadata: { docsify: true },
-      generate: async (element, designSystem) => '<section class="cover show"></section>',
+      generate: async (_element, _designSystem) => '<section class="cover show"></section>',
     };
   }
 }
